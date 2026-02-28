@@ -6,7 +6,9 @@ import {
   FOOD_CARD_H,
   FOOD_CARD_RADIUS,
   nameToColor,
+  hexToCardColor,
 } from './FoodCard';
+import { FoodAssets } from '../data/food-assets';
 import { COLORS, PROCESSOR_RING_PAD } from '../config';
 import type { CardType } from '../types';
 
@@ -24,15 +26,22 @@ export class PuzzleCard extends FoodCard {
     y: number,
     label: string,
     type: CardType,
-    meta: { emoji?: string; itemName?: string; stepId?: string } = {},
+    meta: { emoji?: string; itemName?: string; stepId?: string; assetId?: string | null } = {},
   ) {
-    const cardColor = type === 'processor' ? FOOD_CARD_COLORS.blue : nameToColor(label);
+    const asset = meta.assetId ? FoodAssets.find(meta.assetId) : undefined;
+    const cardColor =
+      type === 'processor'
+        ? FOOD_CARD_COLORS.blue
+        : asset
+          ? hexToCardColor(asset.color)
+          : nameToColor(label);
 
     super(scene, x, y, {
       name: label,
       emoji: meta.emoji ?? '',
       color: cardColor,
       wave: type !== 'processor',
+      assetId: meta.assetId,
     });
 
     this.cardType = type;

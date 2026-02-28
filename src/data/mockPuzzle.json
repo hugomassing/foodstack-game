@@ -72,37 +72,45 @@
     "ingredients": [
         {
             "name": "shrimp",
-            "emoji": "🍤"
+            "emoji": "🍤",
+            "assetId": "shrimp"
         },
         {
             "name": "garlic",
-            "emoji": "🧄"
+            "emoji": "🧄",
+            "assetId": "garlic"
         },
         {
             "name": "chili peppers",
-            "emoji": "🌶️"
+            "emoji": "🌶️",
+            "assetId": "chili"
         },
         {
             "name": "honey",
-            "emoji": "🍯"
+            "emoji": "🍯",
+            "assetId": "honey"
         },
         {
             "name": "tortillas",
-            "emoji": "🌮"
+            "emoji": "🌮",
+            "assetId": "flatbread"
         },
         {
             "name": "lettuce",
-            "emoji": "🥬"
+            "emoji": "🥬",
+            "assetId": "lettuce"
         }
     ],
     "decoys": [
         {
             "name": "cumin",
-            "emoji": "🌿"
+            "emoji": "🌿",
+            "assetId": "herb"
         },
         {
             "name": "lime",
-            "emoji": "🍋"
+            "emoji": "🍋",
+            "assetId": "lime"
         }
     ]
 }

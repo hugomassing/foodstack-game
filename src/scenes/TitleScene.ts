@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
-import { api } from "../../convex/_generated/api";
-import { convex } from "../lib/convex";
+import { api } from '../../convex/_generated/api';
+import { convex } from '../lib/convex';
 
 type Category = 'Style' | 'Protein' | 'Method' | 'Base';
 type Difficulty = 'easy' | 'medium' | 'hard';
