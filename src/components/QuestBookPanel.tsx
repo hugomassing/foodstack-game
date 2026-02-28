@@ -2,11 +2,83 @@ import { useCallback } from 'react';
 import { QUEST_PANEL_W, GAME_H, FONT_FAMILY } from '../config';
 import { useGameStore } from '../App';
 import type { Step } from '../types';
+import {
+  Check,
+  Download,
+  ArrowLeft,
+  PocketKnife,
+  Flame,
+  CookingPot,
+  Layers,
+  Scissors,
+  Droplets,
+  Sparkles,
+  Snowflake,
+  Cloud,
+  Paintbrush,
+  Wheat,
+  UtensilsCrossed,
+  CircleDot,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 const M = 8;
-const SB_W = QUEST_PANEL_W - M * 2; // 224
-const SB_H = GAME_H - M * 2; // 524
+const SB_W = QUEST_PANEL_W - M * 2;
+const SB_H = GAME_H - M * 2;
 const PAD = 12;
+
+const PROCESSOR_ICONS: Record<string, LucideIcon> = {
+  chop: PocketKnife,
+  slice: Scissors,
+  dice: PocketKnife,
+  mince: PocketKnife,
+  cut: Scissors,
+  fry: Flame,
+  grill: Flame,
+  roast: Flame,
+  toast: Flame,
+  sear: Flame,
+  caramelize: Flame,
+  char: Flame,
+  bake: CookingPot,
+  boil: Droplets,
+  steam: Cloud,
+  braise: CookingPot,
+  simmer: CookingPot,
+  poach: Droplets,
+  blanch: Droplets,
+  stew: CookingPot,
+  mix: UtensilsCrossed,
+  blend: UtensilsCrossed,
+  whisk: UtensilsCrossed,
+  fold: UtensilsCrossed,
+  stir: UtensilsCrossed,
+  toss: UtensilsCrossed,
+  combine: UtensilsCrossed,
+  assemble: Layers,
+  layer: Layers,
+  stack: Layers,
+  plate: Layers,
+  season: Sparkles,
+  garnish: Sparkles,
+  dress: Sparkles,
+  drizzle: Droplets,
+  glaze: Paintbrush,
+  marinate: Droplets,
+  coat: Paintbrush,
+  spread: Paintbrush,
+  stuff: Wheat,
+  fill: Wheat,
+  wrap: Wheat,
+  freeze: Snowflake,
+  chill: Snowflake,
+  cool: Snowflake,
+};
+
+function getProcessorIcon(processor: string): LucideIcon {
+  const key = processor.toLowerCase().trim();
+  return PROCESSOR_ICONS[key] ?? CircleDot;
+}
 
 export function QuestBookPanel() {
   const puzzleData = useGameStore((s) => s.puzzleData);
@@ -67,9 +139,8 @@ export function QuestBookPanel() {
           width: '100%',
           height: '100%',
           borderRadius: 20,
-          background: '#fffaf0',
+          background: '#3e2723',
           border: '4px solid #3e2723',
-          boxShadow: '6px 8px 0 #3e2723',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
@@ -79,8 +150,8 @@ export function QuestBookPanel() {
         <div
           style={{
             background: '#ffca28',
-            padding: '16px 12px 12px',
-            borderBottom: '4px solid #3e2723',
+            padding: '14px 12px 10px',
+            borderBottom: '3px solid #3e2723',
             position: 'relative',
             flexShrink: 0,
           }}
@@ -91,15 +162,17 @@ export function QuestBookPanel() {
               position: 'absolute',
               top: 8,
               right: 10,
-              width: 16,
-              height: 16,
+              width: 14,
+              height: 14,
               borderRadius: '50%',
               background: '#ffffff',
               border: '2px solid #3e2723',
             }}
           />
-          <div style={{ fontSize: 18, fontWeight: 'bold', color: '#3e2723' }}>RECIPE</div>
-          <div style={{ fontSize: 11, color: '#d84315', marginTop: 4 }}>{dishLabel}</div>
+          <div style={{ fontSize: 16, fontWeight: 900, color: '#3e2723', letterSpacing: '0.04em' }}>
+            RECIPE
+          </div>
+          <div style={{ fontSize: 11, color: '#d84315', marginTop: 2, fontWeight: 900 }}>{dishLabel}</div>
         </div>
 
         {/* Body */}
@@ -111,30 +184,44 @@ export function QuestBookPanel() {
             overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
+            borderRadius: '0 0 16px 16px',
           }}
         >
           {/* Progress row */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-            <span style={{ fontSize: 10, color: '#a1887f' }}>PROGRESS</span>
+            <span style={{ fontSize: 10, color: '#a1887f', fontWeight: 900, letterSpacing: '0.08em' }}>PROGRESS</span>
             <span
               style={{
                 fontSize: 9,
-                fontWeight: 'bold',
+                fontWeight: 900,
                 color: '#3e2723',
-                background: '#e0e0e0',
-                borderRadius: 4,
-                padding: '2px 8px',
+                background: '#f5f0e8',
+                borderRadius: 6,
+                padding: '3px 8px',
+                border: '1.5px solid #e0d6c8',
               }}
             >
-              {stepCount}/{totalSteps} STEPS
+              {stepCount} / {totalSteps} STEPS
             </span>
           </div>
 
           {/* Step rows */}
           {puzzleData.branches.map((branch) => (
-            <div key={branch.name} style={{ marginBottom: 8 }}>
-              <div style={{ fontSize: 10, color: '#8d6e63', marginBottom: 4 }}>
-                — {branch.name.toUpperCase()}
+            <div key={branch.name} style={{ marginBottom: 6 }}>
+              <div
+                style={{
+                  fontSize: 10,
+                  color: '#8d6e63',
+                  marginBottom: 4,
+                  fontWeight: 900,
+                  letterSpacing: '0.06em',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 4,
+                }}
+              >
+                <div style={{ width: 12, height: 1.5, background: '#d7ccc8', borderRadius: 1 }} />
+                {branch.name.toUpperCase()}
               </div>
               {branch.steps.map((step) => (
                 <StepRow
@@ -148,8 +235,22 @@ export function QuestBookPanel() {
           ))}
 
           {/* Final */}
-          <div style={{ marginBottom: 8 }}>
-            <div style={{ fontSize: 10, color: '#8d6e63', marginBottom: 4 }}>— FINAL</div>
+          <div style={{ marginBottom: 6 }}>
+            <div
+              style={{
+                fontSize: 10,
+                color: '#8d6e63',
+                marginBottom: 4,
+                fontWeight: 900,
+                letterSpacing: '0.06em',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 4,
+              }}
+            >
+              <div style={{ width: 12, height: 1.5, background: '#d7ccc8', borderRadius: 1 }} />
+              FINAL
+            </div>
             <StepRow
               step={puzzleData.finalStep}
               completed={completedStepIds.has(puzzleData.finalStep.stepId)}
@@ -167,21 +268,26 @@ export function QuestBookPanel() {
             onClick={onExportJSON}
             style={{
               width: '100%',
-              height: 28,
+              height: 30,
               borderRadius: 8,
               background: '#ffffff',
-              border: '2px solid #8d6e63',
-              boxShadow: '2px 3px 0 rgba(141,110,99,0.35)',
+              border: '2px solid #d7ccc8',
               fontSize: 10,
-              fontWeight: 'bold',
+              fontWeight: 900,
               color: '#8d6e63',
               fontFamily: FONT_FAMILY,
               cursor: 'pointer',
               marginTop: 8,
               flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 6,
+              letterSpacing: '0.06em',
             }}
           >
-            ↓ EXPORT JSON
+            <Download size={12} strokeWidth={3} />
+            EXPORT JSON
           </button>
         </div>
       </div>
@@ -198,8 +304,7 @@ function StepRow({
   completed: boolean;
   actionable: boolean;
 }) {
-  const emoji = step.processorEmoji ?? '';
-  const label = (emoji ? emoji + ' ' : '') + step.processor.toUpperCase();
+  const Icon = getProcessorIcon(step.processor);
 
   return (
     <div
@@ -210,36 +315,38 @@ function StepRow({
         borderRadius: 8,
         marginBottom: 4,
         padding: '0 6px',
-        background: actionable ? '#ffecb3' : 'transparent',
-        border: actionable ? '2px solid #ffca28' : '2px solid transparent',
+        background: completed ? '#e8f5e9' : actionable ? '#fff8e1' : 'transparent',
+        border: completed
+          ? '2px solid #a5d6a7'
+          : actionable
+            ? '2px solid #ffca28'
+            : '2px solid transparent',
       }}
     >
       {/* Status circle */}
       <div
         style={{
-          width: 16,
-          height: 16,
+          width: 18,
+          height: 18,
           borderRadius: '50%',
           flexShrink: 0,
-          marginRight: 8,
+          marginRight: 6,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           ...(completed
             ? { background: '#4caf50' }
             : actionable
-              ? { border: '2px solid #ffca28', background: 'transparent', position: 'relative' as const }
-              : { border: '2px solid #bdbdbd', background: 'transparent' }),
+              ? { border: '2px solid #ffca28', background: '#fff8e1', position: 'relative' as const }
+              : { border: '2px solid #d0d0d0', background: 'transparent' }),
         }}
       >
-        {completed && (
-          <span style={{ color: '#fff', fontSize: 11, lineHeight: 1 }}>✓</span>
-        )}
+        {completed && <Check size={11} strokeWidth={3.5} color="#fff" />}
         {actionable && (
           <div
             style={{
-              width: 8,
-              height: 8,
+              width: 7,
+              height: 7,
               borderRadius: '50%',
               background: '#ffca28',
             }}
@@ -247,25 +354,56 @@ function StepRow({
         )}
       </div>
 
+      {/* Processor icon */}
+      <div
+        style={{
+          width: 18,
+          height: 18,
+          flexShrink: 0,
+          marginRight: 6,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Icon
+          size={14}
+          strokeWidth={2.5}
+          color={completed ? '#4caf50' : actionable ? '#d84315' : '#bdbdbd'}
+        />
+      </div>
+
       {/* Label */}
       <span
         style={{
           flex: 1,
-          fontSize: 12,
-          fontWeight: 'bold',
+          fontSize: 11,
+          fontWeight: 900,
           color: completed ? '#4caf50' : actionable ? '#3e2723' : '#9ca3af',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
+          letterSpacing: '0.02em',
         }}
       >
-        {completed ? '✓ ' + step.processor.toUpperCase() : label}
+        {step.processor.toUpperCase()}
       </span>
 
       {/* Input count */}
       {!completed && (
-        <span style={{ fontSize: 12, color: actionable ? '#8d6e63' : '#9ca3af', flexShrink: 0 }}>
-          ← {step.inputs.length}
+        <span
+          style={{
+            fontSize: 11,
+            color: actionable ? '#8d6e63' : '#bdbdbd',
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            fontWeight: 900,
+          }}
+        >
+          <ArrowLeft size={10} strokeWidth={3} />
+          {step.inputs.length}
         </span>
       )}
     </div>
