@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser from 'phaser';
 
 export interface FoodCardColor {
   bg: number;
@@ -18,9 +18,9 @@ export interface FoodCardProps {
   height?: number;
 }
 
-export const FOOD_CARD_W = 100;
-export const FOOD_CARD_H = 130;
-export const FOOD_CARD_RADIUS = 12;
+export const FOOD_CARD_W = 112;
+export const FOOD_CARD_H = 146;
+export const FOOD_CARD_RADIUS = 14;
 
 export const FOOD_CARD_COLORS: Record<string, FoodCardColor> = {
   yellow: { bg: 0xf4d03f, wave: 0xd4ac0d, border: 0xb7950b },
@@ -32,9 +32,7 @@ export const FOOD_CARD_COLORS: Record<string, FoodCardColor> = {
   pink: { bg: 0xe91e63, wave: 0xc2185b, border: 0xad1457 },
 };
 
-export function createFoodCard(
-  props: FoodCardProps
-): Phaser.GameObjects.Container {
+export function createFoodCard(props: FoodCardProps): Phaser.GameObjects.Container {
   const { scene, x, y, name, emoji, color } = props;
   const w = props.width ?? FOOD_CARD_W;
   const h = props.height ?? FOOD_CARD_H;
@@ -62,8 +60,12 @@ export function createFoodCard(
   if (showWave) {
     // Derive a lighter wave color by blending bg and wave at ~40% toward bg
     const blend = (a: number, b: number, t: number) => {
-      const r1 = (a >> 16) & 0xff, g1 = (a >> 8) & 0xff, b1 = a & 0xff;
-      const r2 = (b >> 16) & 0xff, g2 = (b >> 8) & 0xff, b2 = b & 0xff;
+      const r1 = (a >> 16) & 0xff,
+        g1 = (a >> 8) & 0xff,
+        b1 = a & 0xff;
+      const r2 = (b >> 16) & 0xff,
+        g2 = (b >> 8) & 0xff,
+        b2 = b & 0xff;
       const ri = Math.round(r1 + (r2 - r1) * t);
       const gi = Math.round(g1 + (g2 - g1) * t);
       const bi = Math.round(b1 + (b2 - b1) * t);
@@ -105,8 +107,7 @@ export function createFoodCard(
         const px = ox + t * w;
         const sl = slope * (t - 0.5);
         const diag = tilt * (t - 0.5);
-        const py =
-          waveBaseY + bob + sl + diag + Math.sin(t * Math.PI * 2 + phase) * amplitude;
+        const py = waveBaseY + bob + sl + diag + Math.sin(t * Math.PI * 2 + phase) * amplitude;
         if (i === 0) {
           gfx.moveTo(px, py);
         } else {
@@ -119,10 +120,7 @@ export function createFoodCard(
       gfx.arc(ox + r, oy + h - r, r, Math.PI / 2, Math.PI, false);
       const leftSl = slope * (0 - 0.5);
       const leftDiag = tilt * (0 - 0.5);
-      gfx.lineTo(
-        ox,
-        waveBaseY + bob + leftSl + leftDiag + Math.sin(phase) * amplitude
-      );
+      gfx.lineTo(ox, waveBaseY + bob + leftSl + leftDiag + Math.sin(phase) * amplitude);
       gfx.closePath();
       gfx.fillPath();
     }
@@ -134,7 +132,15 @@ export function createFoodCard(
     waveDarkGfx = scene.add.graphics();
 
     // Initial draw
-    drawSingleWave(waveLightGfx, lighterWaveColor, backWaveY, phaseOffset + backPhaseShift, 0, 0, baseSlope);
+    drawSingleWave(
+      waveLightGfx,
+      lighterWaveColor,
+      backWaveY,
+      phaseOffset + backPhaseShift,
+      0,
+      0,
+      baseSlope,
+    );
     drawSingleWave(waveDarkGfx, color.wave, frontWaveY, phaseOffset, 0, 0, baseSlope);
 
     // Animate front wave
@@ -144,9 +150,17 @@ export function createFoodCard(
       phase: phaseOffset + Math.PI * 2,
       duration: phaseDuration,
       repeat: -1,
-      ease: "Linear",
+      ease: 'Linear',
       onUpdate: () => {
-        drawSingleWave(waveDarkGfx!, color.wave, frontWaveY, frontAnim.phase, frontAnim.bob, frontAnim.tilt, baseSlope);
+        drawSingleWave(
+          waveDarkGfx!,
+          color.wave,
+          frontWaveY,
+          frontAnim.phase,
+          frontAnim.bob,
+          frontAnim.tilt,
+          baseSlope,
+        );
       },
     });
     scene.tweens.add({
@@ -155,7 +169,7 @@ export function createFoodCard(
       duration: bobDuration,
       repeat: -1,
       yoyo: true,
-      ease: "Sine.easeInOut",
+      ease: 'Sine.easeInOut',
     });
     scene.tweens.add({
       targets: frontAnim,
@@ -163,7 +177,7 @@ export function createFoodCard(
       duration: tiltDuration,
       repeat: -1,
       yoyo: true,
-      ease: "Sine.easeInOut",
+      ease: 'Sine.easeInOut',
     });
 
     // Animate back wave — slightly different timing for offset feel
@@ -173,9 +187,17 @@ export function createFoodCard(
       phase: phaseOffset + backPhaseShift + Math.PI * 2,
       duration: phaseDuration * 1.15,
       repeat: -1,
-      ease: "Linear",
+      ease: 'Linear',
       onUpdate: () => {
-        drawSingleWave(waveLightGfx!, lighterWaveColor, backWaveY, backAnim.phase, backAnim.bob, backAnim.tilt, baseSlope);
+        drawSingleWave(
+          waveLightGfx!,
+          lighterWaveColor,
+          backWaveY,
+          backAnim.phase,
+          backAnim.bob,
+          backAnim.tilt,
+          baseSlope,
+        );
       },
     });
     scene.tweens.add({
@@ -184,7 +206,7 @@ export function createFoodCard(
       duration: bobDuration * 1.2,
       repeat: -1,
       yoyo: true,
-      ease: "Sine.easeInOut",
+      ease: 'Sine.easeInOut',
     });
     scene.tweens.add({
       targets: backAnim,
@@ -192,7 +214,7 @@ export function createFoodCard(
       duration: tiltDuration * 1.3,
       repeat: -1,
       yoyo: true,
-      ease: "Sine.easeInOut",
+      ease: 'Sine.easeInOut',
     });
   }
 
@@ -202,22 +224,22 @@ export function createFoodCard(
   border.strokeRoundedRect(ox, oy, w, h, r);
 
   // 5. Name text — bold, uppercase, dark, near top
-  const nameText = scene.add.text(0, oy + 12, name.toUpperCase(), {
-    fontFamily: "Arial, sans-serif",
-    fontSize: "11px",
-    fontStyle: "bold",
-    color: "#2C3E50",
-    align: "center",
+  const nameText = scene.add.text(0, oy + 14, name.toUpperCase(), {
+    fontFamily: 'Arial, sans-serif',
+    fontSize: '12px',
+    fontStyle: 'bold',
+    color: '#2C3E50',
+    align: 'center',
     wordWrap: { width: w - 16 },
   });
   nameText.setOrigin(0.5, 0);
 
   // 6. Emoji — 40px, centered vertically in the card body (between name and bottom)
-  const nameBottom = oy + 12 + nameText.height;
+  const nameBottom = oy + 14 + nameText.height;
   const emojiY = nameBottom + (oy + h - nameBottom) / 2;
   const emojiText = scene.add.text(0, emojiY, emoji, {
     fontSize: `${Math.round(h * 0.42)}px`,
-    align: "center",
+    align: 'center',
   });
   emojiText.setOrigin(0.5, 0.5);
 

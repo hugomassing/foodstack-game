@@ -4,10 +4,10 @@ type Category = 'Style' | 'Protein' | 'Method' | 'Base';
 type Difficulty = 'easy' | 'medium' | 'hard';
 
 const WORD_LISTS: Record<Category, string[]> = {
-  Style:   ['Crispy', 'Smoky', 'Spicy', 'Cheesy', 'Tangy', 'Herby'],
+  Style: ['Crispy', 'Smoky', 'Spicy', 'Cheesy', 'Tangy', 'Herby'],
   Protein: ['Meatball', 'Chicken', 'Tofu', 'Shrimp', 'Mushroom', 'Pulled Pork'],
-  Method:  ['Stuffed', 'Glazed', 'Grilled', 'Braised', 'Roasted', 'Caramelized'],
-  Base:    ['Bun', 'Bowl', 'Wrap', 'Taco', 'Pasta', 'Salad'],
+  Method: ['Stuffed', 'Glazed', 'Grilled', 'Braised', 'Roasted', 'Caramelized'],
+  Base: ['Bun', 'Bowl', 'Wrap', 'Taco', 'Pasta', 'Salad'],
 };
 
 const CATEGORIES = Object.keys(WORD_LISTS) as Category[];
@@ -53,15 +53,25 @@ export class TitleScene extends Phaser.Scene {
     }
 
     // Title
-    this.add.text(width / 2, 30, 'FoodStack', {
-      fontSize: '36px', fontStyle: 'bold', color: '#f1c40f',
-      fontFamily: 'Arial', stroke: '#000000', strokeThickness: 3,
-    }).setOrigin(0.5);
+    this.add
+      .text(width / 2, 30, 'FoodStack', {
+        fontSize: '36px',
+        fontStyle: 'bold',
+        color: '#f1c40f',
+        fontFamily: 'Arial',
+        stroke: '#000000',
+        strokeThickness: 3,
+      })
+      .setOrigin(0.5);
 
     // Subtitle
-    this.add.text(width / 2, 65, 'Pick your ingredients, cook your puzzle!', {
-      fontSize: '13px', color: '#aaaacc', fontFamily: 'Arial',
-    }).setOrigin(0.5);
+    this.add
+      .text(width / 2, 65, 'Pick your ingredients, cook your puzzle!', {
+        fontSize: '13px',
+        color: '#aaaacc',
+        fontFamily: 'Arial',
+      })
+      .setOrigin(0.5);
 
     // Word columns
     const colW = width / (CATEGORIES.length + 1);
@@ -71,9 +81,14 @@ export class TitleScene extends Phaser.Scene {
       const cat = CATEGORIES[c];
       const cx = colW * (c + 0.75);
 
-      this.add.text(cx, startY, cat, {
-        fontSize: '14px', fontStyle: 'bold', color: '#5dade2', fontFamily: 'Arial',
-      }).setOrigin(0.5);
+      this.add
+        .text(cx, startY, cat, {
+          fontSize: '14px',
+          fontStyle: 'bold',
+          color: '#5dade2',
+          fontFamily: 'Arial',
+        })
+        .setOrigin(0.5);
 
       this.wordChips[cat] = [];
       const words = WORD_LISTS[cat];
@@ -81,9 +96,14 @@ export class TitleScene extends Phaser.Scene {
       for (let w = 0; w < words.length; w++) {
         const word = words[w];
         const y = startY + 28 + w * 28;
-        const txt = this.add.text(cx, y, word, {
-          fontSize: '13px', color: '#888899', fontFamily: 'Arial',
-        }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+        const txt = this.add
+          .text(cx, y, word, {
+            fontSize: '13px',
+            color: '#888899',
+            fontFamily: 'Arial',
+          })
+          .setOrigin(0.5)
+          .setInteractive({ useHandCursor: true });
 
         txt.on('pointerover', () => {
           if (this.selections[cat] !== word) txt.setColor('#ccccdd');
@@ -103,23 +123,37 @@ export class TitleScene extends Phaser.Scene {
     }
 
     // Dish name preview
-    this.dishNameText = this.add.text(width / 2, height - 120, '', {
-      fontSize: '20px', fontStyle: 'bold', color: '#ffffff', fontFamily: 'Arial',
-    }).setOrigin(0.5);
+    this.dishNameText = this.add
+      .text(width / 2, height - 120, '', {
+        fontSize: '20px',
+        fontStyle: 'bold',
+        color: '#ffffff',
+        fontFamily: 'Arial',
+      })
+      .setOrigin(0.5);
 
     // Difficulty selector
     const diffY = height - 88;
-    this.add.text(width / 2 - 100, diffY, 'Difficulty:', {
-      fontSize: '12px', color: '#aaaacc', fontFamily: 'Arial',
-    }).setOrigin(0.5);
+    this.add
+      .text(width / 2 - 100, diffY, 'Difficulty:', {
+        fontSize: '12px',
+        color: '#aaaacc',
+        fontFamily: 'Arial',
+      })
+      .setOrigin(0.5);
 
     this.diffButtons = [];
     for (let d = 0; d < DIFFICULTIES.length; d++) {
       const diff = DIFFICULTIES[d];
       const bx = width / 2 + (d - 1) * 60 + 10;
-      const txt = this.add.text(bx, diffY, diff, {
-        fontSize: '13px', color: '#888899', fontFamily: 'Arial',
-      }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+      const txt = this.add
+        .text(bx, diffY, diff, {
+          fontSize: '13px',
+          color: '#888899',
+          fontFamily: 'Arial',
+        })
+        .setOrigin(0.5)
+        .setInteractive({ useHandCursor: true });
 
       txt.on('pointerdown', () => {
         if (this.isLoading) return;
@@ -137,15 +171,26 @@ export class TitleScene extends Phaser.Scene {
     this.createButton(width / 2 + 200, btnY, 'Load JSON', '#8e44ad', () => this.onLoadJSON());
 
     // Loading text
-    this.loadingText = this.add.text(width / 2, height / 2 + 60, '', {
-      fontSize: '14px', color: '#f1c40f', fontFamily: 'Arial',
-    }).setOrigin(0.5).setVisible(false);
+    this.loadingText = this.add
+      .text(width / 2, height / 2 + 60, '', {
+        fontSize: '14px',
+        color: '#f1c40f',
+        fontFamily: 'Arial',
+      })
+      .setOrigin(0.5)
+      .setVisible(false);
 
     // Error text
-    this.errorText = this.add.text(width / 2, height - 155, '', {
-      fontSize: '12px', color: '#e74c3c', fontFamily: 'Arial',
-      wordWrap: { width: width - 100 }, align: 'center',
-    }).setOrigin(0.5).setVisible(false);
+    this.errorText = this.add
+      .text(width / 2, height - 155, '', {
+        fontSize: '12px',
+        color: '#e74c3c',
+        fontFamily: 'Arial',
+        wordWrap: { width: width - 100 },
+        align: 'center',
+      })
+      .setOrigin(0.5)
+      .setVisible(false);
 
     this.refreshChips();
     this.refreshDishName();
@@ -153,14 +198,22 @@ export class TitleScene extends Phaser.Scene {
   }
 
   private createButton(x: number, y: number, label: string, color: string, callback: () => void) {
-    const w = 120, h = 36, r = 8;
+    const w = 120,
+      h = 36,
+      r = 8;
     const bg = this.add.graphics();
     bg.fillStyle(Phaser.Display.Color.HexStringToColor(color).color, 1);
     bg.fillRoundedRect(x - w / 2, y - h / 2, w, h, r);
 
-    const txt = this.add.text(x, y, label, {
-      fontSize: '15px', fontStyle: 'bold', color: '#ffffff', fontFamily: 'Arial',
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    const txt = this.add
+      .text(x, y, label, {
+        fontSize: '15px',
+        fontStyle: 'bold',
+        color: '#ffffff',
+        fontFamily: 'Arial',
+      })
+      .setOrigin(0.5)
+      .setInteractive({ useHandCursor: true });
 
     txt.on('pointerdown', callback);
     return { bg, txt };
@@ -179,7 +232,7 @@ export class TitleScene extends Phaser.Scene {
   }
 
   private refreshDishName() {
-    this.dishNameText.setText(CATEGORIES.map(c => this.selections[c]).join(' '));
+    this.dishNameText.setText(CATEGORIES.map((c) => this.selections[c]).join(' '));
   }
 
   private refreshDifficulty() {
@@ -193,7 +246,7 @@ export class TitleScene extends Phaser.Scene {
   }
 
   private getDishName() {
-    return CATEGORIES.map(c => this.selections[c]).join(' ');
+    return CATEGORIES.map((c) => this.selections[c]).join(' ');
   }
 
   private async onCook() {

@@ -1,7 +1,15 @@
 import Phaser from 'phaser';
-import { createFoodCard, FOOD_CARD_COLORS, FOOD_CARD_W, FOOD_CARD_H, FOOD_CARD_RADIUS, type FoodCardColor } from '../createFoodCard';
+import {
+  createFoodCard,
+  FOOD_CARD_COLORS,
+  FOOD_CARD_W,
+  FOOD_CARD_H,
+  FOOD_CARD_RADIUS,
+  type FoodCardColor,
+} from '../createFoodCard';
+import { GAME_W, GAME_H, DPR } from '../config';
 
-const QUEST_PANEL_W = 250;
+const QUEST_PANEL_W = 280;
 
 type CardType = 'ingredient' | 'intermediate' | 'processor';
 
@@ -78,22 +86,28 @@ export class CookingPuzzleScene extends Phaser.Scene {
   }
 
   gameX(fraction: number): number {
-    const { width } = this.scale;
-    return QUEST_PANEL_W + fraction * (width - QUEST_PANEL_W);
+    return QUEST_PANEL_W + fraction * (GAME_W - QUEST_PANEL_W);
   }
 
   get gameCenterX(): number {
-    const { width } = this.scale;
-    return QUEST_PANEL_W + (width - QUEST_PANEL_W) / 2;
+    return QUEST_PANEL_W + (GAME_W - QUEST_PANEL_W) / 2;
   }
 
   get gameAreaW(): number {
-    return this.scale.width - QUEST_PANEL_W;
+    return GAME_W - QUEST_PANEL_W;
   }
 
   create(data: { puzzleData: PuzzleData }): void {
-    const { width, height } = this.scale;
+    const width = GAME_W;
+    const height = GAME_H;
     this.cameras.main.setBackgroundColor('#1a1a2e');
+    this.cameras.main.setZoom(DPR);
+    this.cameras.main.centerOn(GAME_W / 2, GAME_H / 2);
+
+    // Auto-set high resolution on all text objects for crisp rendering
+    const _addText = this.add.text.bind(this.add);
+    (this.add as any).text = (...args: Parameters<typeof _addText>) =>
+      _addText(...args).setResolution(DPR);
 
     this.puzzleData = data.puzzleData;
 
@@ -126,7 +140,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
       }
     }
     for (const step of this.allSteps) {
-      step.inputs = step.inputs.map(inp => outputToStepId.get(inp) ?? inp);
+      step.inputs = step.inputs.map((inp) => outputToStepId.get(inp) ?? inp);
     }
 
     // -- Quest Book --
@@ -143,10 +157,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
         if (obj.cardType === 'processor') {
           const attachments = this.processorAttachments.get(obj);
           if (attachments) {
-            const pileOffsetY = 16;
+            const pileOffsetY = 18;
             attachments.forEach((att, i) => {
               att.card.x = dragX;
-              att.card.y = dragY + 20 + i * pileOffsetY;
+              att.card.y = dragY + 22 + i * pileOffsetY;
             });
           }
         }
@@ -199,8 +213,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     // -- Footer: dish name + step counter --
     this.add
-      .text(this.gameCenterX, height - 20, this.puzzleData.dishName, {
-        fontSize: '16px',
+      .text(this.gameCenterX, height - 22, this.puzzleData.dishName, {
+        fontSize: '18px',
         fontStyle: 'bold',
         color: '#ffffff',
         fontFamily: 'Arial',
@@ -208,8 +222,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.stepText = this.add
-      .text(width - 20, height - 20, `0/${this.totalSteps} steps`, {
-        fontSize: '14px',
+      .text(width - 22, height - 22, `0/${this.totalSteps} steps`, {
+        fontSize: '16px',
         color: '#aaaacc',
         fontFamily: 'Arial',
       })
@@ -299,7 +313,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
   // -- Scatter cards across game area --
 
   scatterCards(): void {
-    const { width, height } = this.scale;
+    const width = GAME_W;
+    const height = GAME_H;
     const minX = QUEST_PANEL_W + FOOD_CARD_W / 2 + 10;
     const maxX = width - FOOD_CARD_W / 2 - 10;
     const minY = FOOD_CARD_H / 2 + 10;
@@ -328,8 +343,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
       const idx = positions.length;
       const col = idx % cols;
       const row = Math.floor(idx / cols);
-      const x = minX + col * (FOOD_CARD_W + 12) + Phaser.Math.Between(-5, 5);
-      const y = minY + row * (FOOD_CARD_H + 12) + Phaser.Math.Between(-5, 5);
+      const x = minX + col * (FOOD_CARD_W + 14) + Phaser.Math.Between(-5, 5);
+      const y = minY + row * (FOOD_CARD_H + 14) + Phaser.Math.Between(-5, 5);
       positions.push({ x, y });
       return { x, y };
     };
@@ -345,7 +360,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     for (const step of this.allSteps) {
       usedProcessors.add(step.processor);
     }
-    const paletteNames = this.puzzleData.processors.map(p => p.name);
+    const paletteNames = this.puzzleData.processors.map((p) => p.name);
     const processorSet = new Set([...usedProcessors, ...paletteNames]);
     const processors = Phaser.Utils.Array.Shuffle([...processorSet]) as string[];
 
@@ -390,7 +405,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     const attachments = this.processorAttachments.get(procCard);
     if (!attachments) return;
 
-    if (attachments.some(a => a.card === ingredientCard)) return;
+    if (attachments.some((a) => a.card === ingredientCard)) return;
 
     ingredientCard.attachedTo = procCard;
     attachments.push({
@@ -409,7 +424,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     const attachments = this.processorAttachments.get(procCard);
     if (attachments) {
-      const idx = attachments.findIndex(a => a.card === ingredientCard);
+      const idx = attachments.findIndex((a) => a.card === ingredientCard);
       if (idx !== -1) attachments.splice(idx, 1);
       this.layoutAttachedCards(procCard);
     }
@@ -420,11 +435,11 @@ export class CookingPuzzleScene extends Phaser.Scene {
     const attachments = this.processorAttachments.get(procCard);
     if (!attachments) return;
 
-    const pileOffsetY = 16;
+    const pileOffsetY = 18;
 
     attachments.forEach((att, i) => {
       const targetX = procCard.x;
-      const targetY = procCard.y + 20 + i * pileOffsetY;
+      const targetY = procCard.y + 22 + i * pileOffsetY;
       att.card.setDepth(procCard.cardDepth + 1 + i);
       this.tweens.add({
         targets: att.card,
@@ -444,7 +459,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     const procName = procCard.cardLabel;
 
-    const resolvedInputs = attachments.map(att => {
+    const resolvedInputs = attachments.map((att) => {
       if (att.stepId) return att.stepId;
       for (const [stepId, outputName] of this.availableIntermediates) {
         if (outputName === att.itemName) return stepId;
@@ -499,8 +514,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
     const toDetach = [...attachments];
     for (const att of toDetach) {
       att.card.attachedTo = null;
-      const newX = Phaser.Math.Between(QUEST_PANEL_W + 60, this.scale.width - 60);
-      const newY = Phaser.Math.Between(40, this.scale.height - 60);
+      const newX = Phaser.Math.Between(QUEST_PANEL_W + 68, GAME_W - 68);
+      const newY = Phaser.Math.Between(45, GAME_H - 68);
       this.tweens.add({
         targets: att.card,
         x: newX,
@@ -598,8 +613,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
     });
 
     const floatText = this.add
-      .text(procCard.x, procCard.y - 10, step.output, {
-        fontSize: '13px',
+      .text(procCard.x, procCard.y - 12, step.output, {
+        fontSize: '15px',
         fontStyle: 'bold',
         color: '#2ecc71',
         fontFamily: 'Arial',
@@ -608,7 +623,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
       .setDepth(101);
     this.tweens.add({
       targets: floatText,
-      y: floatText.y - 40,
+      y: floatText.y - 45,
       alpha: 0,
       duration: 1200,
       ease: 'Quad.easeOut',
@@ -619,7 +634,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
   // -- Victory --
 
   onVictory(dishName: string): void {
-    const { width, height } = this.scale;
+    const width = GAME_W;
+    const height = GAME_H;
 
     const overlay = this.add.graphics();
     overlay.fillStyle(0x000000, 0.6);
@@ -628,7 +644,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     const victoryText = this.add
       .text(width / 2, -100, dishName, {
-        fontSize: '28px',
+        fontSize: '32px',
         fontStyle: 'bold',
         color: '#f1c40f',
         fontFamily: 'Arial',
@@ -641,14 +657,14 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     this.tweens.add({
       targets: victoryText,
-      y: height / 2 - 20,
+      y: height / 2 - 22,
       ease: 'Bounce.Out',
       duration: 1200,
     });
 
     const subtitle = this.add
       .text(width / 2, -100, 'YOU WIN!', {
-        fontSize: '20px',
+        fontSize: '22px',
         fontStyle: 'bold',
         color: '#2ecc71',
         fontFamily: 'Arial',
@@ -660,7 +676,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     this.tweens.add({
       targets: subtitle,
-      y: height / 2 + 30,
+      y: height / 2 + 34,
       ease: 'Bounce.Out',
       duration: 1200,
       delay: 300,
@@ -691,7 +707,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
   // -- Quest Book --
 
   buildQuestBook(): void {
-    const { height } = this.scale;
+    const height = GAME_H;
 
     const bg = this.add.graphics();
     bg.fillStyle(0x151528, 1);
@@ -702,22 +718,22 @@ export class CookingPuzzleScene extends Phaser.Scene {
     sep.lineBetween(QUEST_PANEL_W, 0, QUEST_PANEL_W, height);
 
     this.add
-      .text(QUEST_PANEL_W / 2, 14, 'Quest Book', {
-        fontSize: '16px',
+      .text(QUEST_PANEL_W / 2, 16, 'Quest Book', {
+        fontSize: '18px',
         fontStyle: 'bold',
         color: '#f1c40f',
         fontFamily: 'Arial',
       })
       .setOrigin(0.5, 0);
 
-    let curY = 44;
-    const lineH = 20;
-    const padX = 12;
+    let curY = 50;
+    const lineH = 22;
+    const padX = 14;
 
     for (const branch of this.puzzleData.branches) {
       this.add
         .text(padX, curY, `\u2500\u2500 ${branch.name}`, {
-          fontSize: '12px',
+          fontSize: '14px',
           fontStyle: 'bold',
           color: '#aaaacc',
           fontFamily: 'Arial',
@@ -728,7 +744,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
       for (const step of branch.steps) {
         const txt = this.add
           .text(padX + 8, curY, '', {
-            fontSize: '11px',
+            fontSize: '12px',
             color: '#666688',
             fontFamily: 'Arial',
           })
@@ -741,7 +757,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     this.add
       .text(padX, curY, '\u2500\u2500 final', {
-        fontSize: '12px',
+        fontSize: '14px',
         fontStyle: 'bold',
         color: '#aaaacc',
         fontFamily: 'Arial',
@@ -751,7 +767,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     const finalTxt = this.add
       .text(padX + 8, curY, '', {
-        fontSize: '11px',
+        fontSize: '12px',
         color: '#666688',
         fontFamily: 'Arial',
       })
@@ -771,7 +787,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
         txt.setColor('#2ecc71');
       } else if (this.debugMode) {
         const inputs = step.inputs
-          .map(inp => {
+          .map((inp) => {
             for (const branch of this.puzzleData.branches) {
               for (const s of branch.steps) {
                 if (s.stepId === inp) return `[${s.output}]`;
