@@ -21,3 +21,7 @@ A card/cooking puzzle game built with Phaser 3 and TypeScript.
 | `npm run lint` | Lint `src/` with oxlint |
 | `npm run format` | Format `src/**/*.ts` with oxfmt |
 | `npm run format:check` | Check formatting without writing |
+
+## Skills
+
+- When working on Phaser-related tasks (scenes, sprites, physics, tilemaps, animations, input, game architecture), always use the `/phaser-gamedev` skill.
