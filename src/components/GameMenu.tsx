@@ -4,6 +4,7 @@ import { convex } from '../lib/convex';
 import { gameStore } from '../store/gameStore';
 import { FONT_FAMILY } from '../config';
 import type { PuzzleData } from '../types';
+import { ChevronLeft, ChevronRight, Play, Upload } from 'lucide-react';
 
 type Category = 'Style' | 'Filling' | 'Method' | 'Base';
 
@@ -15,6 +16,8 @@ const WORD_LISTS: Record<Category, string[]> = {
 };
 
 const CATEGORIES: Category[] = ['Style', 'Filling', 'Method', 'Base'];
+
+const FOOD_ICONS = ['🍖', '🥩', '🍕', '🥪', '🥕', '🍴', '🔥', '💧', '☕'];
 
 function randomSelections(): Record<Category, number> {
   const result = {} as Record<Category, number>;
@@ -111,60 +114,137 @@ export function GameMenu() {
         justifyContent: 'center',
         fontFamily: font,
         zIndex: 10,
+        overflow: 'hidden',
       }}
     >
+      {/* Background food pattern */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          opacity: 0.12,
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(8, 1fr)',
+            gap: 40,
+            padding: 24,
+            height: '100%',
+            width: '100%',
+            transform: 'rotate(-5deg) scale(1.3)',
+          }}
+        >
+          {Array.from({ length: 48 }).map((_, i) => (
+            <div
+              key={i}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 32,
+              }}
+            >
+              {FOOD_ICONS[i % FOOD_ICONS.length]}
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Card */}
       <div
         style={{
-          width: 580,
-          padding: '24px 32px 20px',
+          width: 480,
+          padding: '20px 28px 16px',
           background: '#fffaf0',
-          borderRadius: 20,
+          borderRadius: 28,
           border: '4px solid #3e2723',
-          boxShadow: '0 8px 0 #3e2723',
+          boxShadow: '0 10px 0 #3e2723',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: 6,
+          gap: 2,
+          position: 'relative',
+          marginTop: 8,
+          zIndex: 10,
         }}
       >
-        <h1
+        {/* Top pin */}
+        <div
           style={{
-            fontSize: 32,
-            fontWeight: 'bold',
-            color: '#3e2723',
-            margin: '0 0 8px',
+            position: 'absolute',
+            top: 0,
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
           }}
         >
-          CREATE RECIPE
+          <div
+            style={{
+              width: 26,
+              height: 26,
+              background: '#ff5252',
+              borderRadius: '50%',
+              border: '3px solid #3e2723',
+              boxShadow: '0 2px 0 #3e2723',
+            }}
+          />
+        </div>
+
+        {/* Header */}
+        <h1
+          style={{
+            fontSize: 26,
+            fontWeight: 900,
+            color: '#3e2723',
+            margin: '2px 0 6px',
+            letterSpacing: '-0.03em',
+            textTransform: 'uppercase',
+          }}
+        >
+          Create Recipe
         </h1>
 
         {/* Selector rows */}
-        {CATEGORIES.map((cat) => (
-          <SelectorRow
-            key={cat}
-            category={cat}
-            value={WORD_LISTS[cat][indices[cat]]}
-            onPrev={() => cycleWord(cat, -1)}
-            onNext={() => cycleWord(cat, 1)}
-            disabled={isLoading}
-          />
-        ))}
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 4 }}>
+          {CATEGORIES.map((cat) => (
+            <SelectorRow
+              key={cat}
+              category={cat}
+              value={WORD_LISTS[cat][indices[cat]]}
+              onPrev={() => cycleWord(cat, -1)}
+              onNext={() => cycleWord(cat, 1)}
+              disabled={isLoading}
+            />
+          ))}
+        </div>
 
         {/* Summary box */}
         <div
           style={{
             width: '100%',
-            marginTop: 8,
             background: '#ffca28',
-            borderRadius: 16,
+            borderRadius: 14,
             border: '3px solid #3e2723',
-            boxShadow: '0 6px 0 #3e2723',
-            padding: '10px 16px 14px',
+            boxShadow: '0 5px 0 #3e2723',
+            padding: '10px 16px 12px',
             textAlign: 'center',
+            position: 'relative',
+            marginBottom: 6,
           }}
         >
-          <div style={{ fontSize: 10, fontWeight: 'bold', color: '#b45309', marginBottom: 4 }}>
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 900,
+              color: '#d84315',
+              marginBottom: 4,
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+            }}
+          >
             SELECTED ORDER
           </div>
           {customName.trim() ? (
@@ -174,7 +254,7 @@ export function GameMenu() {
               onChange={(e) => setCustomName(e.target.value)}
               style={{
                 fontSize: 19,
-                fontWeight: 'bold',
+                fontWeight: 900,
                 color: '#3e2723',
                 fontFamily: font,
                 background: 'transparent',
@@ -183,18 +263,22 @@ export function GameMenu() {
                 outline: 'none',
                 textAlign: 'center',
                 width: '90%',
-                caretColor: '#b45309',
+                caretColor: '#d84315',
                 textTransform: 'uppercase',
+                letterSpacing: '-0.02em',
               }}
             />
           ) : (
             <div
               style={{
                 fontSize: 19,
-                fontWeight: 'bold',
+                fontWeight: 900,
                 color: '#3e2723',
                 cursor: 'text',
-                minHeight: 26,
+                minHeight: 24,
+                lineHeight: 1.2,
+                textTransform: 'uppercase',
+                letterSpacing: '-0.02em',
               }}
               onClick={() => {
                 setCustomName(' ');
@@ -208,34 +292,36 @@ export function GameMenu() {
 
         {/* START RECIPE button */}
         <PushButton
-          label="▶  START RECIPE"
+          icon={<Play size={18} fill="currentColor" strokeWidth={0} />}
+          label="START RECIPE"
           color="#4caf50"
-          shadow="#2e7d32"
-          height={48}
-          shadowDepth={8}
+          hoverColor="#43a047"
+          height={44}
+          shadowDepth={6}
           onClick={onCook}
           disabled={isLoading}
-          style={{ width: '100%', marginTop: 8 }}
+          style={{ width: '100%' }}
         />
 
         {/* DEMO / LOAD buttons */}
-        <div style={{ display: 'flex', gap: 8, width: '100%' }}>
+        <div style={{ display: 'flex', gap: 8, width: '100%', marginTop: 2 }}>
           <PushButton
             label="DEMO"
             color="#29b6f6"
-            shadow="#0277bd"
-            height={40}
-            shadowDepth={6}
+            hoverColor="#03a9f4"
+            height={36}
+            shadowDepth={5}
             onClick={onDemo}
             disabled={isLoading}
             style={{ flex: 1 }}
           />
           <PushButton
+            icon={<Upload size={14} strokeWidth={3} />}
             label="LOAD"
             color="#9e9e9e"
-            shadow="#616161"
-            height={40}
-            shadowDepth={6}
+            hoverColor="#757575"
+            height={36}
+            shadowDepth={5}
             onClick={onLoadJSON}
             disabled={isLoading}
             style={{ flex: 1 }}
@@ -270,32 +356,51 @@ function SelectorRow({
     <div
       style={{
         width: '100%',
-        height: 44,
-        background: '#f5f0e8',
-        borderRadius: 8,
-        border: '2px solid #e8ddd0',
-        boxShadow: '0 3px 0 rgba(0,0,0,0.07)',
+        background: '#ffffff',
+        borderRadius: 14,
+        border: '2px solid #e0e0e0',
+        boxShadow: '0 3px 0 #e0e0e0',
         display: 'flex',
         alignItems: 'center',
-        padding: '0 12px',
+        padding: 4,
       }}
     >
-      <span style={{ fontSize: 11, color: '#a1887f', width: 80, flexShrink: 0 }}>
-        {category.toUpperCase()}
-      </span>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
-        <ArrowBtn glyph="‹" onClick={onPrev} disabled={disabled} />
-        <span style={{ fontSize: 17, fontWeight: 'bold', color: '#3e2723', minWidth: 120, textAlign: 'center' }}>
-          {value.toUpperCase()}
+      <div style={{ width: 80, paddingLeft: 8, flexShrink: 0 }}>
+        <span
+          style={{
+            fontSize: 11,
+            fontWeight: 900,
+            color: '#a1887f',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+          }}
+        >
+          {category}
         </span>
-        <ArrowBtn glyph="›" onClick={onNext} disabled={disabled} />
       </div>
+      <ArrowBtn direction="left" onClick={onPrev} disabled={disabled} />
+      <div
+        style={{
+          flex: 1,
+          textAlign: 'center',
+          fontSize: 18,
+          fontWeight: 900,
+          color: '#3e2723',
+          textTransform: 'uppercase',
+          letterSpacing: '0.04em',
+          userSelect: 'none',
+        }}
+      >
+        {value}
+      </div>
+      <ArrowBtn direction="right" onClick={onNext} disabled={disabled} />
     </div>
   );
 }
 
-function ArrowBtn({ glyph, onClick, disabled }: { glyph: string; onClick: () => void; disabled: boolean }) {
+function ArrowBtn({ direction, onClick, disabled }: { direction: 'left' | 'right'; onClick: () => void; disabled: boolean }) {
   const [hover, setHover] = useState(false);
+  const Icon = direction === 'left' ? ChevronLeft : ChevronRight;
   return (
     <div
       onMouseEnter={() => setHover(true)}
@@ -304,36 +409,38 @@ function ArrowBtn({ glyph, onClick, disabled }: { glyph: string; onClick: () => 
       style={{
         width: 34,
         height: 34,
-        borderRadius: 8,
-        background: hover && !disabled ? '#ddd5c8' : '#e8e0d8',
+        borderRadius: 10,
+        background: hover && !disabled ? '#eeeeee' : '#f5f5f5',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         cursor: disabled ? 'default' : 'pointer',
-        fontSize: 22,
         color: '#3e2723',
         userSelect: 'none',
-        fontFamily: FONT_FAMILY,
+        boxShadow: '0 1px 2px rgba(0,0,0,0.06)',
+        transition: 'background 0.15s',
       }}
     >
-      {glyph}
+      <Icon size={20} strokeWidth={3} />
     </div>
   );
 }
 
 function PushButton({
+  icon,
   label,
   color,
-  shadow,
+  hoverColor,
   height,
   shadowDepth,
   onClick,
   disabled,
   style,
 }: {
+  icon?: React.ReactNode;
   label: string;
   color: string;
-  shadow: string;
+  hoverColor: string;
   height: number;
   shadowDepth: number;
   onClick: () => void;
@@ -341,15 +448,26 @@ function PushButton({
   style?: React.CSSProperties;
 }) {
   const [pressed, setPressed] = useState(false);
+  const [hover, setHover] = useState(false);
+
+  const borderWidth = 3;
+  const outerRadius = 14;
+  const innerRadius = outerRadius - borderWidth;
 
   return (
     <div
       style={{
-        position: 'relative',
-        height: height + shadowDepth,
+        borderRadius: outerRadius,
+        border: `${borderWidth}px solid #3e2723`,
+        background: '#3e2723',
         cursor: disabled ? 'default' : 'pointer',
         userSelect: 'none',
         ...style,
+      }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => {
+        setHover(false);
+        setPressed(false);
       }}
       onMouseDown={() => {
         if (!disabled) setPressed(true);
@@ -360,37 +478,33 @@ function PushButton({
           onClick();
         }
       }}
-      onMouseLeave={() => setPressed(false)}
     >
-      {/* Shadow */}
-      <div
-        style={{
-          position: 'absolute',
-          top: shadowDepth,
-          left: 0,
-          right: 0,
-          height,
-          borderRadius: 10,
-          background: shadow,
-        }}
-      />
       {/* Face */}
       <div
         style={{
-          position: 'absolute',
-          top: pressed ? shadowDepth : 0,
-          left: 0,
-          right: 0,
           height,
-          borderRadius: 10,
-          background: color,
+          borderRadius: innerRadius,
+          background: hover && !disabled && !pressed ? hoverColor : color,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          transition: 'top 0.05s',
+          gap: 8,
+          marginBottom: pressed ? 0 : shadowDepth,
+          marginTop: pressed ? shadowDepth : 0,
+          transition: 'margin 0.08s, background 0.15s',
         }}
       >
-        <span style={{ fontSize: 17, fontWeight: 'bold', color: '#ffffff', fontFamily: FONT_FAMILY }}>
+        {icon}
+        <span
+          style={{
+            fontSize: 18,
+            fontWeight: 900,
+            color: '#ffffff',
+            fontFamily: FONT_FAMILY,
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+          }}
+        >
           {label}
         </span>
       </div>

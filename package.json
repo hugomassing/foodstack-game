@@ -26,6 +26,7 @@
     "@ai-sdk/mistral": "^3.0.21",
     "ai": "^6.0.105",
     "convex": "^1.32.0",
+    "lucide-react": "^0.575.0",
     "phaser": "^3.80.1",
     "react": "^19",
     "react-dom": "^19",
