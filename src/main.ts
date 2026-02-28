@@ -1,20 +1,22 @@
-import Phaser from 'phaser';
-import { PreloadScene } from './scenes/PreloadScene';
-import { TitleScene } from './scenes/TitleScene';
-import { CookingPuzzleScene } from './scenes/CookingPuzzleScene';
-import { GAME_W, GAME_H, DPR } from './config';
+import Phaser from "phaser";
+import { PreloadScene } from "./scenes/PreloadScene";
+import { TitleScene } from "./scenes/TitleScene";
+import { CookingPuzzleScene } from "./scenes/CookingPuzzleScene";
+import { GAME_W, GAME_H, DPR } from "./config";
 
 const config: Phaser.Types.Core.GameConfig = {
-  title: 'FoodStack',
+  title: "FoodStack",
   type: Phaser.AUTO,
   width: GAME_W * DPR,
   height: GAME_H * DPR,
-  parent: 'game-container',
-  backgroundColor: '#1a1a2e',
+  parent: "game-container",
+  backgroundColor: "#1a1a2e",
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
+
+  dom: { createContainer: true },
   scene: [PreloadScene, TitleScene, CookingPuzzleScene],
 };
 

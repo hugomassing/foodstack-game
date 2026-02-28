@@ -54,7 +54,7 @@ export class PuzzleCard extends FoodCard {
     this.setDepth(this.cardDepth);
 
     if (type === 'processor') {
-      this.setInteractive({ draggable: true, dropZone: true });
+      this.setInteractive({ draggable: true });
       const ring = scene.add.graphics();
       const pad = PROCESSOR_RING_PAD;
       ring.lineStyle(2, COLORS.PROCESSOR_RING, 0.8);

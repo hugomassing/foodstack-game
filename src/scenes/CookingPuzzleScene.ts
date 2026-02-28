@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { FOOD_CARD_W, FOOD_CARD_H } from '../gameObjects/FoodCard';
+import { FOOD_CARD_W, FOOD_CARD_H, FOOD_CARD_RADIUS } from '../gameObjects/FoodCard';
 import { PuzzleCard } from '../gameObjects/PuzzleCard';
 import { QuestBook } from '../gameObjects/QuestBook';
 import {
@@ -8,10 +8,12 @@ import {
   DPR,
   FONT_FAMILY,
   QUEST_PANEL_W,
+  TOPBAR_H,
   COLORS,
   TEXT_COLORS,
   PILE,
   SCATTER,
+  PROCESSOR_RING_PAD,
 } from '../config';
 import { FoodAssets } from '../data/food-assets';
 import type { PuzzleData, Step, Ingredient, Attachment } from '../types';
@@ -54,8 +56,12 @@ export class CookingPuzzleScene extends Phaser.Scene {
   private totalSteps!: number;
   private stepText!: Phaser.GameObjects.Text;
   private questBook!: QuestBook;
-  private activeProcessor: PuzzleCard | null = null;
-  private cookButton: Phaser.GameObjects.Container | null = null;
+  private hoveredProcessor: PuzzleCard | null = null;
+  private dropHighlight!: Phaser.GameObjects.Graphics;
+  private progressBarGfx!: Phaser.GameObjects.Graphics;
+  private progressBarMaxW = 0;
+  private progressBarInnerX = 0;
+  private progressBarInnerY = 0;
 
   constructor() {
     super({ key: 'CookingPuzzleScene' });
@@ -66,9 +72,33 @@ export class CookingPuzzleScene extends Phaser.Scene {
   }
 
   create(data: { puzzleData: PuzzleData }): void {
-    this.cameras.main.setBackgroundColor('#1a1a2e');
+    this.cameras.main.setBackgroundColor('#c4a070');
     this.cameras.main.setZoom(DPR);
     this.cameras.main.centerOn(GAME_W / 2, GAME_H / 2);
+
+    // Board plank texture
+    const planks = this.add.graphics().setDepth(-1);
+    // Alternating plank shading
+    let alt = false;
+    for (let x = QUEST_PANEL_W; x < GAME_W; x += 130) {
+      if (alt) {
+        planks.fillStyle(0x000000, 0.04);
+        planks.fillRect(x, 0, 130, GAME_H);
+      }
+      alt = !alt;
+    }
+    // Warmer, slightly more visible dividing lines
+    planks.lineStyle(1, 0x7a4a20, 0.22);
+    for (let x = QUEST_PANEL_W + 130; x < GAME_W; x += 130) {
+      planks.lineBetween(x, 0, x, GAME_H);
+    }
+
+    // Left-edge depth shadow (cue between sidebar and board)
+    const edgeShadow = this.add.graphics().setDepth(0);
+    edgeShadow.fillStyle(0x000000, 0.14);
+    edgeShadow.fillRect(QUEST_PANEL_W + 2, 0, 16, GAME_H);
+    edgeShadow.fillStyle(0x000000, 0.05);
+    edgeShadow.fillRect(QUEST_PANEL_W + 18, 0, 14, GAME_H);
 
     // Auto-set high resolution on all text objects
     const _addText = this.add.text.bind(this.add);
@@ -115,6 +145,75 @@ export class CookingPuzzleScene extends Phaser.Scene {
       this.availableIntermediates,
     );
 
+    // -- Top bar --
+    const TBAR_MARGIN = 8;
+    const TBAR_H = 54;
+    const TBAR_X = QUEST_PANEL_W + 12;
+    const TBAR_W = GAME_W - QUEST_PANEL_W - 24;
+    const TBAR_Y = TBAR_MARGIN;
+
+    // Drop shadow
+    const topBarShadow = this.add.graphics().setDepth(5);
+    topBarShadow.fillStyle(0x000000, 0.22);
+    topBarShadow.fillRoundedRect(TBAR_X + 4, TBAR_Y + 6, TBAR_W, TBAR_H, 12);
+
+    // Card body
+    const topBarBg = this.add.graphics().setDepth(6);
+    topBarBg.fillStyle(0xffffff, 1);
+    topBarBg.fillRoundedRect(TBAR_X, TBAR_Y, TBAR_W, TBAR_H, 12);
+    topBarBg.lineStyle(3, 0x222222, 1);
+    topBarBg.strokeRoundedRect(TBAR_X, TBAR_Y, TBAR_W, TBAR_H, 12);
+
+    // Dish name — centered in upper portion
+    this.add
+      .text(TBAR_X + TBAR_W / 2, TBAR_Y + 22, this.puzzleData.dishName, {
+        fontSize: '17px',
+        fontStyle: 'bold',
+        color: '#1a1a1a',
+        fontFamily: FONT_FAMILY,
+      })
+      .setOrigin(0.5)
+      .setDepth(7);
+
+    // Step counter — right-aligned
+    this.stepText = this.add
+      .text(TBAR_X + TBAR_W - 14, TBAR_Y + 22, `0/${this.totalSteps} steps`, {
+        fontSize: '12px',
+        color: '#6b7280',
+        fontFamily: FONT_FAMILY,
+      })
+      .setOrigin(1, 0.5)
+      .setDepth(7);
+
+    // Progress bar (track + animated fill)
+    const PROG_PAD = 14;
+    const PROG_H = 6;
+    const PROG_Y = TBAR_Y + TBAR_H - PROG_H - 8;
+    const PROG_X = TBAR_X + PROG_PAD;
+    const PROG_W = TBAR_W - PROG_PAD * 2;
+
+    const progTrack = this.add.graphics().setDepth(7);
+    progTrack.fillStyle(0xe5e7eb, 1);
+    progTrack.fillRoundedRect(PROG_X, PROG_Y, PROG_W, PROG_H, 3);
+
+    this.progressBarGfx = this.add.graphics().setDepth(8);
+    this.progressBarMaxW = PROG_W;
+    this.progressBarInnerX = PROG_X;
+    this.progressBarInnerY = PROG_Y;
+    this.drawProgressBar(0);
+
+    // -- Drop highlight graphic (pulsing outline drawn over the hovered processor) --
+    this.dropHighlight = this.add.graphics();
+    this.dropHighlight.setVisible(false).setDepth(99);
+    this.tweens.add({
+      targets: this.dropHighlight,
+      alpha: { from: 0.45, to: 1 },
+      duration: 480,
+      repeat: -1,
+      yoyo: true,
+      ease: 'Sine.easeInOut',
+    });
+
     // -- Drag support --
     this.input.on(
       'drag',
@@ -129,6 +228,15 @@ export class CookingPuzzleScene extends Phaser.Scene {
               att.card.x = dragX;
               att.card.y = dragY + PILE.BASE_Y + i * PILE.OFFSET_Y;
             });
+          }
+        } else {
+          // Spatial overlap — find the processor most overlapped by this card
+          const proc = this.findOverlappingProcessor(obj);
+          this.hoveredProcessor = proc;
+          if (proc) {
+            this.updateDropHighlight(proc);
+          } else {
+            this.dropHighlight.setVisible(false);
           }
         }
       },
@@ -147,6 +255,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
           });
         }
       }
+      this.hoveredProcessor = null;
+      this.dropHighlight.setVisible(false);
     });
 
     this.input.on('dragend', (_pointer: Phaser.Input.Pointer, obj: PuzzleCard) => {
@@ -161,53 +271,51 @@ export class CookingPuzzleScene extends Phaser.Scene {
           });
         }
       }
+      // Spatial drop: attach if an overlapping processor was found
+      if ((obj.cardType === 'ingredient' || obj.cardType === 'intermediate') && this.hoveredProcessor) {
+        this.attachToProcessor(obj, this.hoveredProcessor);
+      }
+      this.hoveredProcessor = null;
+      this.dropHighlight.setVisible(false);
     });
-
-    this.input.on(
-      'drop',
-      (_pointer: Phaser.Input.Pointer, obj: PuzzleCard, dropZone: PuzzleCard) => {
-        if (
-          (obj.cardType === 'ingredient' || obj.cardType === 'intermediate') &&
-          dropZone.cardType === 'processor'
-        ) {
-          if (this.activeProcessor && this.activeProcessor !== dropZone) return;
-          this.attachToProcessor(obj, dropZone);
-        }
-      },
-    );
 
     // -- Scatter cards --
     this.scatterCards();
 
-    // -- Footer --
-    this.add
-      .text(this.gameCenterX, GAME_H - 22, this.puzzleData.dishName, {
-        fontSize: '18px',
-        fontStyle: 'bold',
-        color: TEXT_COLORS.WHITE,
-        fontFamily: FONT_FAMILY,
-      })
-      .setOrigin(0.5);
+    // -- Board footer strip --
+    const FOOTER_H = 36;
+    const footerBg = this.add.graphics().setDepth(4);
+    footerBg.fillStyle(0x000000, 0.2);
+    footerBg.fillRect(QUEST_PANEL_W, GAME_H - FOOTER_H, GAME_W - QUEST_PANEL_W, FOOTER_H);
+    footerBg.lineStyle(1, 0x000000, 0.25);
+    footerBg.lineBetween(QUEST_PANEL_W, GAME_H - FOOTER_H, GAME_W, GAME_H - FOOTER_H);
 
-    this.stepText = this.add
-      .text(GAME_W - 22, GAME_H - 22, `0/${this.totalSteps} steps`, {
-        fontSize: '16px',
-        color: TEXT_COLORS.STEP_COUNTER,
-        fontFamily: FONT_FAMILY,
-      })
-      .setOrigin(1, 0.5);
+    // Download pill button
+    const DL_W = 108;
+    const DL_H = 22;
+    const DL_X = QUEST_PANEL_W + 14;
+    const DL_Y = GAME_H - FOOTER_H / 2 - DL_H / 2;
+    const dlBtnBg = this.add.graphics().setDepth(5);
+    const drawDlBg = (hover: boolean) => {
+      dlBtnBg.clear();
+      dlBtnBg.fillStyle(0xffffff, hover ? 0.28 : 0.16);
+      dlBtnBg.lineStyle(1, 0xffffff, hover ? 0.7 : 0.4);
+      dlBtnBg.fillRoundedRect(DL_X, DL_Y, DL_W, DL_H, 6);
+      dlBtnBg.strokeRoundedRect(DL_X, DL_Y, DL_W, DL_H, 6);
+    };
+    drawDlBg(false);
 
-    // -- Download recipe button --
     const dlBtn = this.add
-      .text(QUEST_PANEL_W + 10, GAME_H - 20, 'Download JSON', {
+      .text(DL_X + DL_W / 2, GAME_H - FOOTER_H / 2, '\u2193 Export JSON', {
         fontSize: '11px',
-        color: TEXT_COLORS.LINK,
+        color: '#ffffff',
         fontFamily: FONT_FAMILY,
       })
-      .setOrigin(0, 0.5)
+      .setOrigin(0.5)
+      .setDepth(6)
       .setInteractive({ useHandCursor: true });
-    dlBtn.on('pointerover', () => dlBtn.setColor(TEXT_COLORS.LINK_HOVER));
-    dlBtn.on('pointerout', () => dlBtn.setColor(TEXT_COLORS.LINK));
+    dlBtn.on('pointerover', () => drawDlBg(true));
+    dlBtn.on('pointerout', () => drawDlBg(false));
     dlBtn.on('pointerdown', () => {
       const json = JSON.stringify(this.puzzleData, null, 2);
       const blob = new Blob([json], { type: 'application/json' });
@@ -230,7 +338,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
   private scatterCards(): void {
     const minX = QUEST_PANEL_W + FOOD_CARD_W / 2 + SCATTER.PAD;
     const maxX = GAME_W - FOOD_CARD_W / 2 - SCATTER.PAD;
-    const minY = FOOD_CARD_H / 2 + SCATTER.PAD;
+    const minY = TOPBAR_H + FOOD_CARD_H / 2 + SCATTER.PAD;
     const maxY = GAME_H - FOOD_CARD_H / 2 - SCATTER.FOOTER;
 
     const positions: { x: number; y: number }[] = [];
@@ -355,11 +463,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     this.layoutAttachedCards(procCard);
 
-    if (!this.activeProcessor) {
-      this.activeProcessor = procCard;
-      this.disableOtherProcessors(procCard);
-    }
-    this.showCookButton();
+    this.checkProcessorMatch(procCard);
   }
 
   private detachFromProcessor(ingredientCard: PuzzleCard): void {
@@ -373,10 +477,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
       this.layoutAttachedCards(procCard);
     }
     ingredientCard.attachedTo = null;
-
-    if (this.activeProcessor === procCard && attachments && attachments.length === 0) {
-      this.deactivateProcessor();
-    }
   }
 
   private layoutAttachedCards(procCard: PuzzleCard): void {
@@ -461,7 +561,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     for (const att of toDetach) {
       att.card.attachedTo = null;
       const newX = Phaser.Math.Between(QUEST_PANEL_W + 68, GAME_W - 68);
-      const newY = Phaser.Math.Between(45, GAME_H - 68);
+      const newY = Phaser.Math.Between(TOPBAR_H + 20, GAME_H - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10);
       this.tweens.add({
         targets: att.card,
         x: newX,
@@ -471,7 +571,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
       });
     }
     attachments.length = 0;
-    this.deactivateProcessor();
   }
 
   // -- Step Success --
@@ -480,6 +579,16 @@ export class CookingPuzzleScene extends Phaser.Scene {
     this.completedSteps.add(step.stepId);
     this.stepCount++;
     this.stepText.setText(`${this.stepCount}/${this.totalSteps} steps`);
+
+    // Animate progress bar
+    const progObj = { value: (this.stepCount - 1) / this.totalSteps };
+    this.tweens.add({
+      targets: progObj,
+      value: this.stepCount / this.totalSteps,
+      duration: 500,
+      ease: 'Sine.easeOut',
+      onUpdate: () => this.drawProgressBar(progObj.value),
+    });
 
     for (const inp of step.inputs) {
       if (this.availableIntermediates.has(inp)) {
@@ -537,7 +646,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
     }
 
     this.questBook.refresh();
-    this.deactivateProcessor();
 
     if (isFinal) {
       this.time.delayedCall(400, () => this.onVictory(step.output));
@@ -596,97 +704,66 @@ export class CookingPuzzleScene extends Phaser.Scene {
     });
   }
 
-  // -- Cook Button & Processor Activation --
+  // -- Spatial drop helpers --
 
-  private showCookButton(): void {
-    if (this.cookButton) return;
+  private findOverlappingProcessor(card: PuzzleCard): PuzzleCard | null {
+    const cardRect = new Phaser.Geom.Rectangle(
+      card.x - FOOD_CARD_W / 2,
+      card.y - FOOD_CARD_H / 2,
+      FOOD_CARD_W,
+      FOOD_CARD_H,
+    );
 
-    const btnW = 140;
-    const btnH = 50;
-    const btnX = this.gameCenterX;
-    const btnY = GAME_H - 70;
+    let best: PuzzleCard | null = null;
+    let bestArea = 0;
 
-    const container = this.add.container(btnX, btnY).setDepth(150);
+    for (const [, procCard] of this.processorCards) {
+      const procRect = new Phaser.Geom.Rectangle(
+        procCard.x - FOOD_CARD_W / 2,
+        procCard.y - FOOD_CARD_H / 2,
+        FOOD_CARD_W,
+        FOOD_CARD_H,
+      );
+      if (!Phaser.Geom.Intersects.RectangleToRectangle(cardRect, procRect)) continue;
 
-    const bg = this.add.graphics();
-    bg.fillStyle(0xe74c3c, 1);
-    bg.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 14);
-    container.add(bg);
-
-    const label = this.add
-      .text(0, 0, 'Cook!', {
-        fontSize: '22px',
-        fontStyle: 'bold',
-        color: TEXT_COLORS.WHITE,
-        fontFamily: FONT_FAMILY,
-      })
-      .setOrigin(0.5);
-    container.add(label);
-
-    container.setSize(btnW, btnH);
-    container.setInteractive({ useHandCursor: true });
-    container.on('pointerover', () => {
-      bg.clear();
-      bg.fillStyle(0xc0392b, 1);
-      bg.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 14);
-    });
-    container.on('pointerout', () => {
-      bg.clear();
-      bg.fillStyle(0xe74c3c, 1);
-      bg.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 14);
-    });
-    container.on('pointerdown', () => this.onCookButtonPressed());
-
-    container.setScale(0);
-    this.tweens.add({
-      targets: container,
-      scaleX: 1,
-      scaleY: 1,
-      duration: 200,
-      ease: 'Back.easeOut',
-    });
-
-    this.cookButton = container;
-  }
-
-  private hideCookButton(): void {
-    if (!this.cookButton) return;
-    const btn = this.cookButton;
-    this.cookButton = null;
-    this.tweens.add({
-      targets: btn,
-      scaleX: 0,
-      scaleY: 0,
-      duration: 150,
-      ease: 'Quad.easeIn',
-      onComplete: () => btn.destroy(),
-    });
-  }
-
-  private onCookButtonPressed(): void {
-    if (!this.activeProcessor) return;
-    this.checkProcessorMatch(this.activeProcessor);
-  }
-
-  private deactivateProcessor(): void {
-    this.activeProcessor = null;
-    this.enableAllProcessors();
-    this.hideCookButton();
-  }
-
-  private disableOtherProcessors(active: PuzzleCard): void {
-    for (const [, card] of this.processorCards) {
-      if (card !== active) {
-        card.disableInteractive();
-        card.setAlpha(0.5);
+      const overlapW = Math.min(cardRect.right, procRect.right) - Math.max(cardRect.left, procRect.left);
+      const overlapH = Math.min(cardRect.bottom, procRect.bottom) - Math.max(cardRect.top, procRect.top);
+      const area = overlapW * overlapH;
+      if (area > bestArea) {
+        bestArea = area;
+        best = procCard;
       }
     }
+
+    return best;
   }
 
-  private enableAllProcessors(): void {
-    for (const [, card] of this.processorCards) {
-      card.setInteractive({ dropZone: true });
-      card.setAlpha(1);
+  private updateDropHighlight(procCard: PuzzleCard): void {
+    const pad = PROCESSOR_RING_PAD + 5;
+    this.dropHighlight.clear();
+    this.dropHighlight.lineStyle(3, 0x00ff88, 1);
+    this.dropHighlight.strokeRoundedRect(
+      procCard.x - FOOD_CARD_W / 2 - pad,
+      procCard.y - FOOD_CARD_H / 2 - pad,
+      FOOD_CARD_W + pad * 2,
+      FOOD_CARD_H + pad * 2,
+      FOOD_CARD_RADIUS + pad,
+    );
+    this.dropHighlight.setVisible(true);
+  }
+
+  private drawProgressBar(fraction: number): void {
+    this.progressBarGfx.clear();
+    const w = this.progressBarMaxW * Math.min(1, Math.max(0, fraction));
+    if (w > 0) {
+      this.progressBarGfx.fillStyle(0x22c55e, 1);
+      this.progressBarGfx.fillRoundedRect(
+        this.progressBarInnerX,
+        this.progressBarInnerY,
+        w,
+        6,
+        3,
+      );
     }
   }
 

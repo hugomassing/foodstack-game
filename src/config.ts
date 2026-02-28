@@ -5,7 +5,10 @@ export const DPR = Math.min(window.devicePixelRatio || 1, 2);
 export const FONT_FAMILY = 'Arial, sans-serif';
 
 // Quest panel
-export const QUEST_PANEL_W = 280;
+export const QUEST_PANEL_W = 240;
+
+// Reserved space at top of board (margin + bar + gap)
+export const TOPBAR_H = 70;
 
 export const QUEST_BOOK = {
   TITLE_Y: 16,
@@ -18,8 +21,9 @@ export const QUEST_BOOK = {
 
 // Colors (hex ints)
 export const COLORS = {
-  QUEST_BG: 0x151528,
-  SEPARATOR: 0x444466,
+  QUEST_BG: 0xfff8e7,
+  SEPARATOR: 0x222222,
+  QUEST_ITEM_ACTIVE: 0xfef9c3,
   SUCCESS_FLASH: 0x2ecc71,
   PROCESSOR_RING: 0xf1c40f,
   OVERLAY: 0x000000,
@@ -29,13 +33,14 @@ export const COLORS = {
 export const TEXT_COLORS = {
   GOLD: '#f1c40f',
   WHITE: '#ffffff',
-  DIM: '#666688',
-  BRANCH: '#aaaacc',
-  SUCCESS: '#2ecc71',
+  DARK: '#1a1a1a',
+  DIM: '#9ca3af',
+  BRANCH: '#6b7280',
+  SUCCESS: '#16a34a',
   LINK: '#5dade2',
   LINK_HOVER: '#85c1e9',
   DEBUG: '#e67e22',
-  STEP_COUNTER: '#aaaacc',
+  STEP_COUNTER: '#6b7280',
 } as const;
 
 // Pile / attachment layout
@@ -47,7 +52,7 @@ export const PILE = {
 // Scatter padding
 export const SCATTER = {
   PAD: 10,
-  FOOTER: 30,
+  FOOTER: 44,
   CARD_GAP: 8,
   GRID_GAP: 14,
   GRID_JITTER: 5,
