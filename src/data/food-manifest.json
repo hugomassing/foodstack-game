@@ -1,0 +1,3810 @@
+[
+  {
+    "id": "acorn",
+    "label": "Acorn",
+    "category": "ingredient",
+    "filename": "food/ingredient/acorn.png",
+    "color": "#e8a868",
+    "description": "A small, hard nut from an oak tree, sometimes used in specialty cooking.",
+    "tags": [
+      "nut",
+      "hard",
+      "small",
+      "wild",
+      "earthy",
+      "foraging",
+      "niche"
+    ]
+  },
+  {
+    "id": "amphora",
+    "label": "Amphora",
+    "category": "utensil",
+    "filename": "food/utensil/amphora.png",
+    "color": "#c06848",
+    "description": "An ancient two-handled ceramic vessel used for storing wine, oil, and grain",
+    "tags": [
+      "vessel",
+      "ceramic",
+      "ancient",
+      "storage",
+      "wine",
+      "oil",
+      "pottery"
+    ]
+  },
+  {
+    "id": "apple",
+    "label": "Apple",
+    "category": "fruit",
+    "filename": "food/fruit/apple.png",
+    "color": "#e02848",
+    "description": "A crisp, sweet-tart fruit with a smooth red skin.",
+    "tags": [
+      "sweet",
+      "tart",
+      "crunchy",
+      "fresh",
+      "raw",
+      "juicy",
+      "classic"
+    ]
+  },
+  {
+    "id": "avocado",
+    "label": "Avocado",
+    "category": "fruit",
+    "filename": "food/fruit/avocado.png",
+    "color": "#c8f078",
+    "description": "A creamy, buttery green fruit rich in healthy fats.",
+    "tags": [
+      "creamy",
+      "buttery",
+      "healthy-fat",
+      "green",
+      "soft",
+      "fresh",
+      "mild"
+    ]
+  },
+  {
+    "id": "baby_bottle",
+    "label": "Baby Bottle",
+    "category": "utensil",
+    "filename": "food/utensil/baby_bottle.png",
+    "color": "#98a8b0",
+    "description": "A bottle with a nipple used for feeding infants milk or formula",
+    "tags": [
+      "bottle",
+      "baby",
+      "milk",
+      "infant",
+      "feeding",
+      "nurture",
+      "drink-vessel"
+    ]
+  },
+  {
+    "id": "bacon",
+    "label": "Bacon",
+    "category": "protein",
+    "filename": "food/protein/bacon.png",
+    "color": "#f88068",
+    "description": "Thin, crispy strips of cured and smoked pork belly.",
+    "tags": [
+      "crispy",
+      "smoky",
+      "salty",
+      "cured",
+      "pork",
+      "breakfast",
+      "savory"
+    ]
+  },
+  {
+    "id": "bagel",
+    "label": "Bagel",
+    "category": "grain",
+    "filename": "food/grain/bagel.png",
+    "color": "#c06848",
+    "description": "A round, dense bread roll with a hole in the center, boiled then baked.",
+    "tags": [
+      "round",
+      "dense",
+      "boiled",
+      "baked",
+      "chewy",
+      "breakfast",
+      "ring-shaped"
+    ]
+  },
+  {
+    "id": "baguette",
+    "label": "Baguette",
+    "category": "grain",
+    "filename": "food/grain/baguette.png",
+    "color": "#e8b880",
+    "description": "A long, crusty French bread loaf with a golden crust.",
+    "tags": [
+      "baked",
+      "crusty",
+      "french",
+      "long",
+      "golden",
+      "artisan",
+      "crispy"
+    ]
+  },
+  {
+    "id": "banana",
+    "label": "Banana",
+    "category": "fruit",
+    "filename": "food/fruit/banana.png",
+    "color": "#f8c828",
+    "description": "A soft, sweet tropical fruit with a yellow peel.",
+    "tags": [
+      "sweet",
+      "soft",
+      "tropical",
+      "energy",
+      "potassium-rich",
+      "peelable",
+      "snack"
+    ]
+  },
+  {
+    "id": "beans",
+    "label": "Beans",
+    "category": "vegetable",
+    "filename": "food/vegetable/beans.png",
+    "color": "#c86848",
+    "description": "A handful of dried beans, a protein-rich legume staple.",
+    "tags": [
+      "legume",
+      "protein-rich",
+      "dried",
+      "starchy",
+      "versatile",
+      "staple",
+      "hearty"
+    ]
+  },
+  {
+    "id": "beer",
+    "label": "Beer",
+    "category": "drink",
+    "filename": "food/drink/beer.png",
+    "color": "#f0c040",
+    "description": "A carbonated alcoholic beverage brewed from grain and hops.",
+    "tags": [
+      "alcoholic",
+      "carbonated",
+      "bitter",
+      "brewed",
+      "cold",
+      "grain-based",
+      "refreshing"
+    ]
+  },
+  {
+    "id": "beer_mugs",
+    "label": "Clinking Beer Mugs",
+    "category": "utensil",
+    "filename": "food/utensil/beer_mugs.png",
+    "color": "#f8a830",
+    "description": "Two foaming beer mugs clinking together in a festive toast",
+    "tags": [
+      "glass",
+      "beer",
+      "mug",
+      "celebration",
+      "toast",
+      "party",
+      "drink-vessel"
+    ]
+  },
+  {
+    "id": "beet",
+    "label": "Beet",
+    "category": "vegetable",
+    "filename": "food/vegetable/beet.png",
+    "color": "#b03058",
+    "description": "A deep purple root vegetable with an earthy, sweet flavor.",
+    "tags": [
+      "root",
+      "earthy",
+      "sweet",
+      "purple",
+      "staining",
+      "nutritious",
+      "roasted"
+    ]
+  },
+  {
+    "id": "bento",
+    "label": "Bento",
+    "category": "prepared",
+    "filename": "food/prepared/bento.png",
+    "color": "#282830",
+    "description": "A compartmentalized Japanese lunch box with rice, protein, and sides.",
+    "tags": [
+      "japanese",
+      "compartmented",
+      "lunch",
+      "rice-based",
+      "balanced",
+      "portable",
+      "colorful"
+    ]
+  },
+  {
+    "id": "blueberry",
+    "label": "Blueberry",
+    "category": "fruit",
+    "filename": "food/fruit/blueberry.png",
+    "color": "#8800f8",
+    "description": "A small, round berry with a sweet and slightly tart flavor.",
+    "tags": [
+      "sweet",
+      "tart",
+      "berry",
+      "small",
+      "antioxidant",
+      "purple",
+      "snack"
+    ]
+  },
+  {
+    "id": "bok_choy",
+    "label": "Bok Choy",
+    "category": "vegetable",
+    "filename": "food/vegetable/bok_choy.png",
+    "color": "#70b050",
+    "description": "A leafy Asian green vegetable with crisp white stems.",
+    "tags": [
+      "leafy",
+      "asian",
+      "green",
+      "crisp",
+      "stir-fry",
+      "mild",
+      "crunchy"
+    ]
+  },
+  {
+    "id": "bowl_spoon",
+    "label": "Bowl with Spoon",
+    "category": "utensil",
+    "filename": "food/utensil/bowl_spoon.png",
+    "color": "#602010",
+    "description": "A round bowl with a spoon, used for serving cereal, soup, or porridge",
+    "tags": [
+      "bowl",
+      "spoon",
+      "cereal",
+      "soup",
+      "porridge",
+      "serving",
+      "kitchen"
+    ]
+  },
+  {
+    "id": "bread_loaf",
+    "label": "Bread Loaf",
+    "category": "grain",
+    "filename": "food/grain/bread_loaf.png",
+    "color": "#d08048",
+    "description": "A whole loaf of baked bread, a staple carbohydrate food.",
+    "tags": [
+      "baked",
+      "starchy",
+      "staple",
+      "whole",
+      "carb",
+      "soft",
+      "versatile"
+    ]
+  },
+  {
+    "id": "bread_slice",
+    "label": "Bread Slice",
+    "category": "grain",
+    "filename": "food/grain/bread_slice.png",
+    "color": "#f0d0a0",
+    "description": "A single slice of bread, the base for sandwiches and toast.",
+    "tags": [
+      "baked",
+      "starchy",
+      "sliced",
+      "sandwich-base",
+      "carb",
+      "soft",
+      "toast"
+    ]
+  },
+  {
+    "id": "broccoli",
+    "label": "Broccoli",
+    "category": "vegetable",
+    "filename": "food/vegetable/broccoli.png",
+    "color": "#009040",
+    "description": "A green cruciferous vegetable with dense, tree-like florets.",
+    "tags": [
+      "green",
+      "cruciferous",
+      "florets",
+      "healthy",
+      "crunchy",
+      "steamed",
+      "nutritious"
+    ]
+  },
+  {
+    "id": "bubble_tea",
+    "label": "Bubble Tea",
+    "category": "drink",
+    "filename": "food/drink/bubble_tea.png",
+    "color": "#d0a070",
+    "description": "A tall cup of milky tea with chewy tapioca pearls at the bottom.",
+    "tags": [
+      "sweet",
+      "milky",
+      "tapioca",
+      "asian",
+      "cold",
+      "chewy",
+      "trendy"
+    ]
+  },
+  {
+    "id": "bun_bottom",
+    "label": "Bun Bottom",
+    "category": "grain",
+    "filename": "food/grain/bun_bottom.png",
+    "color": "#f8d8b0",
+    "description": "The bottom half of a burger bun, the base layer of a burger stack.",
+    "tags": [
+      "baked",
+      "starchy",
+      "burger-part",
+      "base",
+      "soft",
+      "round",
+      "assembly"
+    ]
+  },
+  {
+    "id": "bun_top",
+    "label": "Bun Top",
+    "category": "grain",
+    "filename": "food/grain/bun_top.png",
+    "color": "#e8a868",
+    "description": "The top half of a sesame burger bun, the crown of a burger stack.",
+    "tags": [
+      "baked",
+      "starchy",
+      "burger-part",
+      "top",
+      "sesame",
+      "round",
+      "assembly"
+    ]
+  },
+  {
+    "id": "burger",
+    "label": "Burger",
+    "category": "prepared",
+    "filename": "food/prepared/burger.png",
+    "color": "#e8a868",
+    "description": "A classic assembled burger with bun, patty, and toppings.",
+    "tags": [
+      "assembled",
+      "fast-food",
+      "american",
+      "hearty",
+      "layered",
+      "grilled",
+      "classic"
+    ]
+  },
+  {
+    "id": "burrito",
+    "label": "Burrito",
+    "category": "prepared",
+    "filename": "food/prepared/burrito.png",
+    "color": "#f8c848",
+    "description": "A large flour tortilla wrapped around a filling of rice, beans, and meat.",
+    "tags": [
+      "mexican",
+      "wrapped",
+      "filled",
+      "large",
+      "portable",
+      "hearty",
+      "assembled"
+    ]
+  },
+  {
+    "id": "butter",
+    "label": "Butter",
+    "category": "dairy",
+    "filename": "food/dairy/butter.png",
+    "color": "#f8c828",
+    "description": "A rich dairy fat churned from cream, used in cooking and baking.",
+    "tags": [
+      "fatty",
+      "rich",
+      "dairy",
+      "creamy",
+      "baking",
+      "cooking",
+      "golden"
+    ]
+  },
+  {
+    "id": "cabbage",
+    "label": "Cabbage",
+    "category": "vegetable",
+    "filename": "food/vegetable/cabbage.png",
+    "color": "#50b850",
+    "description": "A leafy green vegetable with tightly packed layers.",
+    "tags": [
+      "leafy",
+      "green",
+      "layered",
+      "crunchy",
+      "versatile",
+      "coleslaw",
+      "fermentable"
+    ]
+  },
+  {
+    "id": "cake",
+    "label": "Cake",
+    "category": "sweet",
+    "filename": "food/sweet/cake.png",
+    "color": "#e08058",
+    "description": "A layered, frosted sponge dessert, baked for celebrations.",
+    "tags": [
+      "sweet",
+      "baked",
+      "layered",
+      "frosted",
+      "celebration",
+      "sponge",
+      "dessert"
+    ]
+  },
+  {
+    "id": "cake_slice",
+    "label": "Cake Slice",
+    "category": "sweet",
+    "filename": "food/sweet/cake_slice.png",
+    "color": "#f8d880",
+    "description": "A triangular slice of layered cake with cream and a strawberry on top.",
+    "tags": [
+      "sweet",
+      "layered",
+      "sliced",
+      "cream",
+      "strawberry",
+      "dessert",
+      "elegant"
+    ]
+  },
+  {
+    "id": "candy",
+    "label": "Candy",
+    "category": "sweet",
+    "filename": "food/sweet/candy.png",
+    "color": "#f888a8",
+    "description": "A small, wrapped sweet confection made from sugar.",
+    "tags": [
+      "sweet",
+      "sugary",
+      "wrapped",
+      "small",
+      "confection",
+      "colorful",
+      "treat"
+    ]
+  },
+  {
+    "id": "candy_cane",
+    "label": "Candy Cane",
+    "category": "sweet",
+    "filename": "food/sweet/candy_cane.png",
+    "color": "#e02848",
+    "description": "A red-and-white striped, curved peppermint candy stick.",
+    "tags": [
+      "sweet",
+      "peppermint",
+      "striped",
+      "curved",
+      "christmas",
+      "festive",
+      "hard-candy"
+    ]
+  },
+  {
+    "id": "canned_food",
+    "label": "Canned Food",
+    "category": "ingredient",
+    "filename": "food/ingredient/canned_food.png",
+    "color": "#589038",
+    "description": "A sealed tin can of preserved food, shelf-stable and versatile.",
+    "tags": [
+      "preserved",
+      "canned",
+      "shelf-stable",
+      "versatile",
+      "pantry",
+      "metal",
+      "sealed"
+    ]
+  },
+  {
+    "id": "carrot",
+    "label": "Carrot",
+    "category": "vegetable",
+    "filename": "food/vegetable/carrot.png",
+    "color": "#f89000",
+    "description": "A bright orange root vegetable, sweet and crunchy when raw.",
+    "tags": [
+      "orange",
+      "root",
+      "sweet",
+      "crunchy",
+      "raw",
+      "healthy",
+      "versatile"
+    ]
+  },
+  {
+    "id": "cereal",
+    "label": "Cereal",
+    "category": "grain",
+    "filename": "food/grain/cereal.png",
+    "color": "#f8b8c0",
+    "description": "Processed breakfast grain flakes, typically served with milk.",
+    "tags": [
+      "breakfast",
+      "crunchy",
+      "processed",
+      "sweet",
+      "grain",
+      "quick",
+      "morning"
+    ]
+  },
+  {
+    "id": "cereal_box",
+    "label": "Cereal Box",
+    "category": "grain",
+    "filename": "food/grain/cereal_box.png",
+    "color": "#f8c828",
+    "description": "A boxed package of breakfast cereal.",
+    "tags": [
+      "breakfast",
+      "packaged",
+      "processed",
+      "grain",
+      "boxed",
+      "morning",
+      "shelf-stable"
+    ]
+  },
+  {
+    "id": "champagne",
+    "label": "Champagne",
+    "category": "drink",
+    "filename": "food/drink/champagne.png",
+    "color": "#204010",
+    "description": "A bottle of sparkling champagne with the cork popping off.",
+    "tags": [
+      "alcoholic",
+      "sparkling",
+      "celebration",
+      "bubbly",
+      "french",
+      "premium",
+      "festive"
+    ]
+  },
+  {
+    "id": "cheese",
+    "label": "Cheese",
+    "category": "dairy",
+    "filename": "food/dairy/cheese.png",
+    "color": "#f8c828",
+    "description": "A solid dairy product with a rich, savory flavor, aged from milk curds.",
+    "tags": [
+      "savory",
+      "dairy",
+      "aged",
+      "rich",
+      "protein-rich",
+      "melty",
+      "versatile"
+    ]
+  },
+  {
+    "id": "cheese_slice",
+    "label": "Cheese Slice",
+    "category": "dairy",
+    "filename": "food/dairy/cheese_slice.png",
+    "color": "#f8c828",
+    "description": "A thin, pre-cut slice of cheese, perfect for sandwiches and burgers.",
+    "tags": [
+      "savory",
+      "dairy",
+      "sliced",
+      "melty",
+      "sandwich",
+      "burger-topping",
+      "mild"
+    ]
+  },
+  {
+    "id": "cheeseburger",
+    "label": "Cheeseburger",
+    "category": "prepared",
+    "filename": "food/prepared/cheeseburger.png",
+    "color": "#d08048",
+    "description": "A burger topped with melted cheese, a fast-food icon.",
+    "tags": [
+      "assembled",
+      "fast-food",
+      "american",
+      "cheesy",
+      "melted",
+      "grilled",
+      "classic"
+    ]
+  },
+  {
+    "id": "cheesecake",
+    "label": "Cheesecake",
+    "category": "sweet",
+    "filename": "food/sweet/cheesecake.png",
+    "color": "#f8d0a0",
+    "description": "A rich, creamy dessert with a biscuit base and smooth cheese filling.",
+    "tags": [
+      "creamy",
+      "rich",
+      "biscuit-base",
+      "cheese-filling",
+      "chilled",
+      "dessert",
+      "indulgent"
+    ]
+  },
+  {
+    "id": "cherry",
+    "label": "Cherry",
+    "category": "fruit",
+    "filename": "food/fruit/cherry.png",
+    "color": "#a02838",
+    "description": "A small, round stone fruit with a deep red color and sweet-tart taste.",
+    "tags": [
+      "sweet",
+      "tart",
+      "stone-fruit",
+      "small",
+      "red",
+      "juicy",
+      "summer"
+    ]
+  },
+  {
+    "id": "chestnut",
+    "label": "Chestnut",
+    "category": "ingredient",
+    "filename": "food/ingredient/chestnut.png",
+    "color": "#b85838",
+    "description": "A starchy, mildly sweet nut with a brown shell, often roasted.",
+    "tags": [
+      "nutty",
+      "starchy",
+      "sweet",
+      "roasted",
+      "autumn",
+      "warm",
+      "earthy"
+    ]
+  },
+  {
+    "id": "chili",
+    "label": "Chili",
+    "category": "vegetable",
+    "filename": "food/vegetable/chili.png",
+    "color": "#e02848",
+    "description": "A small, fiery red pepper that adds intense heat to dishes.",
+    "tags": [
+      "spicy",
+      "hot",
+      "red",
+      "fiery",
+      "small",
+      "pungent",
+      "intense"
+    ]
+  },
+  {
+    "id": "chips",
+    "label": "Chips",
+    "category": "snack",
+    "filename": "food/snack/chips.png",
+    "color": "#e83838",
+    "description": "Thin, crispy slices of fried potato in a bag, a salty snack.",
+    "tags": [
+      "crispy",
+      "salty",
+      "fried",
+      "thin",
+      "snack",
+      "crunchy",
+      "packaged"
+    ]
+  },
+  {
+    "id": "chocolate",
+    "label": "Chocolate",
+    "category": "sweet",
+    "filename": "food/sweet/chocolate.png",
+    "color": "#b85838",
+    "description": "A bar of solid chocolate made from roasted cacao beans.",
+    "tags": [
+      "sweet",
+      "rich",
+      "cacao",
+      "solid",
+      "melty",
+      "indulgent",
+      "classic"
+    ]
+  },
+  {
+    "id": "chocolate_spread",
+    "label": "Chocolate Spread",
+    "category": "condiment",
+    "filename": "food/condiment/chocolate_spread.png",
+    "color": "#b85838",
+    "description": "A sweet, creamy spread made from chocolate and hazelnuts.",
+    "tags": [
+      "sweet",
+      "spread",
+      "breakfast",
+      "topping",
+      "creamy",
+      "hazelnut",
+      "indulgent"
+    ]
+  },
+  {
+    "id": "chopsticks",
+    "label": "Chopsticks",
+    "category": "utensil",
+    "filename": "food/utensil/chopsticks.png",
+    "color": "#c06848",
+    "description": "A pair of wooden chopsticks for picking up food.",
+    "tags": [
+      "utensil",
+      "asian",
+      "wooden",
+      "pair",
+      "picking",
+      "traditional",
+      "dexterous"
+    ]
+  },
+  {
+    "id": "cinnamon_roll",
+    "label": "Cinnamon Roll",
+    "category": "sweet",
+    "filename": "food/sweet/cinnamon_roll.png",
+    "color": "#e8a868",
+    "description": "A spiral pastry swirled with cinnamon-sugar filling and glazed.",
+    "tags": [
+      "sweet",
+      "spiral",
+      "cinnamon",
+      "glazed",
+      "baked",
+      "warm",
+      "aromatic"
+    ]
+  },
+  {
+    "id": "clinking_glasses",
+    "label": "Clinking Glasses",
+    "category": "utensil",
+    "filename": "food/utensil/clinking_glasses.png",
+    "color": "#f8c848",
+    "description": "Two champagne flutes clinking together, used for toasting and celebrations",
+    "tags": [
+      "glass",
+      "champagne",
+      "celebration",
+      "toast",
+      "flute",
+      "party",
+      "drink-vessel"
+    ]
+  },
+  {
+    "id": "cocktail",
+    "label": "Cocktail",
+    "category": "drink",
+    "filename": "food/drink/cocktail.png",
+    "color": "#8898a0",
+    "description": "A colorful mixed drink in a martini glass with an olive garnish.",
+    "tags": [
+      "alcoholic",
+      "mixed",
+      "cold",
+      "elegant",
+      "garnished",
+      "colorful",
+      "bar"
+    ]
+  },
+  {
+    "id": "coconut",
+    "label": "Coconut",
+    "category": "fruit",
+    "filename": "food/fruit/coconut.png",
+    "color": "#b85838",
+    "description": "A large tropical nut with white flesh and sweet water inside.",
+    "tags": [
+      "tropical",
+      "nutty",
+      "hard-shell",
+      "white-flesh",
+      "sweet",
+      "exotic",
+      "versatile"
+    ]
+  },
+  {
+    "id": "coffee",
+    "label": "Coffee",
+    "category": "drink",
+    "filename": "food/drink/coffee.png",
+    "color": "#b85838",
+    "description": "A hot, bitter beverage brewed from roasted coffee beans.",
+    "tags": [
+      "hot",
+      "bitter",
+      "caffeinated",
+      "roasted",
+      "aromatic",
+      "morning",
+      "energizing"
+    ]
+  },
+  {
+    "id": "cookie",
+    "label": "Cookie",
+    "category": "sweet",
+    "filename": "food/sweet/cookie.png",
+    "color": "#e8b068",
+    "description": "A small, flat baked treat, often with chocolate chips or other mix-ins.",
+    "tags": [
+      "sweet",
+      "baked",
+      "flat",
+      "crunchy",
+      "snack",
+      "chocolate-chip",
+      "homemade"
+    ]
+  },
+  {
+    "id": "cooking_pot",
+    "label": "Cooking Pot",
+    "category": "utensil",
+    "filename": "food/utensil/cooking_pot.png",
+    "color": "#282830",
+    "description": "A deep round vessel used for boiling, stewing, and preparing soups and broths",
+    "tags": [
+      "cooking",
+      "boiling",
+      "stewing",
+      "pot",
+      "stovetop",
+      "kitchen",
+      "soup"
+    ]
+  },
+  {
+    "id": "corn",
+    "label": "Corn",
+    "category": "vegetable",
+    "filename": "food/vegetable/corn.png",
+    "color": "#50b850",
+    "description": "A starchy yellow vegetable with kernels on a cob, sweet when fresh.",
+    "tags": [
+      "starchy",
+      "sweet",
+      "yellow",
+      "kernels",
+      "cob",
+      "summer",
+      "grillable"
+    ]
+  },
+  {
+    "id": "cotton_candy",
+    "label": "Cotton Candy",
+    "category": "sweet",
+    "filename": "food/sweet/cotton_candy.png",
+    "color": "#f8b8c0",
+    "description": "A fluffy, cloud-like confection spun from melted sugar.",
+    "tags": [
+      "sweet",
+      "fluffy",
+      "spun-sugar",
+      "pink",
+      "carnival",
+      "melt-in-mouth",
+      "airy"
+    ]
+  },
+  {
+    "id": "crab",
+    "label": "Crab",
+    "category": "seafood",
+    "filename": "food/seafood/crab.png",
+    "color": "#b81830",
+    "description": "A red crab with large claws, prized for its sweet white meat.",
+    "tags": [
+      "crustacean",
+      "red",
+      "clawed",
+      "sweet",
+      "shellfish",
+      "premium",
+      "steamed"
+    ]
+  },
+  {
+    "id": "cream",
+    "label": "Cream",
+    "category": "dairy",
+    "filename": "food/dairy/cream.png",
+    "color": "#7890a0",
+    "description": "A rich, smooth dairy liquid skimmed from milk, used in sauces and desserts.",
+    "tags": [
+      "rich",
+      "smooth",
+      "dairy",
+      "liquid",
+      "fat",
+      "baking",
+      "sauce"
+    ]
+  },
+  {
+    "id": "creme_brulee",
+    "label": "Crème Brûlée",
+    "category": "sweet",
+    "filename": "food/sweet/creme_brulee.png",
+    "color": "#f8e850",
+    "description": "A rich custard dessert topped with a layer of caramelized sugar.",
+    "tags": [
+      "creamy",
+      "custard",
+      "caramelized",
+      "french",
+      "elegant",
+      "torched",
+      "dessert"
+    ]
+  },
+  {
+    "id": "croissant",
+    "label": "Croissant",
+    "category": "grain",
+    "filename": "food/grain/croissant.png",
+    "color": "#e8b068",
+    "description": "A flaky, buttery French pastry shaped into a crescent.",
+    "tags": [
+      "flaky",
+      "buttery",
+      "french",
+      "pastry",
+      "baked",
+      "laminated",
+      "breakfast"
+    ]
+  },
+  {
+    "id": "cucumber",
+    "label": "Cucumber",
+    "category": "vegetable",
+    "filename": "food/vegetable/cucumber.png",
+    "color": "#009040",
+    "description": "A cool, crisp, hydrating green vegetable with mild flavor.",
+    "tags": [
+      "cool",
+      "crisp",
+      "hydrating",
+      "green",
+      "mild",
+      "fresh",
+      "crunchy"
+    ]
+  },
+  {
+    "id": "cup_straw",
+    "label": "Cup with Straw",
+    "category": "utensil",
+    "filename": "food/utensil/cup_straw.png",
+    "color": "#50a8e8",
+    "description": "A disposable cup with a straw, commonly used for soft drinks and iced beverages",
+    "tags": [
+      "cup",
+      "straw",
+      "disposable",
+      "takeaway",
+      "iced",
+      "soda",
+      "drink-vessel"
+    ]
+  },
+  {
+    "id": "cupcake",
+    "label": "Cupcake",
+    "category": "sweet",
+    "filename": "food/sweet/cupcake.png",
+    "color": "#f8e8b0",
+    "description": "A small frosted cake in a paper cup, topped with swirled icing.",
+    "tags": [
+      "sweet",
+      "frosted",
+      "small",
+      "individual",
+      "icing",
+      "colorful",
+      "party"
+    ]
+  },
+  {
+    "id": "curry",
+    "label": "Curry",
+    "category": "prepared",
+    "filename": "food/prepared/curry.png",
+    "color": "#f89000",
+    "description": "A richly spiced stew-like dish with a thick, aromatic sauce.",
+    "tags": [
+      "spicy",
+      "aromatic",
+      "saucy",
+      "indian",
+      "warm",
+      "complex",
+      "stewed"
+    ]
+  },
+  {
+    "id": "dango",
+    "label": "Dango",
+    "category": "sweet",
+    "filename": "food/sweet/dango.png",
+    "color": "#a0d088",
+    "description": "Colorful Japanese rice dumplings on a skewer.",
+    "tags": [
+      "japanese",
+      "rice-based",
+      "sweet",
+      "skewered",
+      "colorful",
+      "chewy",
+      "mochi"
+    ]
+  },
+  {
+    "id": "donut",
+    "label": "Donut",
+    "category": "sweet",
+    "filename": "food/sweet/donut.png",
+    "color": "#f888a8",
+    "description": "A ring-shaped fried dough pastry coated in sweet glaze or frosting.",
+    "tags": [
+      "sweet",
+      "fried",
+      "ring-shaped",
+      "glazed",
+      "soft",
+      "indulgent",
+      "breakfast"
+    ]
+  },
+  {
+    "id": "dough",
+    "label": "Dough",
+    "category": "ingredient",
+    "filename": "food/ingredient/dough.png",
+    "color": "#f8d8b0",
+    "description": "A soft, raw mixture of flour, water, and other ingredients, ready to bake.",
+    "tags": [
+      "raw",
+      "soft",
+      "unbaked",
+      "base",
+      "malleable",
+      "flour-based",
+      "preparation"
+    ]
+  },
+  {
+    "id": "dragonfruit",
+    "label": "Dragonfruit",
+    "category": "fruit",
+    "filename": "food/fruit/dragonfruit.png",
+    "color": "#f83888",
+    "description": "An exotic, mildly sweet tropical fruit with vibrant pink skin and speckled flesh.",
+    "tags": [
+      "exotic",
+      "mild",
+      "tropical",
+      "pink",
+      "speckled",
+      "unique",
+      "decorative"
+    ]
+  },
+  {
+    "id": "drumstick",
+    "label": "Drumstick",
+    "category": "protein",
+    "filename": "food/protein/drumstick.png",
+    "color": "#d08048",
+    "description": "A whole chicken leg, typically roasted or fried until golden.",
+    "tags": [
+      "chicken",
+      "bone-in",
+      "roasted",
+      "fried",
+      "juicy",
+      "protein",
+      "golden"
+    ]
+  },
+  {
+    "id": "dumpling",
+    "label": "Dumpling",
+    "category": "prepared",
+    "filename": "food/prepared/dumpling.png",
+    "color": "#f8d880",
+    "description": "A crescent-shaped dough pocket filled with meat and vegetables.",
+    "tags": [
+      "filled",
+      "dough",
+      "steamed",
+      "asian",
+      "crescent",
+      "savory",
+      "juicy"
+    ]
+  },
+  {
+    "id": "eclair",
+    "label": "Éclair",
+    "category": "sweet",
+    "filename": "food/sweet/eclair.png",
+    "color": "#b85838",
+    "description": "An oblong French pastry filled with cream and topped with chocolate.",
+    "tags": [
+      "sweet",
+      "french",
+      "cream-filled",
+      "chocolate-topped",
+      "oblong",
+      "choux",
+      "elegant"
+    ]
+  },
+  {
+    "id": "egg",
+    "label": "Egg",
+    "category": "protein",
+    "filename": "food/protein/egg.png",
+    "color": "#f8d8b0",
+    "description": "A whole raw egg in its shell, one of the most versatile cooking ingredients.",
+    "tags": [
+      "versatile",
+      "raw",
+      "protein-rich",
+      "shell",
+      "oval",
+      "baking",
+      "essential"
+    ]
+  },
+  {
+    "id": "eggplant",
+    "label": "Eggplant",
+    "category": "vegetable",
+    "filename": "food/vegetable/eggplant.png",
+    "color": "#7000d0",
+    "description": "A smooth, glossy purple vegetable with spongy flesh.",
+    "tags": [
+      "purple",
+      "spongy",
+      "glossy",
+      "grilled",
+      "mediterranean",
+      "absorbent",
+      "meaty"
+    ]
+  },
+  {
+    "id": "falafel",
+    "label": "Falafel",
+    "category": "prepared",
+    "filename": "food/prepared/falafel.png",
+    "color": "#c05828",
+    "description": "Crispy fried balls of spiced chickpea paste, a Mediterranean staple.",
+    "tags": [
+      "crispy",
+      "fried",
+      "chickpea",
+      "mediterranean",
+      "plant-based",
+      "spiced",
+      "golden"
+    ]
+  },
+  {
+    "id": "fire",
+    "label": "Fire",
+    "category": "utensil",
+    "filename": "food/utensil/fire.png",
+    "color": "#f09008",
+    "description": "An open flame representing cooking heat, grilling, and stovetop burners",
+    "tags": [
+      "fire",
+      "flame",
+      "heat",
+      "cooking",
+      "grilling",
+      "hot",
+      "stovetop"
+    ]
+  },
+  {
+    "id": "fish",
+    "label": "Fish",
+    "category": "seafood",
+    "filename": "food/seafood/fish.png",
+    "color": "#009040",
+    "description": "A whole green fish, a lean source of protein and omega-3.",
+    "tags": [
+      "lean",
+      "omega-3",
+      "whole",
+      "fresh",
+      "protein",
+      "mild",
+      "aquatic"
+    ]
+  },
+  {
+    "id": "fish_cake",
+    "label": "Fish Cake",
+    "category": "prepared",
+    "filename": "food/prepared/fish_cake.png",
+    "color": "#d070b8",
+    "description": "A decorative Japanese fish cake (narutomaki) with a pink swirl.",
+    "tags": [
+      "japanese",
+      "processed",
+      "decorative",
+      "pink-swirl",
+      "mild",
+      "sliced",
+      "topping"
+    ]
+  },
+  {
+    "id": "flan",
+    "label": "Flan",
+    "category": "sweet",
+    "filename": "food/sweet/flan.png",
+    "color": "#f8c848",
+    "description": "A smooth caramel custard dessert with a golden syrup topping.",
+    "tags": [
+      "creamy",
+      "caramel",
+      "custard",
+      "smooth",
+      "cold",
+      "latin",
+      "dessert"
+    ]
+  },
+  {
+    "id": "flatbread",
+    "label": "Flatbread",
+    "category": "grain",
+    "filename": "food/grain/flatbread.png",
+    "color": "#e8b878",
+    "description": "A round, thin unleavened bread, common across many cultures.",
+    "tags": [
+      "flat",
+      "thin",
+      "unleavened",
+      "baked",
+      "versatile",
+      "warm",
+      "wrap"
+    ]
+  },
+  {
+    "id": "flour",
+    "label": "Flour",
+    "category": "ingredient",
+    "filename": "food/ingredient/flour.png",
+    "color": "#e8d0a0",
+    "description": "A fine powder ground from wheat, the essential base for baking.",
+    "tags": [
+      "powder",
+      "fine",
+      "baking",
+      "base",
+      "white",
+      "starchy",
+      "essential"
+    ]
+  },
+  {
+    "id": "fondue",
+    "label": "Fondue",
+    "category": "prepared",
+    "filename": "food/prepared/fondue.png",
+    "color": "#b81830",
+    "description": "A pot of melted cheese or chocolate for dipping bread or fruit.",
+    "tags": [
+      "melted",
+      "dipping",
+      "swiss",
+      "cheesy",
+      "warm",
+      "shared",
+      "indulgent"
+    ]
+  },
+  {
+    "id": "fork_knife",
+    "label": "Fork & Knife",
+    "category": "utensil",
+    "filename": "food/utensil/fork_knife.png",
+    "color": "#98a8b0",
+    "description": "A crossed fork and knife, representing dining and eating.",
+    "tags": [
+      "utensil",
+      "dining",
+      "eating",
+      "crossed",
+      "western",
+      "serving",
+      "meal"
+    ]
+  },
+  {
+    "id": "fortune_cookie",
+    "label": "Fortune Cookie",
+    "category": "sweet",
+    "filename": "food/sweet/fortune_cookie.png",
+    "color": "#f8a840",
+    "description": "A crisp, folded cookie with a paper fortune inside.",
+    "tags": [
+      "crispy",
+      "folded",
+      "chinese-american",
+      "hollow",
+      "sweet",
+      "light",
+      "novelty"
+    ]
+  },
+  {
+    "id": "fried_egg",
+    "label": "Fried Egg",
+    "category": "protein",
+    "filename": "food/protein/fried_egg.png",
+    "color": "#f8c828",
+    "description": "An egg fried sunny-side up with a runny golden yolk.",
+    "tags": [
+      "fried",
+      "runny-yolk",
+      "breakfast",
+      "cooked",
+      "golden",
+      "quick",
+      "topping"
+    ]
+  },
+  {
+    "id": "fries",
+    "label": "Fries",
+    "category": "prepared",
+    "filename": "food/prepared/fries.png",
+    "color": "#f8c828",
+    "description": "Golden, crispy deep-fried potato sticks, a universal side dish.",
+    "tags": [
+      "crispy",
+      "fried",
+      "golden",
+      "salty",
+      "fast-food",
+      "side-dish",
+      "potato-based"
+    ]
+  },
+  {
+    "id": "frying_pan",
+    "label": "Frying Pan",
+    "category": "utensil",
+    "filename": "food/utensil/frying_pan.png",
+    "color": "#282830",
+    "description": "A flat-bottomed pan used for frying, searing, and sautéing food with oil or butter",
+    "tags": [
+      "cooking",
+      "frying",
+      "searing",
+      "sauteing",
+      "pan",
+      "stovetop",
+      "kitchen"
+    ]
+  },
+  {
+    "id": "garlic",
+    "label": "Garlic",
+    "category": "vegetable",
+    "filename": "food/vegetable/garlic.png",
+    "color": "#f8d0f8",
+    "description": "A pungent, aromatic bulb made of cloves, essential in savory cooking.",
+    "tags": [
+      "pungent",
+      "aromatic",
+      "bulb",
+      "savory",
+      "essential",
+      "strong",
+      "universal"
+    ]
+  },
+  {
+    "id": "ginger",
+    "label": "Ginger",
+    "category": "ingredient",
+    "filename": "food/ingredient/ginger.png",
+    "color": "#f0b078",
+    "description": "A knobby, aromatic root with a warm, spicy-sweet flavor.",
+    "tags": [
+      "spicy",
+      "aromatic",
+      "root",
+      "warm",
+      "zesty",
+      "medicinal",
+      "asian"
+    ]
+  },
+  {
+    "id": "ginger_root",
+    "label": "Ginger Root",
+    "category": "ingredient",
+    "filename": "food/ingredient/ginger_root.png",
+    "color": "#f0b070",
+    "description": "A fresh ginger root with light brown skin and fibrous flesh.",
+    "tags": [
+      "spicy",
+      "aromatic",
+      "root",
+      "warm",
+      "asian",
+      "fibrous",
+      "medicinal"
+    ]
+  },
+  {
+    "id": "grapes",
+    "label": "Grapes",
+    "category": "fruit",
+    "filename": "food/fruit/grapes.png",
+    "color": "#60d060",
+    "description": "Small, juicy fruit growing in clusters, eaten fresh or used for wine.",
+    "tags": [
+      "sweet",
+      "juicy",
+      "clustered",
+      "fresh",
+      "wine-source",
+      "snack",
+      "green"
+    ]
+  },
+  {
+    "id": "green_apple",
+    "label": "Green Apple",
+    "category": "fruit",
+    "filename": "food/fruit/green_apple.png",
+    "color": "#70b050",
+    "description": "A tart, crisp apple with bright green skin.",
+    "tags": [
+      "tart",
+      "crisp",
+      "green",
+      "fresh",
+      "raw",
+      "sour",
+      "crunchy"
+    ]
+  },
+  {
+    "id": "guacamole",
+    "label": "Guacamole",
+    "category": "condiment",
+    "filename": "food/condiment/guacamole.png",
+    "color": "#60d060",
+    "description": "A creamy dip made from mashed avocado, lime, and spices.",
+    "tags": [
+      "dip",
+      "mexican",
+      "creamy",
+      "fresh",
+      "spicy",
+      "avocado-based",
+      "cold"
+    ]
+  },
+  {
+    "id": "gummy_bear",
+    "label": "Gummy Bear",
+    "category": "sweet",
+    "filename": "food/sweet/gummy_bear.png",
+    "color": "#e02848",
+    "description": "A small, chewy gelatin candy shaped like a bear.",
+    "tags": [
+      "sweet",
+      "chewy",
+      "gelatin",
+      "bear-shaped",
+      "colorful",
+      "candy",
+      "fun"
+    ]
+  },
+  {
+    "id": "ham",
+    "label": "Ham",
+    "category": "protein",
+    "filename": "food/protein/ham.png",
+    "color": "#d05038",
+    "description": "A large cut of cured or smoked pork leg.",
+    "tags": [
+      "cured",
+      "smoky",
+      "salty",
+      "pork",
+      "sliceable",
+      "cold-cut",
+      "hearty"
+    ]
+  },
+  {
+    "id": "ham_slice",
+    "label": "Ham Slice",
+    "category": "protein",
+    "filename": "food/protein/ham_slice.png",
+    "color": "#f87868",
+    "description": "A thin slice of cured ham, ideal for sandwiches and platters.",
+    "tags": [
+      "cured",
+      "sliced",
+      "thin",
+      "pork",
+      "cold-cut",
+      "sandwich",
+      "deli"
+    ]
+  },
+  {
+    "id": "herb",
+    "label": "Herb",
+    "category": "ingredient",
+    "filename": "food/ingredient/herb.png",
+    "color": "#88c830",
+    "description": "Fresh green aromatic leaves used to season and garnish dishes.",
+    "tags": [
+      "aromatic",
+      "fresh",
+      "green",
+      "leafy",
+      "seasoning",
+      "garnish",
+      "fragrant"
+    ]
+  },
+  {
+    "id": "honey",
+    "label": "Honey",
+    "category": "condiment",
+    "filename": "food/condiment/honey.png",
+    "color": "#f0a820",
+    "description": "A golden, viscous natural sweetener produced by bees.",
+    "tags": [
+      "sweet",
+      "natural",
+      "liquid",
+      "golden",
+      "sticky",
+      "sweetener",
+      "raw"
+    ]
+  },
+  {
+    "id": "honeycomb",
+    "label": "Honeycomb",
+    "category": "ingredient",
+    "filename": "food/ingredient/honeycomb.png",
+    "color": "#f89000",
+    "description": "A waxy structure of hexagonal cells filled with raw honey.",
+    "tags": [
+      "sweet",
+      "raw",
+      "waxy",
+      "natural",
+      "hexagonal",
+      "golden",
+      "bee-made"
+    ]
+  },
+  {
+    "id": "hot_beverage",
+    "label": "Hot Beverage",
+    "category": "drink",
+    "filename": "food/drink/hot_beverage.png",
+    "color": "#884838",
+    "description": "A steaming cup of hot coffee or tea on a saucer.",
+    "tags": [
+      "hot",
+      "steaming",
+      "warm",
+      "aromatic",
+      "morning",
+      "classic",
+      "comforting"
+    ]
+  },
+  {
+    "id": "hot_sauce",
+    "label": "Hot Sauce",
+    "category": "condiment",
+    "filename": "food/condiment/hot_sauce.png",
+    "color": "#e02848",
+    "description": "A fiery condiment made from chili peppers and vinegar.",
+    "tags": [
+      "spicy",
+      "hot",
+      "liquid",
+      "tangy",
+      "chili-based",
+      "bold",
+      "pungent"
+    ]
+  },
+  {
+    "id": "hotdog",
+    "label": "Hotdog",
+    "category": "prepared",
+    "filename": "food/prepared/hotdog.png",
+    "color": "#e8b068",
+    "description": "A grilled sausage in a soft bun, a classic street food.",
+    "tags": [
+      "assembled",
+      "fast-food",
+      "american",
+      "grilled",
+      "street-food",
+      "casual",
+      "portable"
+    ]
+  },
+  {
+    "id": "hummus",
+    "label": "Hummus",
+    "category": "condiment",
+    "filename": "food/condiment/hummus.png",
+    "color": "#f8d8b0",
+    "description": "A smooth, savory dip made from chickpeas, tahini, and lemon.",
+    "tags": [
+      "dip",
+      "mediterranean",
+      "creamy",
+      "savory",
+      "plant-based",
+      "protein-rich",
+      "cold"
+    ]
+  },
+  {
+    "id": "ice_cream",
+    "label": "Ice Cream",
+    "category": "sweet",
+    "filename": "food/sweet/ice_cream.png",
+    "color": "#f888a8",
+    "description": "A frozen, creamy dairy dessert scooped into a cone or bowl.",
+    "tags": [
+      "frozen",
+      "creamy",
+      "sweet",
+      "cold",
+      "scooped",
+      "dairy",
+      "summer"
+    ]
+  },
+  {
+    "id": "ice_cube",
+    "label": "Ice Cube",
+    "category": "ingredient",
+    "filename": "food/ingredient/ice_cube.png",
+    "color": "#c0e0e8",
+    "description": "A translucent blue cube of frozen water used to chill beverages and cocktails",
+    "tags": [
+      "ice",
+      "frozen",
+      "cold",
+      "cube",
+      "chilling",
+      "beverage",
+      "cooling"
+    ]
+  },
+  {
+    "id": "jam",
+    "label": "Jam",
+    "category": "condiment",
+    "filename": "food/condiment/jam.png",
+    "color": "#a02838",
+    "description": "A sweet preserve made from cooked fruit and sugar.",
+    "tags": [
+      "sweet",
+      "spread",
+      "fruity",
+      "breakfast",
+      "preserved",
+      "thick",
+      "cooked"
+    ]
+  },
+  {
+    "id": "jar",
+    "label": "Jar",
+    "category": "ingredient",
+    "filename": "food/ingredient/jar.png",
+    "color": "#f8c850",
+    "description": "A glass storage jar with a lid, used for preserving food.",
+    "tags": [
+      "glass",
+      "storage",
+      "sealed",
+      "preserving",
+      "pantry",
+      "transparent",
+      "versatile"
+    ]
+  },
+  {
+    "id": "jelly",
+    "label": "Jelly",
+    "category": "sweet",
+    "filename": "food/sweet/jelly.png",
+    "color": "#e02848",
+    "description": "A translucent, wobbly dessert made from gelatin and fruit juice.",
+    "tags": [
+      "sweet",
+      "wobbly",
+      "gelatin",
+      "translucent",
+      "fruity",
+      "cold",
+      "jiggly"
+    ]
+  },
+  {
+    "id": "juice_box",
+    "label": "Juice Box",
+    "category": "drink",
+    "filename": "food/drink/juice_box.png",
+    "color": "#f8c848",
+    "description": "A small cardboard box of fruit juice with a straw.",
+    "tags": [
+      "sweet",
+      "fruity",
+      "boxed",
+      "small",
+      "portable",
+      "kids",
+      "shelf-stable"
+    ]
+  },
+  {
+    "id": "juice_cup",
+    "label": "Juice Cup",
+    "category": "drink",
+    "filename": "food/drink/juice_cup.png",
+    "color": "#50a8e8",
+    "description": "A disposable cup with a lid and straw, filled with a cold drink.",
+    "tags": [
+      "cold",
+      "sweet",
+      "straw",
+      "disposable",
+      "refreshing",
+      "fruity",
+      "portable"
+    ]
+  },
+  {
+    "id": "ketchup",
+    "label": "Ketchup",
+    "category": "condiment",
+    "filename": "food/condiment/ketchup.png",
+    "color": "#e02848",
+    "description": "A tangy-sweet tomato-based condiment, a staple of fast food.",
+    "tags": [
+      "tangy",
+      "sweet",
+      "tomato-based",
+      "fast-food",
+      "classic",
+      "thick",
+      "american"
+    ]
+  },
+  {
+    "id": "kiwi",
+    "label": "Kiwi",
+    "category": "fruit",
+    "filename": "food/fruit/kiwi.png",
+    "color": "#60d060",
+    "description": "A small, fuzzy brown fruit with bright green, tangy flesh inside.",
+    "tags": [
+      "tangy",
+      "tropical",
+      "fuzzy",
+      "green-flesh",
+      "vitamin-c",
+      "fresh",
+      "zesty"
+    ]
+  },
+  {
+    "id": "knife",
+    "label": "Kitchen Knife",
+    "category": "utensil",
+    "filename": "food/utensil/knife.png",
+    "color": "#303038",
+    "description": "A sharp chef's knife for cutting and chopping ingredients.",
+    "tags": [
+      "utensil",
+      "sharp",
+      "cutting",
+      "chopping",
+      "metal",
+      "essential",
+      "chef"
+    ]
+  },
+  {
+    "id": "lasagna",
+    "label": "Lasagna",
+    "category": "prepared",
+    "filename": "food/prepared/lasagna.png",
+    "color": "#b85838",
+    "description": "Layered pasta sheets with meat sauce, béchamel, and cheese, baked together.",
+    "tags": [
+      "layered",
+      "baked",
+      "italian",
+      "cheesy",
+      "hearty",
+      "comfort-food",
+      "pasta-based"
+    ]
+  },
+  {
+    "id": "leek",
+    "label": "Leek",
+    "category": "vegetable",
+    "filename": "food/vegetable/leek.png",
+    "color": "#88e890",
+    "description": "A mild, onion-like allium vegetable with green leaves and a white base.",
+    "tags": [
+      "mild",
+      "onion-like",
+      "allium",
+      "green",
+      "white-base",
+      "soup",
+      "gentle"
+    ]
+  },
+  {
+    "id": "lemon",
+    "label": "Lemon",
+    "category": "fruit",
+    "filename": "food/fruit/lemon.png",
+    "color": "#f8e850",
+    "description": "A bright yellow citrus fruit with an intensely sour, acidic juice.",
+    "tags": [
+      "sour",
+      "citrus",
+      "acidic",
+      "yellow",
+      "zesty",
+      "aromatic",
+      "juice"
+    ]
+  },
+  {
+    "id": "lettuce",
+    "label": "Lettuce",
+    "category": "vegetable",
+    "filename": "food/vegetable/lettuce.png",
+    "color": "#88c830",
+    "description": "A crisp, green leafy vegetable used as a base for salads and burger toppings.",
+    "tags": [
+      "crisp",
+      "green",
+      "leafy",
+      "fresh",
+      "salad",
+      "light",
+      "crunchy"
+    ]
+  },
+  {
+    "id": "lime",
+    "label": "Lime",
+    "category": "fruit",
+    "filename": "food/fruit/lime.png",
+    "color": "#60d060",
+    "description": "A small green citrus fruit, tart and aromatic, essential in cocktails.",
+    "tags": [
+      "sour",
+      "citrus",
+      "tart",
+      "green",
+      "aromatic",
+      "zesty",
+      "cocktail"
+    ]
+  },
+  {
+    "id": "lobster",
+    "label": "Lobster",
+    "category": "seafood",
+    "filename": "food/seafood/lobster.png",
+    "color": "#f88068",
+    "description": "A large, red crustacean prized for its sweet, tender meat.",
+    "tags": [
+      "luxury",
+      "crustacean",
+      "sweet",
+      "tender",
+      "red",
+      "shellfish",
+      "premium"
+    ]
+  },
+  {
+    "id": "lollipop",
+    "label": "Lollipop",
+    "category": "sweet",
+    "filename": "food/sweet/lollipop.png",
+    "color": "#e02848",
+    "description": "A hard candy on a stick, meant to be licked and sucked.",
+    "tags": [
+      "sweet",
+      "hard-candy",
+      "on-a-stick",
+      "round",
+      "colorful",
+      "sugary",
+      "long-lasting"
+    ]
+  },
+  {
+    "id": "macaron",
+    "label": "Macaron",
+    "category": "sweet",
+    "filename": "food/sweet/macaron.png",
+    "color": "#f8d8b0",
+    "description": "A delicate French sandwich cookie made from almond flour and meringue.",
+    "tags": [
+      "delicate",
+      "french",
+      "almond",
+      "meringue",
+      "filled",
+      "elegant",
+      "colorful"
+    ]
+  },
+  {
+    "id": "mango",
+    "label": "Mango",
+    "category": "fruit",
+    "filename": "food/fruit/mango.png",
+    "color": "#f8c828",
+    "description": "A sweet, fragrant tropical fruit with golden-orange flesh.",
+    "tags": [
+      "sweet",
+      "tropical",
+      "fragrant",
+      "juicy",
+      "golden",
+      "exotic",
+      "summer"
+    ]
+  },
+  {
+    "id": "mate_cup",
+    "label": "Maté Cup",
+    "category": "utensil",
+    "filename": "food/utensil/mate_cup.png",
+    "color": "#a05038",
+    "description": "A traditional gourd and bombilla used for drinking yerba maté, popular in South America",
+    "tags": [
+      "mate",
+      "gourd",
+      "bombilla",
+      "south-american",
+      "argentinian",
+      "herbal",
+      "drink-vessel"
+    ]
+  },
+  {
+    "id": "mayo",
+    "label": "Mayonnaise",
+    "category": "condiment",
+    "filename": "food/condiment/mayo.png",
+    "color": "#f8f0d0",
+    "description": "A creamy emulsion of egg yolks, oil, and vinegar or lemon.",
+    "tags": [
+      "creamy",
+      "rich",
+      "egg-based",
+      "cold",
+      "spread",
+      "mild",
+      "emulsion"
+    ]
+  },
+  {
+    "id": "meat_bone",
+    "label": "Meat on Bone",
+    "category": "protein",
+    "filename": "food/protein/meat_bone.png",
+    "color": "#c06848",
+    "description": "A large piece of cooked meat on the bone, caveman-style.",
+    "tags": [
+      "bone-in",
+      "roasted",
+      "hearty",
+      "large",
+      "primal",
+      "grilled",
+      "rustic"
+    ]
+  },
+  {
+    "id": "melon",
+    "label": "Melon",
+    "category": "fruit",
+    "filename": "food/fruit/melon.png",
+    "color": "#a0d088",
+    "description": "A round, pale green melon with sweet, juicy orange flesh.",
+    "tags": [
+      "sweet",
+      "juicy",
+      "round",
+      "green",
+      "tropical",
+      "refreshing",
+      "summer"
+    ]
+  },
+  {
+    "id": "milk",
+    "label": "Milk",
+    "category": "dairy",
+    "filename": "food/dairy/milk.png",
+    "color": "#d8eef8",
+    "description": "A white nutritious dairy liquid, rich in calcium and protein.",
+    "tags": [
+      "dairy",
+      "liquid",
+      "calcium-rich",
+      "protein-rich",
+      "cold",
+      "fresh",
+      "basic"
+    ]
+  },
+  {
+    "id": "milkshake",
+    "label": "Milkshake",
+    "category": "drink",
+    "filename": "food/drink/milkshake.png",
+    "color": "#30b8f8",
+    "description": "A thick, sweet blended drink made from milk and ice cream.",
+    "tags": [
+      "sweet",
+      "cold",
+      "thick",
+      "blended",
+      "creamy",
+      "dessert-drink",
+      "indulgent"
+    ]
+  },
+  {
+    "id": "moon_cake",
+    "label": "Moon Cake",
+    "category": "sweet",
+    "filename": "food/sweet/moon_cake.png",
+    "color": "#602010",
+    "description": "A dense Chinese pastry with sweet filling, eaten during the Mid-Autumn Festival.",
+    "tags": [
+      "chinese",
+      "dense",
+      "sweet",
+      "festive",
+      "filled",
+      "ornate",
+      "traditional"
+    ]
+  },
+  {
+    "id": "muffin",
+    "label": "Muffin",
+    "category": "sweet",
+    "filename": "food/sweet/muffin.png",
+    "color": "#e8b068",
+    "description": "A soft, domed individual cake, often with blueberries or chocolate chips.",
+    "tags": [
+      "sweet",
+      "baked",
+      "soft",
+      "domed",
+      "individual",
+      "breakfast",
+      "moist"
+    ]
+  },
+  {
+    "id": "mushroom",
+    "label": "Mushroom",
+    "category": "vegetable",
+    "filename": "food/vegetable/mushroom.png",
+    "color": "#e8b068",
+    "description": "A soft, earthy fungus with an umami-rich, savory flavor.",
+    "tags": [
+      "earthy",
+      "umami",
+      "soft",
+      "fungus",
+      "savory",
+      "absorbent",
+      "versatile"
+    ]
+  },
+  {
+    "id": "mustard",
+    "label": "Mustard",
+    "category": "condiment",
+    "filename": "food/condiment/mustard.png",
+    "color": "#f8c828",
+    "description": "A sharp, tangy condiment made from ground mustard seeds.",
+    "tags": [
+      "tangy",
+      "sharp",
+      "spicy",
+      "yellow",
+      "seed-based",
+      "pungent",
+      "classic"
+    ]
+  },
+  {
+    "id": "noodles",
+    "label": "Noodles",
+    "category": "grain",
+    "filename": "food/grain/noodles.png",
+    "color": "#e02848",
+    "description": "Long, thin strips of dough, a staple in Asian cuisines.",
+    "tags": [
+      "starchy",
+      "asian",
+      "long",
+      "boiled",
+      "versatile",
+      "wheat-based",
+      "slurpable"
+    ]
+  },
+  {
+    "id": "oatmeal",
+    "label": "Oatmeal",
+    "category": "grain",
+    "filename": "food/grain/oatmeal.png",
+    "color": "#e8c890",
+    "description": "A warm, creamy porridge made from cooked oats.",
+    "tags": [
+      "warm",
+      "creamy",
+      "healthy",
+      "breakfast",
+      "fiber-rich",
+      "comforting",
+      "whole-grain"
+    ]
+  },
+  {
+    "id": "olive",
+    "label": "Olive",
+    "category": "vegetable",
+    "filename": "food/vegetable/olive.png",
+    "color": "#406070",
+    "description": "A small, oily fruit with a salty, briny flavor, used in Mediterranean cuisine.",
+    "tags": [
+      "salty",
+      "oily",
+      "briny",
+      "small",
+      "mediterranean",
+      "cured",
+      "dark"
+    ]
+  },
+  {
+    "id": "olive_oil",
+    "label": "Olive Oil",
+    "category": "condiment",
+    "filename": "food/condiment/olive_oil.png",
+    "color": "#409000",
+    "description": "A fruity oil pressed from olives, essential in Mediterranean cooking.",
+    "tags": [
+      "oil",
+      "mediterranean",
+      "healthy",
+      "liquid",
+      "fat",
+      "cooking",
+      "fruity"
+    ]
+  },
+  {
+    "id": "onigiri",
+    "label": "Onigiri",
+    "category": "prepared",
+    "filename": "food/prepared/onigiri.png",
+    "color": "#406070",
+    "description": "A Japanese rice ball shaped by hand, often wrapped in seaweed.",
+    "tags": [
+      "japanese",
+      "rice-based",
+      "portable",
+      "wrapped",
+      "seaweed",
+      "savory",
+      "snack"
+    ]
+  },
+  {
+    "id": "onion",
+    "label": "Onion",
+    "category": "vegetable",
+    "filename": "food/vegetable/onion.png",
+    "color": "#f0b078",
+    "description": "A pungent, layered bulb vegetable that sweetens when cooked.",
+    "tags": [
+      "pungent",
+      "layered",
+      "bulb",
+      "versatile",
+      "cooked",
+      "caramelizable",
+      "essential"
+    ]
+  },
+  {
+    "id": "orange",
+    "label": "Orange",
+    "category": "fruit",
+    "filename": "food/fruit/orange.png",
+    "color": "#f89000",
+    "description": "A round citrus fruit with bright orange skin and sweet, juicy flesh.",
+    "tags": [
+      "sweet",
+      "citrus",
+      "juicy",
+      "vitamin-c",
+      "orange",
+      "refreshing",
+      "breakfast"
+    ]
+  },
+  {
+    "id": "oven_mitt",
+    "label": "Oven Mitt",
+    "category": "utensil",
+    "filename": "food/utensil/oven_mitt.png",
+    "color": "#98a8b0",
+    "description": "A thick insulated glove used to handle hot dishes, pots, and baking trays safely",
+    "tags": [
+      "mitt",
+      "glove",
+      "oven",
+      "baking",
+      "protection",
+      "heat",
+      "kitchen"
+    ]
+  },
+  {
+    "id": "oyster",
+    "label": "Oyster",
+    "category": "seafood",
+    "filename": "food/seafood/oyster.png",
+    "color": "#f8d880",
+    "description": "A raw oyster in its rough shell, a luxury delicacy.",
+    "tags": [
+      "raw",
+      "briny",
+      "luxury",
+      "shell",
+      "delicate",
+      "aphrodisiac",
+      "premium"
+    ]
+  },
+  {
+    "id": "paella",
+    "label": "Paella",
+    "category": "prepared",
+    "filename": "food/prepared/paella.png",
+    "color": "#f8a830",
+    "description": "A shallow pan of saffron-spiced rice with seafood and vegetables.",
+    "tags": [
+      "spanish",
+      "rice-based",
+      "saffron",
+      "seafood",
+      "colorful",
+      "shared",
+      "aromatic"
+    ]
+  },
+  {
+    "id": "pain_au_chocolat",
+    "label": "Pain au Chocolat",
+    "category": "sweet",
+    "filename": "food/sweet/pain_au_chocolat.png",
+    "color": "#d08048",
+    "description": "A flaky French viennoiserie filled with dark chocolate batons.",
+    "tags": [
+      "flaky",
+      "french",
+      "chocolate-filled",
+      "buttery",
+      "laminated",
+      "breakfast",
+      "pastry"
+    ]
+  },
+  {
+    "id": "pancakes",
+    "label": "Pancakes",
+    "category": "prepared",
+    "filename": "food/prepared/pancakes.png",
+    "color": "#d08048",
+    "description": "Flat, round cakes made from batter and cooked on a griddle.",
+    "tags": [
+      "flat",
+      "sweet",
+      "breakfast",
+      "battered",
+      "griddle-cooked",
+      "fluffy",
+      "stacked"
+    ]
+  },
+  {
+    "id": "paper_roll",
+    "label": "Paper Towel Roll",
+    "category": "utensil",
+    "filename": "food/utensil/paper_roll.png",
+    "color": "#98a8b0",
+    "description": "A roll of absorbent paper towels used for cleaning spills and drying hands in the kitchen",
+    "tags": [
+      "paper",
+      "towel",
+      "roll",
+      "cleaning",
+      "absorbent",
+      "kitchen",
+      "hygiene"
+    ]
+  },
+  {
+    "id": "pasta",
+    "label": "Pasta",
+    "category": "grain",
+    "filename": "food/grain/pasta.png",
+    "color": "#f8c828",
+    "description": "Dried wheat dough shapes, a foundation of Italian cooking.",
+    "tags": [
+      "starchy",
+      "italian",
+      "boiled",
+      "versatile",
+      "wheat-based",
+      "carb",
+      "staple"
+    ]
+  },
+  {
+    "id": "patty",
+    "label": "Patty",
+    "category": "protein",
+    "filename": "food/protein/patty.png",
+    "color": "#b85838",
+    "description": "A flat, round disc of seasoned ground meat, the core of a burger.",
+    "tags": [
+      "ground-meat",
+      "flat",
+      "round",
+      "grilled",
+      "seasoned",
+      "burger-core",
+      "juicy"
+    ]
+  },
+  {
+    "id": "pea_pod",
+    "label": "Pea Pod",
+    "category": "vegetable",
+    "filename": "food/vegetable/pea_pod.png",
+    "color": "#489028",
+    "description": "A fresh green pod with round peas visible inside.",
+    "tags": [
+      "green",
+      "fresh",
+      "pod",
+      "sweet",
+      "spring",
+      "tender",
+      "raw"
+    ]
+  },
+  {
+    "id": "peach",
+    "label": "Peach",
+    "category": "fruit",
+    "filename": "food/fruit/peach.png",
+    "color": "#f0b078",
+    "description": "A soft, fuzzy stone fruit with sweet, fragrant yellow-pink flesh.",
+    "tags": [
+      "sweet",
+      "soft",
+      "fuzzy",
+      "stone-fruit",
+      "fragrant",
+      "summer",
+      "juicy"
+    ]
+  },
+  {
+    "id": "peanut_butter",
+    "label": "Peanut Butter",
+    "category": "condiment",
+    "filename": "food/condiment/peanut_butter.png",
+    "color": "#c89048",
+    "description": "A thick, protein-rich paste made from ground roasted peanuts.",
+    "tags": [
+      "nutty",
+      "thick",
+      "protein-rich",
+      "spread",
+      "roasted",
+      "creamy",
+      "american"
+    ]
+  },
+  {
+    "id": "peanuts",
+    "label": "Peanuts",
+    "category": "ingredient",
+    "filename": "food/ingredient/peanuts.png",
+    "color": "#d89880",
+    "description": "Roasted peanuts in their shells, a crunchy protein-rich snack.",
+    "tags": [
+      "nutty",
+      "crunchy",
+      "protein-rich",
+      "roasted",
+      "snack",
+      "salty",
+      "shelled"
+    ]
+  },
+  {
+    "id": "pear",
+    "label": "Pear",
+    "category": "fruit",
+    "filename": "food/fruit/pear.png",
+    "color": "#a0e860",
+    "description": "A mild, sweet fruit with a soft, grainy texture and green skin.",
+    "tags": [
+      "sweet",
+      "mild",
+      "soft",
+      "grainy",
+      "green",
+      "delicate",
+      "autumn"
+    ]
+  },
+  {
+    "id": "peas",
+    "label": "Peas",
+    "category": "vegetable",
+    "filename": "food/vegetable/peas.png",
+    "color": "#88c830",
+    "description": "Small, round green seeds in a pod, sweet and tender when fresh.",
+    "tags": [
+      "small",
+      "green",
+      "sweet",
+      "tender",
+      "round",
+      "pod",
+      "spring"
+    ]
+  },
+  {
+    "id": "pepper",
+    "label": "Pepper",
+    "category": "vegetable",
+    "filename": "food/vegetable/pepper.png",
+    "color": "#e83838",
+    "description": "A sweet, crunchy bell pepper with thick, colorful flesh.",
+    "tags": [
+      "sweet",
+      "crunchy",
+      "thick-flesh",
+      "colorful",
+      "mild",
+      "raw",
+      "versatile"
+    ]
+  },
+  {
+    "id": "pepperoni",
+    "label": "Pepperoni",
+    "category": "protein",
+    "filename": "food/protein/pepperoni.png",
+    "color": "#e02848",
+    "description": "A spicy, cured Italian-American sausage, sliced thin for pizza toppings.",
+    "tags": [
+      "spicy",
+      "cured",
+      "sliced",
+      "pizza-topping",
+      "italian",
+      "sausage",
+      "savory"
+    ]
+  },
+  {
+    "id": "pickle",
+    "label": "Pickle",
+    "category": "vegetable",
+    "filename": "food/vegetable/pickle.png",
+    "color": "#48a800",
+    "description": "A cucumber preserved in brine or vinegar, tangy and crunchy.",
+    "tags": [
+      "tangy",
+      "crunchy",
+      "brined",
+      "preserved",
+      "sour",
+      "green",
+      "condiment-like"
+    ]
+  },
+  {
+    "id": "pie",
+    "label": "Pie",
+    "category": "prepared",
+    "filename": "food/prepared/pie.png",
+    "color": "#e8a868",
+    "description": "A baked dish with a golden pastry crust enclosing a sweet or savory filling.",
+    "tags": [
+      "baked",
+      "pastry-crust",
+      "filled",
+      "golden",
+      "comfort-food",
+      "classic",
+      "homemade"
+    ]
+  },
+  {
+    "id": "pineapple",
+    "label": "Pineapple",
+    "category": "fruit",
+    "filename": "food/fruit/pineapple.png",
+    "color": "#f8a818",
+    "description": "A large tropical fruit with spiky skin and tangy-sweet yellow flesh.",
+    "tags": [
+      "tangy",
+      "sweet",
+      "tropical",
+      "acidic",
+      "juicy",
+      "spiky",
+      "bold"
+    ]
+  },
+  {
+    "id": "pita",
+    "label": "Pita",
+    "category": "prepared",
+    "filename": "food/prepared/pita.png",
+    "color": "#e8b878",
+    "description": "A round pocket bread stuffed with falafel, vegetables, and sauce.",
+    "tags": [
+      "mediterranean",
+      "stuffed",
+      "pocket-bread",
+      "filled",
+      "portable",
+      "warm",
+      "assembled"
+    ]
+  },
+  {
+    "id": "pizza",
+    "label": "Pizza",
+    "category": "prepared",
+    "filename": "food/prepared/pizza.png",
+    "color": "#f8c828",
+    "description": "A flat round base of dough topped with sauce, cheese, and toppings, baked in an oven.",
+    "tags": [
+      "baked",
+      "italian",
+      "cheesy",
+      "flat",
+      "topped",
+      "shareable",
+      "iconic"
+    ]
+  },
+  {
+    "id": "plate",
+    "label": "Plate Setting",
+    "category": "utensil",
+    "filename": "food/utensil/plate.png",
+    "color": "#e0e8e8",
+    "description": "A dinner plate with fork and knife, ready for a meal.",
+    "tags": [
+      "utensil",
+      "plate",
+      "dining",
+      "setting",
+      "empty",
+      "serving",
+      "formal"
+    ]
+  },
+  {
+    "id": "popcorn",
+    "label": "Popcorn",
+    "category": "snack",
+    "filename": "food/snack/popcorn.png",
+    "color": "#d82840",
+    "description": "A box of fluffy popped corn kernels, a classic movie snack.",
+    "tags": [
+      "crunchy",
+      "salty",
+      "light",
+      "popped",
+      "snack",
+      "buttery",
+      "movie"
+    ]
+  },
+  {
+    "id": "popping_cork",
+    "label": "Popping Cork",
+    "category": "utensil",
+    "filename": "food/utensil/popping_cork.png",
+    "color": "#204010",
+    "description": "A champagne or sparkling wine bottle with its cork popping off in celebration",
+    "tags": [
+      "bottle",
+      "champagne",
+      "cork",
+      "celebration",
+      "sparkling",
+      "party",
+      "opening"
+    ]
+  },
+  {
+    "id": "popsicle",
+    "label": "Popsicle",
+    "category": "sweet",
+    "filename": "food/sweet/popsicle.png",
+    "color": "#f05848",
+    "description": "A frozen fruit-flavored ice treat on a stick.",
+    "tags": [
+      "frozen",
+      "fruity",
+      "on-a-stick",
+      "cold",
+      "sweet",
+      "refreshing",
+      "summer"
+    ]
+  },
+  {
+    "id": "potato",
+    "label": "Potato",
+    "category": "vegetable",
+    "filename": "food/vegetable/potato.png",
+    "color": "#e8b068",
+    "description": "A starchy, versatile tuber that can be boiled, fried, roasted, or mashed.",
+    "tags": [
+      "starchy",
+      "versatile",
+      "tuber",
+      "earthy",
+      "filling",
+      "carb",
+      "staple"
+    ]
+  },
+  {
+    "id": "pouring_liquid",
+    "label": "Pouring Liquid",
+    "category": "utensil",
+    "filename": "food/utensil/pouring_liquid.png",
+    "color": "#a03038",
+    "description": "A glass or container tilted to pour liquid, representing serving or mixing drinks",
+    "tags": [
+      "pour",
+      "liquid",
+      "glass",
+      "serving",
+      "mixing",
+      "water",
+      "drink-vessel"
+    ]
+  },
+  {
+    "id": "pretzel",
+    "label": "Pretzel",
+    "category": "grain",
+    "filename": "food/grain/pretzel.png",
+    "color": "#f09008",
+    "description": "A twisted, salted baked dough snack with a chewy crust.",
+    "tags": [
+      "salty",
+      "twisted",
+      "baked",
+      "chewy",
+      "snack",
+      "german",
+      "golden"
+    ]
+  },
+  {
+    "id": "pumpkin",
+    "label": "Pumpkin",
+    "category": "vegetable",
+    "filename": "food/vegetable/pumpkin.png",
+    "color": "#f08000",
+    "description": "A large, round orange squash associated with autumn and pie.",
+    "tags": [
+      "orange",
+      "squash",
+      "autumn",
+      "large",
+      "sweet",
+      "roasted",
+      "seasonal"
+    ]
+  },
+  {
+    "id": "radish",
+    "label": "Radish",
+    "category": "vegetable",
+    "filename": "food/vegetable/radish.png",
+    "color": "#88d038",
+    "description": "A small, peppery root vegetable with a crisp texture and red skin.",
+    "tags": [
+      "peppery",
+      "crisp",
+      "small",
+      "root",
+      "red",
+      "raw",
+      "zesty"
+    ]
+  },
+  {
+    "id": "ramen",
+    "label": "Ramen",
+    "category": "prepared",
+    "filename": "food/prepared/ramen.png",
+    "color": "#7890a0",
+    "description": "A Japanese noodle soup with rich broth, noodles, and various toppings.",
+    "tags": [
+      "japanese",
+      "soup",
+      "noodle",
+      "brothy",
+      "warm",
+      "umami",
+      "comfort-food"
+    ]
+  },
+  {
+    "id": "raspberry",
+    "label": "Raspberry",
+    "category": "fruit",
+    "filename": "food/fruit/raspberry.png",
+    "color": "#e02848",
+    "description": "A delicate, tart red berry made of tiny drupelets.",
+    "tags": [
+      "tart",
+      "berry",
+      "delicate",
+      "red",
+      "fragile",
+      "aromatic",
+      "summer"
+    ]
+  },
+  {
+    "id": "raw_meat",
+    "label": "Raw Meat",
+    "category": "protein",
+    "filename": "food/protein/raw_meat.png",
+    "color": "#a00018",
+    "description": "A thick, marbled cut of raw red meat ready for cooking.",
+    "tags": [
+      "raw",
+      "marbled",
+      "thick-cut",
+      "beef",
+      "red",
+      "uncooked",
+      "butchery"
+    ]
+  },
+  {
+    "id": "rice",
+    "label": "Rice",
+    "category": "grain",
+    "filename": "food/grain/rice.png",
+    "color": "#f87868",
+    "description": "A bowl of cooked white rice, the world's most common grain staple.",
+    "tags": [
+      "starchy",
+      "staple",
+      "asian",
+      "neutral",
+      "boiled",
+      "fluffy",
+      "universal"
+    ]
+  },
+  {
+    "id": "rice_cracker",
+    "label": "Rice Cracker",
+    "category": "snack",
+    "filename": "food/snack/rice_cracker.png",
+    "color": "#c06848",
+    "description": "A flat, crispy Japanese rice cracker wrapped with a strip of seaweed.",
+    "tags": [
+      "crispy",
+      "japanese",
+      "rice-based",
+      "seaweed",
+      "flat",
+      "savory",
+      "crunchy"
+    ]
+  },
+  {
+    "id": "sake",
+    "label": "Sake",
+    "category": "drink",
+    "filename": "food/drink/sake.png",
+    "color": "#50a8e8",
+    "description": "A Japanese rice wine served in a traditional ceramic cup.",
+    "tags": [
+      "alcoholic",
+      "japanese",
+      "rice-based",
+      "warm",
+      "ceramic",
+      "traditional",
+      "mild"
+    ]
+  },
+  {
+    "id": "salad",
+    "label": "Salad",
+    "category": "prepared",
+    "filename": "food/prepared/salad.png",
+    "color": "#70b050",
+    "description": "A fresh green salad with mixed vegetables and toppings.",
+    "tags": [
+      "fresh",
+      "green",
+      "healthy",
+      "cold",
+      "mixed",
+      "light",
+      "crunchy"
+    ]
+  },
+  {
+    "id": "salmon",
+    "label": "Salmon",
+    "category": "seafood",
+    "filename": "food/seafood/salmon.png",
+    "color": "#f88068",
+    "description": "A pink-fleshed fatty fish, rich in omega-3, served raw or cooked.",
+    "tags": [
+      "fatty",
+      "omega-3",
+      "pink",
+      "rich",
+      "versatile",
+      "fresh",
+      "premium"
+    ]
+  },
+  {
+    "id": "salt",
+    "label": "Salt",
+    "category": "ingredient",
+    "filename": "food/ingredient/salt.png",
+    "color": "#c8d8e0",
+    "description": "A crystalline mineral seasoning, essential for enhancing all flavors.",
+    "tags": [
+      "salty",
+      "mineral",
+      "crystalline",
+      "essential",
+      "seasoning",
+      "universal",
+      "preservative"
+    ]
+  },
+  {
+    "id": "salt_shaker",
+    "label": "Salt Shaker",
+    "category": "utensil",
+    "filename": "food/utensil/salt_shaker.png",
+    "color": "#607078",
+    "description": "A small container with holes in the lid used for sprinkling salt on food at the table",
+    "tags": [
+      "salt",
+      "shaker",
+      "seasoning",
+      "condiment",
+      "table",
+      "sprinkling",
+      "kitchen"
+    ]
+  },
+  {
+    "id": "sandwich",
+    "label": "Sandwich",
+    "category": "prepared",
+    "filename": "food/prepared/sandwich.png",
+    "color": "#f0d0a0",
+    "description": "Two slices of bread with fillings layered between them.",
+    "tags": [
+      "assembled",
+      "layered",
+      "portable",
+      "bread-based",
+      "versatile",
+      "cold",
+      "lunch"
+    ]
+  },
+  {
+    "id": "sausage",
+    "label": "Sausage",
+    "category": "protein",
+    "filename": "food/protein/sausage.png",
+    "color": "#d08048",
+    "description": "A seasoned ground meat mixture stuffed into a casing and grilled.",
+    "tags": [
+      "seasoned",
+      "grilled",
+      "cased",
+      "savory",
+      "pork",
+      "smoky",
+      "hearty"
+    ]
+  },
+  {
+    "id": "sausage_chain",
+    "label": "Sausage Chain",
+    "category": "protein",
+    "filename": "food/protein/sausage_chain.png",
+    "color": "#d05038",
+    "description": "A linked chain of sausages, a butcher-shop classic.",
+    "tags": [
+      "linked",
+      "cased",
+      "grilled",
+      "savory",
+      "pork",
+      "chain",
+      "butchery"
+    ]
+  },
+  {
+    "id": "scissors",
+    "label": "Kitchen Scissors",
+    "category": "utensil",
+    "filename": "food/utensil/scissors.png",
+    "color": "#d82840",
+    "description": "A pair of scissors used in the kitchen for cutting herbs, opening packages, and trimming food",
+    "tags": [
+      "scissors",
+      "cutting",
+      "herbs",
+      "kitchen",
+      "tool",
+      "snipping",
+      "opening"
+    ]
+  },
+  {
+    "id": "shallow_pan",
+    "label": "Shallow Pan",
+    "category": "utensil",
+    "filename": "food/utensil/shallow_pan.png",
+    "color": "#f8a830",
+    "description": "A wide shallow cooking pan used for paella, stir-fry, and shallow frying",
+    "tags": [
+      "cooking",
+      "pan",
+      "paella",
+      "stir-fry",
+      "shallow",
+      "stovetop",
+      "kitchen"
+    ]
+  },
+  {
+    "id": "shaved_ice",
+    "label": "Shaved Ice",
+    "category": "sweet",
+    "filename": "food/sweet/shaved_ice.png",
+    "color": "#f8d0d8",
+    "description": "A bowl of finely shaved ice drizzled with colorful flavored syrup.",
+    "tags": [
+      "frozen",
+      "icy",
+      "sweet",
+      "colorful",
+      "refreshing",
+      "summer",
+      "syrup"
+    ]
+  },
+  {
+    "id": "shredded_cheese",
+    "label": "Shredded Cheese",
+    "category": "dairy",
+    "filename": "food/dairy/shredded_cheese.png",
+    "color": "#f8e850",
+    "description": "Finely grated cheese strands, ideal for melting and topping dishes.",
+    "tags": [
+      "savory",
+      "dairy",
+      "melty",
+      "topping",
+      "shredded",
+      "gratinated",
+      "versatile"
+    ]
+  },
+  {
+    "id": "shrimp",
+    "label": "Shrimp",
+    "category": "seafood",
+    "filename": "food/seafood/shrimp.png",
+    "color": "#f88068",
+    "description": "A small, curved crustacean with sweet, delicate meat.",
+    "tags": [
+      "small",
+      "curved",
+      "sweet",
+      "delicate",
+      "crustacean",
+      "shellfish",
+      "quick-cook"
+    ]
+  },
+  {
+    "id": "skewer",
+    "label": "Skewer",
+    "category": "prepared",
+    "filename": "food/prepared/skewer.png",
+    "color": "#d89880",
+    "description": "Pieces of food threaded on a wooden skewer, grilled or simmered.",
+    "tags": [
+      "grilled",
+      "threaded",
+      "japanese",
+      "portable",
+      "street-food",
+      "savory",
+      "hot"
+    ]
+  },
+  {
+    "id": "soda",
+    "label": "Soda",
+    "category": "drink",
+    "filename": "food/drink/soda.png",
+    "color": "#e02848",
+    "description": "A sweet, fizzy carbonated soft drink.",
+    "tags": [
+      "sweet",
+      "carbonated",
+      "fizzy",
+      "cold",
+      "sugary",
+      "refreshing",
+      "canned"
+    ]
+  },
+  {
+    "id": "soup",
+    "label": "Soup",
+    "category": "prepared",
+    "filename": "food/prepared/soup.png",
+    "color": "#c02840",
+    "description": "A warm liquid dish made by simmering ingredients in broth or water.",
+    "tags": [
+      "warm",
+      "liquid",
+      "simmered",
+      "brothy",
+      "comfort-food",
+      "bowl",
+      "nourishing"
+    ]
+  },
+  {
+    "id": "soy_sauce",
+    "label": "Soy Sauce",
+    "category": "condiment",
+    "filename": "food/condiment/soy_sauce.png",
+    "color": "#304050",
+    "description": "A dark, salty fermented sauce made from soybeans.",
+    "tags": [
+      "salty",
+      "umami",
+      "fermented",
+      "asian",
+      "liquid",
+      "dark",
+      "savory"
+    ]
+  },
+  {
+    "id": "spaghetti",
+    "label": "Spaghetti",
+    "category": "prepared",
+    "filename": "food/prepared/spaghetti.png",
+    "color": "#f8c828",
+    "description": "Long, thin pasta strands served with tomato sauce, an Italian staple.",
+    "tags": [
+      "italian",
+      "pasta",
+      "long",
+      "sauced",
+      "twirled",
+      "classic",
+      "tomato-based"
+    ]
+  },
+  {
+    "id": "sponge",
+    "label": "Kitchen Sponge",
+    "category": "utensil",
+    "filename": "food/utensil/sponge.png",
+    "color": "#f8c848",
+    "description": "A porous cleaning sponge used for washing dishes and wiping kitchen surfaces",
+    "tags": [
+      "sponge",
+      "cleaning",
+      "washing",
+      "dishes",
+      "kitchen",
+      "scrubbing",
+      "hygiene"
+    ]
+  },
+  {
+    "id": "spoon",
+    "label": "Spoon",
+    "category": "utensil",
+    "filename": "food/utensil/spoon.png",
+    "color": "#98a8b0",
+    "description": "A metal spoon for stirring, serving, and eating.",
+    "tags": [
+      "utensil",
+      "metal",
+      "stirring",
+      "serving",
+      "eating",
+      "basic",
+      "essential"
+    ]
+  },
+  {
+    "id": "squeeze_bottle",
+    "label": "Squeeze Bottle",
+    "category": "utensil",
+    "filename": "food/utensil/squeeze_bottle.png",
+    "color": "#f8a830",
+    "description": "A plastic squeeze bottle used for dispensing sauces, condiments, and dressings",
+    "tags": [
+      "bottle",
+      "squeeze",
+      "sauce",
+      "condiment",
+      "dispensing",
+      "plastic",
+      "kitchen"
+    ]
+  },
+  {
+    "id": "squid",
+    "label": "Squid",
+    "category": "seafood",
+    "filename": "food/seafood/squid.png",
+    "color": "#f0a8b8",
+    "description": "A pinkish squid with tentacles, versatile in many cuisines.",
+    "tags": [
+      "tentacles",
+      "mild",
+      "chewy",
+      "versatile",
+      "asian",
+      "fried",
+      "aquatic"
+    ]
+  },
+  {
+    "id": "steak",
+    "label": "Steak",
+    "category": "protein",
+    "filename": "food/protein/steak.png",
+    "color": "#e02848",
+    "description": "A thick cut of beef, grilled or pan-seared to desired doneness.",
+    "tags": [
+      "beef",
+      "thick-cut",
+      "grilled",
+      "seared",
+      "juicy",
+      "premium",
+      "savory"
+    ]
+  },
+  {
+    "id": "stew",
+    "label": "Stew",
+    "category": "prepared",
+    "filename": "food/prepared/stew.png",
+    "color": "#d05038",
+    "description": "A thick, slow-cooked dish of meat and vegetables in a rich gravy.",
+    "tags": [
+      "thick",
+      "slow-cooked",
+      "hearty",
+      "warm",
+      "rustic",
+      "comfort-food",
+      "meaty"
+    ]
+  },
+  {
+    "id": "strawberry",
+    "label": "Strawberry",
+    "category": "fruit",
+    "filename": "food/fruit/strawberry.png",
+    "color": "#e02848",
+    "description": "A bright red, sweet and fragrant berry with tiny seeds on its surface.",
+    "tags": [
+      "sweet",
+      "berry",
+      "red",
+      "fragrant",
+      "juicy",
+      "fresh",
+      "classic"
+    ]
+  },
+  {
+    "id": "sugar",
+    "label": "Sugar",
+    "category": "ingredient",
+    "filename": "food/ingredient/sugar.png",
+    "color": "#f0e8d8",
+    "description": "A sweet crystalline substance refined from sugarcane or beet.",
+    "tags": [
+      "sweet",
+      "crystalline",
+      "refined",
+      "baking",
+      "white",
+      "energy",
+      "dissolving"
+    ]
+  },
+  {
+    "id": "sushi",
+    "label": "Sushi",
+    "category": "prepared",
+    "filename": "food/prepared/sushi.png",
+    "color": "#009040",
+    "description": "Japanese vinegared rice combined with seafood and wrapped in seaweed.",
+    "tags": [
+      "japanese",
+      "rice-based",
+      "seafood",
+      "seaweed",
+      "fresh",
+      "delicate",
+      "cold"
+    ]
+  },
+  {
+    "id": "sweet_potato",
+    "label": "Sweet Potato",
+    "category": "vegetable",
+    "filename": "food/vegetable/sweet_potato.png",
+    "color": "#e08058",
+    "description": "An orange-fleshed tuber with a naturally sweet, starchy flavor.",
+    "tags": [
+      "sweet",
+      "starchy",
+      "orange-fleshed",
+      "tuber",
+      "roasted",
+      "nutritious",
+      "comfort"
+    ]
+  },
+  {
+    "id": "taco",
+    "label": "Taco",
+    "category": "prepared",
+    "filename": "food/prepared/taco.png",
+    "color": "#f8c828",
+    "description": "A folded tortilla filled with seasoned meat, vegetables, and salsa.",
+    "tags": [
+      "mexican",
+      "folded",
+      "filled",
+      "spicy",
+      "crunchy",
+      "portable",
+      "assembled"
+    ]
+  },
+  {
+    "id": "takeout_box",
+    "label": "Takeout Box",
+    "category": "prepared",
+    "filename": "food/prepared/takeout_box.png",
+    "color": "#98a8b0",
+    "description": "A white Chinese takeout container, iconic to-go packaging.",
+    "tags": [
+      "chinese",
+      "container",
+      "takeout",
+      "portable",
+      "iconic",
+      "boxed",
+      "to-go"
+    ]
+  },
+  {
+    "id": "tamale",
+    "label": "Tamale",
+    "category": "prepared",
+    "filename": "food/prepared/tamale.png",
+    "color": "#f8c848",
+    "description": "A traditional Mesoamerican dish of seasoned masa steamed in a corn husk.",
+    "tags": [
+      "mexican",
+      "steamed",
+      "corn-husk",
+      "masa",
+      "traditional",
+      "filled",
+      "wrapped"
+    ]
+  },
+  {
+    "id": "tangerine",
+    "label": "Tangerine",
+    "category": "fruit",
+    "filename": "food/fruit/tangerine.png",
+    "color": "#f09008",
+    "description": "A small, bright orange citrus fruit, sweeter and easier to peel than an orange.",
+    "tags": [
+      "sweet",
+      "citrus",
+      "orange",
+      "peelable",
+      "small",
+      "juicy",
+      "snack"
+    ]
+  },
+  {
+    "id": "tea",
+    "label": "Tea",
+    "category": "drink",
+    "filename": "food/drink/tea.png",
+    "color": "#e08058",
+    "description": "A warm, aromatic beverage made by steeping dried tea leaves in hot water.",
+    "tags": [
+      "hot",
+      "aromatic",
+      "steeped",
+      "mild",
+      "herbal",
+      "calming",
+      "classic"
+    ]
+  },
+  {
+    "id": "teacup",
+    "label": "Teacup",
+    "category": "utensil",
+    "filename": "food/utensil/teacup.png",
+    "color": "#a0d088",
+    "description": "A small handleless cup for serving tea, often associated with Japanese green tea",
+    "tags": [
+      "cup",
+      "tea",
+      "ceramic",
+      "japanese",
+      "green-tea",
+      "matcha",
+      "drink-vessel"
+    ]
+  },
+  {
+    "id": "teapot",
+    "label": "Teapot",
+    "category": "drink",
+    "filename": "food/drink/teapot.png",
+    "color": "#3888c0",
+    "description": "A ceramic teapot for steeping and serving tea.",
+    "tags": [
+      "ceramic",
+      "hot",
+      "steeping",
+      "traditional",
+      "aromatic",
+      "serving",
+      "classic"
+    ]
+  },
+  {
+    "id": "tempura",
+    "label": "Tempura",
+    "category": "prepared",
+    "filename": "food/prepared/tempura.png",
+    "color": "#f8a830",
+    "description": "A golden, crispy deep-fried shrimp in a light batter.",
+    "tags": [
+      "fried",
+      "crispy",
+      "battered",
+      "japanese",
+      "golden",
+      "seafood",
+      "light"
+    ]
+  },
+  {
+    "id": "tomato",
+    "label": "Tomato",
+    "category": "vegetable",
+    "filename": "food/vegetable/tomato.png",
+    "color": "#e83838",
+    "description": "A juicy, red fruit commonly used as a vegetable in cooking.",
+    "tags": [
+      "juicy",
+      "red",
+      "acidic",
+      "versatile",
+      "fresh",
+      "raw",
+      "sauce-base"
+    ]
+  },
+  {
+    "id": "tomato_sauce",
+    "label": "Tomato Sauce",
+    "category": "condiment",
+    "filename": "food/condiment/tomato_sauce.png",
+    "color": "#c02840",
+    "description": "A smooth cooked sauce made from tomatoes, herbs, and garlic.",
+    "tags": [
+      "savory",
+      "tomato-based",
+      "cooked",
+      "italian",
+      "herb-infused",
+      "versatile",
+      "base-sauce"
+    ]
+  },
+  {
+    "id": "tomato_slice",
+    "label": "Tomato Slice",
+    "category": "vegetable",
+    "filename": "food/vegetable/tomato_slice.png",
+    "color": "#e02848",
+    "description": "A round cross-section slice of fresh tomato, a classic sandwich and burger layer.",
+    "tags": [
+      "juicy",
+      "red",
+      "sliced",
+      "fresh",
+      "topping",
+      "burger-layer",
+      "thin"
+    ]
+  },
+  {
+    "id": "tropical_drink",
+    "label": "Tropical Drink",
+    "category": "drink",
+    "filename": "food/drink/tropical_drink.png",
+    "color": "#8898a0",
+    "description": "A vibrant fruit cocktail with a straw and umbrella decoration.",
+    "tags": [
+      "tropical",
+      "fruity",
+      "cold",
+      "colorful",
+      "umbrella",
+      "vacation",
+      "sweet"
+    ]
+  },
+  {
+    "id": "tumbler_glass",
+    "label": "Tumbler Glass",
+    "category": "utensil",
+    "filename": "food/utensil/tumbler_glass.png",
+    "color": "#8898a0",
+    "description": "A short wide glass used for serving spirits, cocktails, and mixed drinks on the rocks",
+    "tags": [
+      "glass",
+      "tumbler",
+      "rocks",
+      "whiskey",
+      "spirit",
+      "cocktail",
+      "drink-vessel"
+    ]
+  },
+  {
+    "id": "turnip",
+    "label": "Turnip",
+    "category": "vegetable",
+    "filename": "food/vegetable/turnip.png",
+    "color": "#c85078",
+    "description": "A round, white-and-purple root vegetable with a mildly peppery taste.",
+    "tags": [
+      "root",
+      "peppery",
+      "mild",
+      "white",
+      "purple-top",
+      "rustic",
+      "starchy"
+    ]
+  },
+  {
+    "id": "waffle",
+    "label": "Waffle",
+    "category": "prepared",
+    "filename": "food/prepared/waffle.png",
+    "color": "#e8b068",
+    "description": "A crisp, golden batter cake with a distinctive grid pattern, served sweet.",
+    "tags": [
+      "crispy",
+      "sweet",
+      "grid-pattern",
+      "battered",
+      "breakfast",
+      "golden",
+      "topped"
+    ]
+  },
+  {
+    "id": "water",
+    "label": "Water",
+    "category": "drink",
+    "filename": "food/drink/water.png",
+    "color": "#a8d8f0",
+    "description": "Pure, essential drinking water — the foundation of all cooking.",
+    "tags": [
+      "neutral",
+      "liquid",
+      "essential",
+      "hydrating",
+      "clear",
+      "base",
+      "universal"
+    ]
+  },
+  {
+    "id": "watermelon",
+    "label": "Watermelon",
+    "category": "fruit",
+    "filename": "food/fruit/watermelon.png",
+    "color": "#e02848",
+    "description": "A large, refreshing summer fruit with sweet, watery pink flesh.",
+    "tags": [
+      "sweet",
+      "watery",
+      "refreshing",
+      "large",
+      "summer",
+      "pink-flesh",
+      "hydrating"
+    ]
+  },
+  {
+    "id": "wheat",
+    "label": "Wheat",
+    "category": "grain",
+    "filename": "food/grain/wheat.png",
+    "color": "#f8d080",
+    "description": "Golden wheat stalks, the raw grain used to make flour and bread.",
+    "tags": [
+      "raw",
+      "grain",
+      "golden",
+      "harvest",
+      "flour-source",
+      "natural",
+      "farm"
+    ]
+  },
+  {
+    "id": "whiskey",
+    "label": "Whiskey",
+    "category": "drink",
+    "filename": "food/drink/whiskey.png",
+    "color": "#8898a0",
+    "description": "A short tumbler glass with amber whiskey and ice.",
+    "tags": [
+      "alcoholic",
+      "amber",
+      "strong",
+      "aged",
+      "neat",
+      "smoky",
+      "premium"
+    ]
+  },
+  {
+    "id": "wine_bottle",
+    "label": "Wine Bottle",
+    "category": "drink",
+    "filename": "food/drink/wine_bottle.png",
+    "color": "#007028",
+    "description": "A bottle of wine, an alcoholic drink fermented from grapes.",
+    "tags": [
+      "alcoholic",
+      "fermented",
+      "grape-based",
+      "aged",
+      "elegant",
+      "bottled",
+      "complex"
+    ]
+  },
+  {
+    "id": "wine_glass",
+    "label": "Wine Glass",
+    "category": "drink",
+    "filename": "food/drink/wine_glass.png",
+    "color": "#c8e8f8",
+    "description": "A glass of wine, ready to drink or pair with a meal.",
+    "tags": [
+      "alcoholic",
+      "fermented",
+      "grape-based",
+      "served",
+      "elegant",
+      "pairing",
+      "refined"
+    ]
+  },
+  {
+    "id": "yogurt",
+    "label": "Yogurt",
+    "category": "dairy",
+    "filename": "food/dairy/yogurt.png",
+    "color": "#f86088",
+    "description": "A creamy, tangy fermented dairy product, eaten plain or flavored.",
+    "tags": [
+      "tangy",
+      "creamy",
+      "fermented",
+      "dairy",
+      "probiotic",
+      "cold",
+      "breakfast"
+    ]
+  },
+  {
+    "id": "zucchini",
+    "label": "Zucchini",
+    "category": "vegetable",
+    "filename": "food/vegetable/zucchini.png",
+    "color": "#38b048",
+    "description": "A tender green summer squash with a mild, slightly sweet flavor.",
+    "tags": [
+      "green",
+      "mild",
+      "tender",
+      "summer-squash",
+      "versatile",
+      "grilled",
+      "light"
+    ]
+  }
+]

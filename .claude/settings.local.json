@@ -12,7 +12,8 @@
       "Bash(jj status:*)",
       "Bash(pnpm format:check:*)",
       "Bash(pnpm lint:*)",
-      "Bash(pnpm:*)"
+      "Bash(pnpm:*)",
+      "Bash(mkdir:*)"
     ]
   }
 }
