@@ -7,9 +7,9 @@ export interface FoodCardColor {
   border: number;
 }
 
-export const FOOD_CARD_W = 112;
-export const FOOD_CARD_H = 146;
-export const FOOD_CARD_RADIUS = 14;
+export const FOOD_CARD_W = 94;
+export const FOOD_CARD_H = 122;
+export const FOOD_CARD_RADIUS = 11;
 
 export const FOOD_CARD_COLORS: Record<string, FoodCardColor> = {
   yellow: { bg: 0xf4d03f, wave: 0xd4ac0d, border: 0xb7950b },
