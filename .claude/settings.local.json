@@ -9,7 +9,10 @@
       "Bash(git commit:*)",
       "Bash(git:*)",
       "Bash(file:*)",
-      "Bash(jj status:*)"
+      "Bash(jj status:*)",
+      "Bash(pnpm format:check:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm:*)"
     ]
   }
 }
