@@ -13,7 +13,34 @@ import {
   PILE,
   SCATTER,
 } from '../config';
+import { FoodAssets } from '../data/food-assets';
 import type { PuzzleData, Step, Ingredient, Attachment } from '../types';
+
+const PROCESSOR_ASSET: Record<string, string> = {
+  mix: 'bowl_spoon',
+  chop: 'knife',
+  boil: 'cooking_pot',
+  fry: 'frying_pan',
+  bake: 'oven_mitt',
+  grill: 'fire',
+  roast: 'fire',
+  knead: 'spoon',
+  shape: 'plate',
+  mash: 'spoon',
+  steam: 'cooking_pot',
+  toast: 'shallow_pan',
+  melt: 'shallow_pan',
+  assemble: 'fork_knife',
+};
+
+function localAssetMatch(name: string): string | null {
+  const normalized = name.toLowerCase().replace(/\s+/g, '_');
+  if (FoodAssets.find(normalized)) return normalized;
+  for (const item of FoodAssets.all) {
+    if (item.label.toLowerCase() === name.toLowerCase()) return item.id;
+  }
+  return null;
+}
 
 export class CookingPuzzleScene extends Phaser.Scene {
   private puzzleData!: PuzzleData;
@@ -258,7 +285,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
     for (const procName of processors) {
       const pos = findPosition();
       const emoji = procEmojiMap.get(procName) ?? '';
-      const card = new PuzzleCard(this, pos.x, pos.y, procName, 'processor', { emoji });
+      const assetId = PROCESSOR_ASSET[procName] ?? null;
+      const card = new PuzzleCard(this, pos.x, pos.y, procName, 'processor', { emoji, assetId });
       this.cards.push(card);
       this.processorCards.set(procName, card);
       this.processorAttachments.set(card, []);
@@ -269,9 +297,11 @@ export class CookingPuzzleScene extends Phaser.Scene {
     const shuffled = Phaser.Utils.Array.Shuffle([...rawItems]) as Ingredient[];
     for (const item of shuffled) {
       const pos = findPosition();
+      const assetId = item.assetId ?? localAssetMatch(item.name);
       const card = new PuzzleCard(this, pos.x, pos.y, item.name, 'ingredient', {
         itemName: item.name,
         emoji: item.emoji,
+        assetId,
       });
       this.cards.push(card);
     }
@@ -283,6 +313,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
         this.puzzleData.finalStep.processorEmoji ??
         procEmojiMap.get(this.puzzleData.finalStep.processor) ??
         '';
+      const finalAssetId = PROCESSOR_ASSET[this.puzzleData.finalStep.processor] ?? null;
       const card = new PuzzleCard(
         this,
         pos.x,
@@ -291,6 +322,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
         'processor',
         {
           emoji,
+          assetId: finalAssetId,
         },
       );
       this.cards.push(card);

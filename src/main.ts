@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { PreloadScene } from './scenes/PreloadScene';
 import { TitleScene } from './scenes/TitleScene';
 import { CookingPuzzleScene } from './scenes/CookingPuzzleScene';
 import { GAME_W, GAME_H, DPR } from './config';
@@ -14,7 +15,7 @@ const config: Phaser.Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [TitleScene, CookingPuzzleScene],
+  scene: [PreloadScene, TitleScene, CookingPuzzleScene],
 };
 
 new Phaser.Game(config);

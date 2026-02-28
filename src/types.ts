@@ -16,6 +16,7 @@ export interface Branch {
 export interface Ingredient {
   name: string;
   emoji: string;
+  assetId?: string | null;
 }
 
 export interface PuzzleData {

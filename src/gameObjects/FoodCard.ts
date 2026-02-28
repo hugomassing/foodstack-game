@@ -31,6 +31,69 @@ export function nameToColor(n: string): FoodCardColor {
   return ingredientColors[Math.abs(hash) % ingredientColors.length];
 }
 
+// ── HSL helpers ──────────────────────────────────────────────────────
+
+function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
+  r /= 255;
+  g /= 255;
+  b /= 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  if (max === min) return [0, 0, l];
+  const d = max - min;
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  let h = 0;
+  if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+  else if (max === g) h = ((b - r) / d + 2) / 6;
+  else h = ((r - g) / d + 4) / 6;
+  return [h, s, l];
+}
+
+function hslToRgb(h: number, s: number, l: number): [number, number, number] {
+  if (s === 0) {
+    const v = Math.round(l * 255);
+    return [v, v, v];
+  }
+  const hue2rgb = (p: number, q: number, t: number) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+  return [
+    Math.round(hue2rgb(p, q, h + 1 / 3) * 255),
+    Math.round(hue2rgb(p, q, h) * 255),
+    Math.round(hue2rgb(p, q, h - 1 / 3) * 255),
+  ];
+}
+
+function hslToInt(h: number, s: number, l: number): number {
+  const [r, g, b] = hslToRgb(h, s, l);
+  return (r << 16) | (g << 8) | b;
+}
+
+/**
+ * Derive a FoodCardColor from a hex string (e.g. "#e8a868").
+ * Creates a soft pastel bg so the full-color sprite has strong contrast.
+ */
+export function hexToCardColor(hex: string): FoodCardColor {
+  const raw = parseInt(hex.replace('#', ''), 16);
+  const [h, s] = rgbToHsl((raw >> 16) & 0xff, (raw >> 8) & 0xff, raw & 0xff);
+
+  // Pastel bg: keep hue, low saturation, high lightness
+  const bgS = Math.min(s, 0.38);
+  return {
+    bg: hslToInt(h, bgS, 0.78),
+    wave: hslToInt(h, bgS + 0.08, 0.64),
+    border: hslToInt(h, bgS + 0.14, 0.5),
+  };
+}
+
 export interface FoodCardConfig {
   name: string;
   emoji: string;
@@ -38,6 +101,7 @@ export interface FoodCardConfig {
   wave?: boolean;
   width?: number;
   height?: number;
+  assetId?: string | null;
 }
 
 export class FoodCard extends Phaser.GameObjects.Container {
@@ -46,6 +110,7 @@ export class FoodCard extends Phaser.GameObjects.Container {
   readonly border: Phaser.GameObjects.Graphics;
   readonly nameText: Phaser.GameObjects.Text;
   readonly emojiText: Phaser.GameObjects.Text;
+  readonly foodImage: Phaser.GameObjects.Image | null = null;
 
   private waveTweens: Phaser.Tweens.Tween[] = [];
 
@@ -201,7 +266,7 @@ export class FoodCard extends Phaser.GameObjects.Container {
         scene.tweens.add({
           targets: backAnim,
           phase: phaseOffset + backPhaseShift + Math.PI * 2,
-          duration: phaseDuration * 1.15,
+          duration: phaseDuration * 1.6,
           repeat: -1,
           ease: 'Linear',
           onUpdate: () => {
@@ -219,7 +284,7 @@ export class FoodCard extends Phaser.GameObjects.Container {
         scene.tweens.add({
           targets: backAnim,
           bob: bobAmount * 0.8,
-          duration: bobDuration * 1.2,
+          duration: bobDuration * 1.7,
           repeat: -1,
           yoyo: true,
           ease: 'Sine.easeInOut',
@@ -227,7 +292,7 @@ export class FoodCard extends Phaser.GameObjects.Container {
         scene.tweens.add({
           targets: backAnim,
           tilt: tiltAmount * 0.7,
-          duration: tiltDuration * 1.3,
+          duration: tiltDuration * 1.8,
           repeat: -1,
           yoyo: true,
           ease: 'Sine.easeInOut',
@@ -240,31 +305,54 @@ export class FoodCard extends Phaser.GameObjects.Container {
     this.border.lineStyle(2, color.border, 1);
     this.border.strokeRoundedRect(ox, oy, w, h, r);
 
-    // 5. Name text
-    this.nameText = scene.add.text(0, oy + 14, name.toUpperCase(), {
-      fontFamily: FONT_FAMILY,
-      fontSize: '12px',
-      fontStyle: 'bold',
-      color: '#2C3E50',
-      align: 'center',
-      wordWrap: { width: w - 16 },
-    });
-    this.nameText.setOrigin(0.5, 0);
-
-    // 6. Emoji
-    const nameBottom = oy + 14 + this.nameText.height;
-    const emojiY = nameBottom + (oy + h - nameBottom) / 2;
-    this.emojiText = scene.add.text(0, emojiY, emoji, {
+    // 5. Image / emoji in the upper area (above the wave)
+    const imageY = oy + h * 0.34;
+    this.emojiText = scene.add.text(0, imageY, emoji, {
       fontSize: `${Math.round(h * 0.42)}px`,
       align: 'center',
     });
     this.emojiText.setOrigin(0.5, 0.5);
+
+    // 6. Sprite image (if assetId provided and texture loaded)
+    let imgShadow: Phaser.GameObjects.Image | null = null;
+    const textureKey = config.assetId ? `food_${config.assetId}` : null;
+    if (textureKey && scene.textures.exists(textureKey)) {
+      const maxDim = Math.round(h * 0.42);
+
+      // Drop shadow: offset, tinted black, semi-transparent
+      imgShadow = scene.add.image(2, imageY + 3, textureKey);
+      const shadowScale = Math.min(maxDim / imgShadow.width, maxDim / imgShadow.height);
+      imgShadow.setScale(shadowScale);
+      imgShadow.setOrigin(0.5, 0.5);
+      imgShadow.setTint(0x000000);
+      imgShadow.setAlpha(0.2);
+
+      const img = scene.add.image(0, imageY, textureKey);
+      const scale = Math.min(maxDim / img.width, maxDim / img.height);
+      img.setScale(scale);
+      img.setOrigin(0.5, 0.5);
+      this.foodImage = img;
+      this.emojiText.setVisible(false);
+    }
+
+    // 7. Name text inside the wave area
+    this.nameText = scene.add.text(0, oy + h * 0.84, name.toUpperCase(), {
+      fontFamily: FONT_FAMILY,
+      fontSize: '12px',
+      fontStyle: 'bold',
+      color: '#ffffff',
+      align: 'center',
+      wordWrap: { width: w - 16 },
+    });
+    this.nameText.setOrigin(0.5, 0.5);
 
     // Assemble container
     const children: Phaser.GameObjects.GameObject[] = [this.shadow, this.cardBody];
     if (waveLightGfx) children.push(waveLightGfx);
     if (waveDarkGfx) children.push(waveDarkGfx);
     children.push(this.border, this.nameText, this.emojiText);
+    if (imgShadow) children.push(imgShadow);
+    if (this.foodImage) children.push(this.foodImage);
     this.add(children);
     this.setSize(w, h);
 

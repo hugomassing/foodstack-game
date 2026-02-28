@@ -14,25 +14,25 @@
  *   const fruits = FoodAssets.byCategory("fruit");
  */
 
-import Phaser from "phaser";
-import manifest from "./food-manifest.json";
+import Phaser from 'phaser';
+import manifest from './food-manifest.json';
 
 // ── Types ─────────────────────────────────────────────────────────────
 
 export type FoodCategory =
-  | "condiment"
-  | "dairy"
-  | "drink"
-  | "fruit"
-  | "grain"
-  | "ingredient"
-  | "prepared"
-  | "protein"
-  | "seafood"
-  | "snack"
-  | "sweet"
-  | "utensil"
-  | "vegetable";
+  | 'condiment'
+  | 'dairy'
+  | 'drink'
+  | 'fruit'
+  | 'grain'
+  | 'ingredient'
+  | 'prepared'
+  | 'protein'
+  | 'seafood'
+  | 'snack'
+  | 'sweet'
+  | 'utensil'
+  | 'vegetable';
 
 export interface FoodItem {
   /** Unique key, e.g. "apple", "bun_top" */
@@ -55,7 +55,7 @@ export interface FoodItem {
 
 // ── Constants ─────────────────────────────────────────────────────────
 
-const SPRITES_BASE = "assets/sprites";
+const SPRITES_BASE = 'assets/sprites';
 
 // ── Build registry ────────────────────────────────────────────────────
 
@@ -63,28 +63,26 @@ const itemsById = new Map<string, FoodItem>();
 const itemsByCategory = new Map<FoodCategory, FoodItem[]>();
 const itemsByTag = new Map<string, FoodItem[]>();
 
-const items: FoodItem[] = (manifest as Omit<FoodItem, "textureKey">[]).map(
-  (raw) => {
-    const item: FoodItem = {
-      ...raw,
-      category: raw.category as FoodCategory,
-      textureKey: `food_${raw.id}`,
-    };
-    itemsById.set(item.id, item);
+const items: FoodItem[] = (manifest as Omit<FoodItem, 'textureKey'>[]).map((raw) => {
+  const item: FoodItem = {
+    ...raw,
+    category: raw.category as FoodCategory,
+    textureKey: `food_${raw.id}`,
+  };
+  itemsById.set(item.id, item);
 
-    const catList = itemsByCategory.get(item.category) ?? [];
-    catList.push(item);
-    itemsByCategory.set(item.category, catList);
+  const catList = itemsByCategory.get(item.category) ?? [];
+  catList.push(item);
+  itemsByCategory.set(item.category, catList);
 
-    for (const tag of item.tags) {
-      const tagList = itemsByTag.get(tag) ?? [];
-      tagList.push(item);
-      itemsByTag.set(tag, tagList);
-    }
-
-    return item;
+  for (const tag of item.tags) {
+    const tagList = itemsByTag.get(tag) ?? [];
+    tagList.push(item);
+    itemsByTag.set(tag, tagList);
   }
-);
+
+  return item;
+});
 
 // ── Public API ────────────────────────────────────────────────────────
 
@@ -104,10 +102,7 @@ export const FoodAssets = {
    */
   preload(scene: Phaser.Scene): void {
     for (const item of items) {
-      scene.load.image(
-        item.textureKey,
-        `${SPRITES_BASE}/${item.filename}`
-      );
+      scene.load.image(item.textureKey, `${SPRITES_BASE}/${item.filename}`);
     }
   },
 
@@ -157,7 +152,7 @@ export const FoodAssets = {
    * Useful for tint, setTint(), graphics fills, etc.
    */
   colorToNumber(hex: string): number {
-    return parseInt(hex.replace("#", ""), 16);
+    return parseInt(hex.replace('#', ''), 16);
   },
 } as const;
 
