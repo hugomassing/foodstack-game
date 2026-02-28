@@ -643,19 +643,15 @@ export class CookingPuzzleScene extends Phaser.Scene {
             ease: 'Back.easeOut',
           });
         } else {
-          // Destroy raw ingredient cards
+          // Scatter ingredient cards back onto the board for reuse
+          const newX = Phaser.Math.Between(QUEST_PANEL_W + 68, GAME_W - 68);
+          const newY = Phaser.Math.Between(TOPBAR_H + 20, GAME_H - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10);
           this.tweens.add({
             targets: att.card,
-            scaleX: 0,
-            scaleY: 0,
-            alpha: 0,
-            duration: 300,
-            ease: 'Quad.easeIn',
-            onComplete: () => {
-              const idx = this.cards.indexOf(att.card);
-              if (idx !== -1) this.cards.splice(idx, 1);
-              att.card.destroy();
-            },
+            x: newX,
+            y: newY,
+            duration: 400,
+            ease: 'Back.easeOut',
           });
         }
       }
@@ -699,12 +695,43 @@ export class CookingPuzzleScene extends Phaser.Scene {
       ? logicalAsset
       : inputTextureKeys.length > 0 ? inputTextureKeys[0].slice(5) : null;
 
-    const card = new PuzzleCard(this, procCard.x, procCard.y, step.output, 'intermediate', {
+    // Spawn away from the processor so the new card isn't hidden underneath it
+    const boardMinX = QUEST_PANEL_W + FOOD_CARD_W / 2 + SCATTER.PAD;
+    const boardMaxX = GAME_W - FOOD_CARD_W / 2 - SCATTER.PAD;
+    const boardMinY = TOPBAR_H + FOOD_CARD_H / 2 + SCATTER.PAD;
+    const boardMaxY = GAME_H - FOOD_CARD_H / 2 - SCATTER.FOOTER;
+
+    let spawnX: number;
+    let spawnY: number;
+    for (let attempt = 0; attempt < SCATTER.MAX_ATTEMPTS; attempt++) {
+      spawnX = Phaser.Math.Between(boardMinX, boardMaxX);
+      spawnY = Phaser.Math.Between(boardMinY, boardMaxY);
+      // Accept if far enough from the processor
+      if (
+        Math.abs(spawnX - procCard.x) > FOOD_CARD_W + SCATTER.CARD_GAP ||
+        Math.abs(spawnY - procCard.y) > FOOD_CARD_H + SCATTER.CARD_GAP
+      ) {
+        break;
+      }
+    }
+    // TypeScript: spawnX/spawnY are always assigned by the loop (MAX_ATTEMPTS >= 1)
+    spawnX ??= Phaser.Math.Between(boardMinX, boardMaxX);
+    spawnY ??= Phaser.Math.Between(boardMinY, boardMaxY);
+
+    // Find the highest depth among existing cards so the new one renders on top
+    let maxDepth = 0;
+    for (const c of this.cards) {
+      if (c.depth > maxDepth) maxDepth = c.depth;
+    }
+
+    const card = new PuzzleCard(this, spawnX, spawnY, step.output, 'intermediate', {
       itemName: step.output,
       stepId: step.stepId,
       emoji: '',
       assetId: primaryAsset,
     });
+    card.cardDepth = maxDepth + 1;
+    card.setDepth(maxDepth + 1);
 
     // Fan multiple input images when no logical asset was resolved
     if (!useLogical && inputTextureKeys.length > 1) {
