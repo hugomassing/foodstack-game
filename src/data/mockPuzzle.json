@@ -1,0 +1,108 @@
+{
+    "dishName": "Spicy Shrimp Glazed Taco",
+    "difficulty": "easy",
+    "branches": [
+        {
+            "name": "shrimp",
+            "steps": [
+                {
+                    "stepId": "b1_s1",
+                    "processor": "chop",
+                    "processorEmoji": "🔪",
+                    "inputs": ["garlic", "chili peppers"],
+                    "output": "chopped aromatics"
+                },
+                {
+                    "stepId": "b1_s2",
+                    "processor": "fry",
+                    "processorEmoji": "🍳",
+                    "inputs": ["shrimp", "b1_s1"],
+                    "output": "spicy shrimp"
+                },
+                {
+                    "stepId": "b1_s3",
+                    "processor": "mix",
+                    "processorEmoji": "🥣",
+                    "inputs": ["b1_s2", "honey"],
+                    "output": "glazed shrimp"
+                }
+            ]
+        },
+        {
+            "name": "taco",
+            "steps": [
+                {
+                    "stepId": "b2_s1",
+                    "processor": "fry",
+                    "processorEmoji": "🍳",
+                    "inputs": ["tortillas"],
+                    "output": "crispy tortillas"
+                },
+                {
+                    "stepId": "b2_s2",
+                    "processor": "chop",
+                    "processorEmoji": "🔪",
+                    "inputs": ["lettuce"],
+                    "output": "shredded lettuce"
+                }
+            ]
+        }
+    ],
+    "finalStep": {
+        "stepId": "final",
+        "processor": "assemble",
+        "processorEmoji": "🍽️",
+        "inputs": ["b1_s3", "b2_s1", "b2_s2"],
+        "output": "Spicy Shrimp Glazed Taco"
+    },
+    "processors": [
+        {
+            "name": "chop",
+            "emoji": "🔪"
+        },
+        {
+            "name": "fry",
+            "emoji": "🍳"
+        },
+        {
+            "name": "mix",
+            "emoji": "🥣"
+        }
+    ],
+    "ingredients": [
+        {
+            "name": "shrimp",
+            "emoji": "🍤"
+        },
+        {
+            "name": "garlic",
+            "emoji": "🧄"
+        },
+        {
+            "name": "chili peppers",
+            "emoji": "🌶️"
+        },
+        {
+            "name": "honey",
+            "emoji": "🍯"
+        },
+        {
+            "name": "tortillas",
+            "emoji": "🌮"
+        },
+        {
+            "name": "lettuce",
+            "emoji": "🥬"
+        }
+    ],
+    "decoys": [
+        {
+            "name": "cumin",
+            "emoji": "🌿"
+        },
+        {
+            "name": "lime",
+            "emoji": "🍋"
+        }
+    ]
+}
