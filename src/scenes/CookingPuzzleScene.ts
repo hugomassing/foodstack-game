@@ -6,12 +6,12 @@ import {
   GAME_H,
   FONT_FAMILY,
   QUEST_PANEL_W,
-  TOPBAR_H,
   COLORS,
   TEXT_COLORS,
   PILE,
   SCATTER,
   PROCESSOR_RING_PAD,
+  HAND,
 } from '../config';
 import { FoodAssets } from '../data/food-assets';
 import { gameStore } from '../store/gameStore';
@@ -83,6 +83,20 @@ function localAssetMatch(name: string): string | null {
   return null;
 }
 
+// Board dimensions (expanded — header removed)
+const BD_X = 248;
+const BD_Y = 10;
+const BD_W = 704;
+const BD_H = 440;
+const BD_R = 20;
+
+interface HandSlot {
+  x: number;
+  y: number;
+  rotation: number;
+  depth: number;
+}
+
 export class CookingPuzzleScene extends Phaser.Scene {
   private puzzleData!: PuzzleData;
   private completedSteps!: Set<string>;
@@ -98,6 +112,14 @@ export class CookingPuzzleScene extends Phaser.Scene {
   private activeProcessor: PuzzleCard | null = null;
   private cookButton: Phaser.GameObjects.Container | null = null;
 
+  // Hand system
+  private handCards!: PuzzleCard[];
+  private handSlots!: Map<PuzzleCard, HandSlot>;
+  private handToBoardCard!: Map<PuzzleCard, PuzzleCard>;
+  private boardToHandCard!: Map<PuzzleCard, PuzzleCard>;
+  private ingredientMeta!: Map<PuzzleCard, { emoji: string; assetId: string | null }>;
+  private removeIndicator!: Phaser.GameObjects.Graphics;
+
   constructor() {
     super({ key: 'CookingPuzzleScene' });
   }
@@ -111,9 +133,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     // ── Background food icons ─────────────────────────────────
     this.drawBgIcons();
-
-    // ── Layout constants ──────────────────────────────────────
-    const BD_X = 248, BD_Y = 78, BD_W = 704, BD_H = 454, BD_R = 20;
 
     // ── Board card shadow ─────────────────────────────────────
     const boardShadow = this.add.graphics().setDepth(-2);
@@ -147,6 +166,11 @@ export class CookingPuzzleScene extends Phaser.Scene {
     this.cards = [];
     this.processorCards = new Map();
     this.processorAttachments = new Map();
+    this.handCards = [];
+    this.handSlots = new Map();
+    this.handToBoardCard = new Map();
+    this.boardToHandCard = new Map();
+    this.ingredientMeta = new Map();
 
     // Build all steps list
     this.allSteps = [];
@@ -184,22 +208,30 @@ export class CookingPuzzleScene extends Phaser.Scene {
       ease: 'Sine.easeInOut',
     });
 
+    // -- Remove indicator (red X shown when dragging card below board) --
+    this.removeIndicator = this.add.graphics().setDepth(201).setVisible(false);
+    const xSize = 14;
+    this.removeIndicator.lineStyle(4, 0xff2222, 1);
+    this.removeIndicator.lineBetween(-xSize, -xSize, xSize, xSize);
+    this.removeIndicator.lineBetween(-xSize, xSize, xSize, -xSize);
+    this.removeIndicator.fillStyle(0xff2222, 0.2);
+    this.removeIndicator.fillCircle(0, 0, xSize + 6);
+
+    // Board drag bounds
+    const boardMinDragX = BD_X + FOOD_CARD_W / 2;
+    const boardMaxDragX = BD_X + BD_W - FOOD_CARD_W / 2;
+    const boardMinDragY = BD_Y + FOOD_CARD_H / 2;
+    const boardMaxDragY = BD_Y + BD_H - FOOD_CARD_H / 2;
+
     // -- Drag support --
     this.input.on(
       'drag',
       (_pointer: Phaser.Input.Pointer, obj: PuzzleCard, dragX: number, dragY: number) => {
-        obj.x = dragX;
-        obj.y = dragY;
-
-        if (obj.cardType === 'processor') {
-          const attachments = this.processorAttachments.get(obj);
-          if (attachments) {
-            attachments.forEach((att, i) => {
-              att.card.x = dragX;
-              att.card.y = dragY + PILE.BASE_Y + i * PILE.OFFSET_Y;
-            });
-          }
-        } else {
+        // Hand cards move freely (they're being dragged to the board)
+        if (this.handSlots.has(obj)) {
+          obj.x = dragX;
+          obj.y = dragY;
+          // Check processor overlap for direct drop onto processor
           const proc = this.findOverlappingProcessor(obj);
           this.hoveredProcessor = proc;
           if (proc) {
@@ -207,38 +239,75 @@ export class CookingPuzzleScene extends Phaser.Scene {
           } else {
             this.dropHighlight.setVisible(false);
           }
+          return;
+        }
+
+        // Board ingredient cards can be dragged below board to remove
+        const isBoardIngredient = obj.cardType === 'ingredient' && this.boardToHandCard.has(obj);
+        if (isBoardIngredient) {
+          obj.x = Phaser.Math.Clamp(dragX, boardMinDragX, boardMaxDragX);
+          obj.y = dragY;
+          // Show red X when card is below board
+          const belowBoard = obj.y > boardMaxDragY;
+          obj.setAlpha(belowBoard ? 0.4 : 1);
+          if (belowBoard) {
+            this.removeIndicator.setPosition(obj.x, obj.y);
+            this.removeIndicator.setVisible(true);
+          } else {
+            this.removeIndicator.setVisible(false);
+          }
+        } else {
+          obj.x = Phaser.Math.Clamp(dragX, boardMinDragX, boardMaxDragX);
+          obj.y = Phaser.Math.Clamp(dragY, boardMinDragY, boardMaxDragY);
+        }
+
+        const proc = this.findOverlappingProcessor(obj);
+        this.hoveredProcessor = proc;
+        if (proc) {
+          this.updateDropHighlight(proc);
+        } else {
+          this.dropHighlight.setVisible(false);
         }
       },
     );
 
     this.input.on('dragstart', (_pointer: Phaser.Input.Pointer, obj: PuzzleCard) => {
+      // Hand card drag start
+      if (this.handSlots.has(obj)) {
+        this.tweens.killTweensOf(obj);
+        obj.setDepth(200);
+        obj.setScale(1);
+        obj.setRotation(0);
+        return;
+      }
+
       obj.setDepth(100);
       if (obj.attachedTo) {
         this.detachFromProcessor(obj);
-      }
-      if (obj.cardType === 'processor') {
-        const attachments = this.processorAttachments.get(obj);
-        if (attachments) {
-          attachments.forEach((att, i) => {
-            att.card.setDepth(101 + i);
-          });
-        }
       }
       this.hoveredProcessor = null;
       this.dropHighlight.setVisible(false);
     });
 
     this.input.on('dragend', (_pointer: Phaser.Input.Pointer, obj: PuzzleCard) => {
+      this.removeIndicator.setVisible(false);
+
+      // Hand card drag end — place on board or return to slot
+      if (this.handSlots.has(obj)) {
+        this.onHandCardDragEnd(obj);
+        return;
+      }
+
+      // Board ingredient card dragged below board — remove it
+      if (obj.cardType === 'ingredient' && this.boardToHandCard.has(obj) && obj.y > boardMaxDragY) {
+        this.trashBoardCard(obj);
+        this.hoveredProcessor = null;
+        this.dropHighlight.setVisible(false);
+        return;
+      }
+
       if (!obj.attachedTo) {
         obj.setDepth(obj.cardDepth || 1);
-      }
-      if (obj.cardType === 'processor') {
-        const attachments = this.processorAttachments.get(obj);
-        if (attachments) {
-          attachments.forEach((att, i) => {
-            att.card.setDepth((obj.cardDepth || 1) + 1 + i);
-          });
-        }
       }
       if ((obj.cardType === 'ingredient' || obj.cardType === 'intermediate') && this.hoveredProcessor) {
         if (this.activeProcessor && this.activeProcessor !== this.hoveredProcessor) return;
@@ -248,55 +317,14 @@ export class CookingPuzzleScene extends Phaser.Scene {
       this.dropHighlight.setVisible(false);
     });
 
-    // -- Scatter cards --
-    this.scatterCards();
+    // -- Create cards --
+    this.createProcessorCards();
+    this.createHandCards();
   }
 
-  // -- Scatter cards across game area --
+  // -- Create processor cards on board --
 
-  private scatterCards(): void {
-    const minX = 248 + FOOD_CARD_W / 2 + SCATTER.PAD;
-    const maxX = 248 + 704 - FOOD_CARD_W / 2 - SCATTER.PAD;
-    const minY = 78 + FOOD_CARD_H / 2 + SCATTER.PAD;
-    const maxY = 78 + 454 - FOOD_CARD_H / 2 - SCATTER.FOOTER;
-
-    const positions: { x: number; y: number }[] = [];
-
-    const findPosition = (): { x: number; y: number } => {
-      for (let attempt = 0; attempt < SCATTER.MAX_ATTEMPTS; attempt++) {
-        const x = Phaser.Math.Between(minX, maxX);
-        const y = Phaser.Math.Between(minY, maxY);
-        let overlapping = false;
-        for (const pos of positions) {
-          if (
-            Math.abs(x - pos.x) < FOOD_CARD_W + SCATTER.CARD_GAP &&
-            Math.abs(y - pos.y) < FOOD_CARD_H + SCATTER.CARD_GAP
-          ) {
-            overlapping = true;
-            break;
-          }
-        }
-        if (!overlapping) {
-          positions.push({ x, y });
-          return { x, y };
-        }
-      }
-      const cols = Math.max(1, Math.floor((maxX - minX) / (FOOD_CARD_W + SCATTER.GRID_GAP - 2)));
-      const idx = positions.length;
-      const col = idx % cols;
-      const row = Math.floor(idx / cols);
-      const x =
-        minX +
-        col * (FOOD_CARD_W + SCATTER.GRID_GAP) +
-        Phaser.Math.Between(-SCATTER.GRID_JITTER, SCATTER.GRID_JITTER);
-      const y =
-        minY +
-        row * (FOOD_CARD_H + SCATTER.GRID_GAP) +
-        Phaser.Math.Between(-SCATTER.GRID_JITTER, SCATTER.GRID_JITTER);
-      positions.push({ x, y });
-      return { x, y };
-    };
-
+  private createProcessorCards(): void {
     // Processor emoji + asset lookup
     const procEmojiMap = new Map<string, string>();
     const procAssetMap = new Map<string, string | null>();
@@ -305,65 +333,236 @@ export class CookingPuzzleScene extends Phaser.Scene {
       procAssetMap.set(p.name, p.assetId ?? null);
     }
 
-    // Collect all processors
+    // Collect all processors (including final step)
     const usedProcessors = new Set<string>();
     for (const step of this.allSteps) {
       usedProcessors.add(step.processor);
     }
     const paletteNames = this.puzzleData.processors.map((p) => p.name);
     const processorSet = new Set([...usedProcessors, ...paletteNames]);
-    const processors = Phaser.Utils.Array.Shuffle([...processorSet]) as string[];
 
-    for (const procName of processors) {
-      const pos = findPosition();
-      const emoji = procEmojiMap.get(procName) ?? '';
+    // Ensure final step processor is included
+    processorSet.add(this.puzzleData.finalStep.processor);
+
+    const processors = [...processorSet];
+    const count = processors.length;
+    const rowY = BD_Y + 80;
+
+    for (let i = 0; i < count; i++) {
+      const procName = processors[i];
+      const x = BD_X + BD_W * (i + 0.5) / count;
+      const emoji =
+        procEmojiMap.get(procName) ??
+        (procName === this.puzzleData.finalStep.processor ? this.puzzleData.finalStep.processorEmoji ?? '' : '');
       const assetId = procAssetMap.get(procName) ?? PROCESSOR_ASSET[procName] ?? null;
-      const card = new PuzzleCard(this, pos.x, pos.y, procName, 'processor', { emoji, assetId });
+      const card = new PuzzleCard(this, x, rowY, procName, 'processor', { emoji, assetId });
       this.cards.push(card);
       this.processorCards.set(procName, card);
       this.processorAttachments.set(card, []);
     }
+  }
 
-    // Ingredient cards (raw + decoys, shuffled)
+  // -- Create hand cards in arc --
+
+  private createHandCards(): void {
     const rawItems = [...this.puzzleData.ingredients, ...this.puzzleData.decoys];
     const shuffled = Phaser.Utils.Array.Shuffle([...rawItems]) as Ingredient[];
+
     for (const item of shuffled) {
-      const pos = findPosition();
       const assetId = item.assetId ?? localAssetMatch(item.name);
-      const card = new PuzzleCard(this, pos.x, pos.y, item.name, 'ingredient', {
+      const card = new PuzzleCard(this, this.gameCenterX, GAME_H + 100, item.name, 'ingredient', {
         itemName: item.name,
         emoji: item.emoji,
         assetId,
       });
+      card.setScale(HAND.CARD_SCALE);
+      card.disableInteractive();
+      card.setInteractive({ draggable: true, useHandCursor: true });
+
+      this.ingredientMeta.set(card, { emoji: item.emoji, assetId: assetId ?? null });
+
+      card.on('pointerover', () => this.onHandCardOver(card));
+      card.on('pointerout', () => this.onHandCardOut(card));
+
+      this.handCards.push(card);
       this.cards.push(card);
     }
 
-    // Final step processor if not already present
-    if (!this.processorCards.has(this.puzzleData.finalStep.processor)) {
-      const pos = findPosition();
-      const emoji =
-        this.puzzleData.finalStep.processorEmoji ??
-        procEmojiMap.get(this.puzzleData.finalStep.processor) ??
-        '';
-      const finalAssetId =
-        procAssetMap.get(this.puzzleData.finalStep.processor) ??
-        PROCESSOR_ASSET[this.puzzleData.finalStep.processor] ??
-        null;
-      const card = new PuzzleCard(
-        this,
-        pos.x,
-        pos.y,
-        this.puzzleData.finalStep.processor,
-        'processor',
-        {
-          emoji,
-          assetId: finalAssetId,
-        },
-      );
-      this.cards.push(card);
-      this.processorCards.set(this.puzzleData.finalStep.processor, card);
-      this.processorAttachments.set(card, []);
+    this.layoutHand(true);
+  }
+
+  private layoutHand(animate = false): void {
+    const n = this.handCards.length;
+    if (n === 0) return;
+
+    const arcCenterX = this.gameCenterX + HAND.CENTER_X_OFFSET;
+    const arcCenterY = GAME_H + HAND.ARC_RADIUS + HAND.CENTER_Y_OFFSET;
+
+    for (let i = 0; i < n; i++) {
+      const card = this.handCards[i];
+      const t = n > 1 ? (i - (n - 1) / 2) / ((n - 1) / 2) : 0;
+      const angle = t * (HAND.MAX_ANGLE_SPREAD / 2);
+
+      const x = arcCenterX + HAND.ARC_RADIUS * Math.sin(angle);
+      const y = arcCenterY - HAND.ARC_RADIUS * Math.cos(angle);
+      const depth = 10 + i;
+
+      this.handSlots.set(card, { x, y, rotation: angle, depth });
+      this.tweens.killTweensOf(card);
+      card.setDepth(depth);
+
+      if (animate) {
+        card.setPosition(arcCenterX, GAME_H + 150);
+        card.setRotation(0);
+        this.tweens.add({
+          targets: card,
+          x,
+          y,
+          rotation: angle,
+          duration: 400,
+          ease: 'Back.easeOut',
+          delay: i * 40,
+        });
+      } else {
+        card.setPosition(x, y);
+        card.setRotation(angle);
+      }
     }
+  }
+
+  private removeFromHand(card: PuzzleCard): void {
+    this.tweens.killTweensOf(card);
+    card.disableInteractive();
+    card.setVisible(false);
+    this.handSlots.delete(card);
+    this.handCards = this.handCards.filter((c) => c !== card);
+    this.layoutHand();
+  }
+
+  private restoreToHand(card: PuzzleCard): void {
+    card.setVisible(true);
+    card.setAlpha(1);
+    card.setScale(HAND.CARD_SCALE);
+    card.disableInteractive();
+    card.setInteractive({ draggable: true, useHandCursor: true });
+    this.handCards.push(card);
+    this.layoutHand();
+  }
+
+  // -- Hand card interaction --
+
+  private onHandCardOver(card: PuzzleCard): void {
+    const slot = this.handSlots.get(card);
+    if (!slot) return;
+
+    this.tweens.killTweensOf(card);
+    this.tweens.add({
+      targets: card,
+      y: slot.y - HAND.HOVER_LIFT,
+      scaleX: HAND.HOVER_SCALE,
+      scaleY: HAND.HOVER_SCALE,
+      rotation: 0,
+      duration: 200,
+      ease: 'Quad.easeOut',
+    });
+    card.setDepth(200);
+  }
+
+  private onHandCardOut(card: PuzzleCard): void {
+    const slot = this.handSlots.get(card);
+    if (!slot) return;
+
+    this.tweens.killTweensOf(card);
+    this.tweens.add({
+      targets: card,
+      x: slot.x,
+      y: slot.y,
+      scaleX: HAND.CARD_SCALE,
+      scaleY: HAND.CARD_SCALE,
+      rotation: slot.rotation,
+      duration: 200,
+      ease: 'Quad.easeOut',
+    });
+    card.setDepth(slot.depth);
+  }
+
+  private onHandCardDragEnd(card: PuzzleCard): void {
+    this.dropHighlight.setVisible(false);
+
+    // Already placed on board — return to slot
+    if (this.handToBoardCard.has(card)) {
+      this.onHandCardOut(card);
+      this.hoveredProcessor = null;
+      return;
+    }
+
+    // Check if dropped in board area
+    const inBoard =
+      card.x > BD_X + FOOD_CARD_W / 2 &&
+      card.x < BD_X + BD_W - FOOD_CARD_W / 2 &&
+      card.y > BD_Y + FOOD_CARD_H / 2 &&
+      card.y < BD_Y + BD_H - FOOD_CARD_H / 2;
+
+    if (!inBoard && !this.hoveredProcessor) {
+      // Dropped outside board — return to hand
+      this.onHandCardOut(card);
+      this.hoveredProcessor = null;
+      return;
+    }
+
+    const meta = this.ingredientMeta.get(card);
+    if (!meta) {
+      this.onHandCardOut(card);
+      this.hoveredProcessor = null;
+      return;
+    }
+
+    // Create board card at the drop position
+    const dropX = Phaser.Math.Clamp(card.x, BD_X + FOOD_CARD_W / 2, BD_X + BD_W - FOOD_CARD_W / 2);
+    const dropY = Phaser.Math.Clamp(card.y, BD_Y + FOOD_CARD_H / 2, BD_Y + BD_H - FOOD_CARD_H / 2);
+
+    const boardCard = new PuzzleCard(this, dropX, dropY, card.cardLabel, 'ingredient', {
+      itemName: card.itemName,
+      emoji: meta.emoji,
+      assetId: meta.assetId,
+    });
+
+    this.cards.push(boardCard);
+    this.handToBoardCard.set(card, boardCard);
+    this.boardToHandCard.set(boardCard, card);
+
+    // If dropped on a processor, attach directly
+    if (this.hoveredProcessor) {
+      if (!this.activeProcessor || this.activeProcessor === this.hoveredProcessor) {
+        this.attachToProcessor(boardCard, this.hoveredProcessor);
+      }
+    }
+
+    // Remove hand card and re-layout
+    this.removeFromHand(card);
+    this.hoveredProcessor = null;
+  }
+
+  private trashBoardCard(boardCard: PuzzleCard): void {
+    const handCard = this.boardToHandCard.get(boardCard);
+    if (!handCard) return;
+
+    this.tweens.add({
+      targets: boardCard,
+      scaleX: 0,
+      scaleY: 0,
+      alpha: 0,
+      duration: 200,
+      ease: 'Quad.easeIn',
+      onComplete: () => {
+        this.cards = this.cards.filter((c) => c !== boardCard);
+        boardCard.destroy();
+      },
+    });
+
+    this.handToBoardCard.delete(handCard);
+    this.boardToHandCard.delete(boardCard);
+    this.restoreToHand(handCard);
   }
 
   // -- Attach / Detach --
@@ -487,15 +686,37 @@ export class CookingPuzzleScene extends Phaser.Scene {
     const toDetach = [...attachments];
     for (const att of toDetach) {
       att.card.attachedTo = null;
-      const newX = Phaser.Math.Between(248 + 68, 248 + 704 - 68);
-      const newY = Phaser.Math.Between(78 + 20, 78 + 454 - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10);
-      this.tweens.add({
-        targets: att.card,
-        x: newX,
-        y: newY,
-        duration: 400,
-        ease: 'Back.easeOut',
-      });
+
+      const handCard = this.boardToHandCard.get(att.card);
+      if (handCard) {
+        // Board ingredient card: destroy and restore hand card
+        this.tweens.add({
+          targets: att.card,
+          scaleX: 0,
+          scaleY: 0,
+          alpha: 0,
+          duration: 300,
+          ease: 'Quad.easeIn',
+          onComplete: () => {
+            this.cards = this.cards.filter((c) => c !== att.card);
+            att.card.destroy();
+          },
+        });
+        this.handToBoardCard.delete(handCard);
+        this.boardToHandCard.delete(att.card);
+        this.restoreToHand(handCard);
+      } else {
+        // Intermediate card: fling back to random board position
+        const newX = Phaser.Math.Between(BD_X + 68, BD_X + BD_W - 68);
+        const newY = Phaser.Math.Between(BD_Y + 20, BD_Y + BD_H - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10);
+        this.tweens.add({
+          targets: att.card,
+          x: newX,
+          y: newY,
+          duration: 400,
+          ease: 'Back.easeOut',
+        });
+      }
     }
     attachments.length = 0;
     this.deactivateProcessor();
@@ -535,15 +756,40 @@ export class CookingPuzzleScene extends Phaser.Scene {
     if (attachments) {
       for (const att of attachments) {
         att.card.attachedTo = null;
-        const newX = Phaser.Math.Between(QUEST_PANEL_W + 68, GAME_W - 68);
-        const newY = Phaser.Math.Between(TOPBAR_H + 20, GAME_H - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10);
-        this.tweens.add({
-          targets: att.card,
-          x: newX,
-          y: newY,
-          duration: 400,
-          ease: 'Back.easeOut',
-        });
+
+        const handCard = this.boardToHandCard.get(att.card);
+        if (handCard) {
+          // Board ingredient card: destroy and restore hand card
+          this.tweens.add({
+            targets: att.card,
+            scaleX: 0,
+            scaleY: 0,
+            alpha: 0,
+            duration: 300,
+            ease: 'Quad.easeIn',
+            onComplete: () => {
+              this.cards = this.cards.filter((c) => c !== att.card);
+              att.card.destroy();
+            },
+          });
+          this.handToBoardCard.delete(handCard);
+          this.boardToHandCard.delete(att.card);
+          this.restoreToHand(handCard);
+        } else {
+          // Intermediate card: destroy (consumed in the step)
+          this.tweens.add({
+            targets: att.card,
+            scaleX: 0,
+            scaleY: 0,
+            alpha: 0,
+            duration: 300,
+            ease: 'Quad.easeIn',
+            onComplete: () => {
+              this.cards = this.cards.filter((c) => c !== att.card);
+              att.card.destroy();
+            },
+          });
+        }
       }
       attachments.length = 0;
     }
@@ -586,10 +832,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
       ? logicalAsset
       : inputTextureKeys.length > 0 ? inputTextureKeys[0].slice(5) : null;
 
-    const boardMinX = QUEST_PANEL_W + FOOD_CARD_W / 2 + SCATTER.PAD;
-    const boardMaxX = GAME_W - FOOD_CARD_W / 2 - SCATTER.PAD;
-    const boardMinY = TOPBAR_H + FOOD_CARD_H / 2 + SCATTER.PAD;
-    const boardMaxY = GAME_H - FOOD_CARD_H / 2 - SCATTER.FOOTER;
+    const boardMinX = BD_X + FOOD_CARD_W / 2 + SCATTER.PAD;
+    const boardMaxX = BD_X + BD_W - FOOD_CARD_W / 2 - SCATTER.PAD;
+    const boardMinY = BD_Y + FOOD_CARD_H / 2 + SCATTER.PAD;
+    const boardMaxY = BD_Y + BD_H - FOOD_CARD_H / 2 - SCATTER.FOOTER;
 
     let spawnX: number;
     let spawnY: number;
@@ -740,20 +986,49 @@ export class CookingPuzzleScene extends Phaser.Scene {
   private showCookButton(): void {
     if (this.cookButton) return;
 
-    const btnW = 140;
-    const btnH = 50;
-    const btnX = this.gameCenterX;
-    const btnY = GAME_H - 70;
+    const proc = this.activeProcessor;
+    const procName = proc?.cardLabel ?? '';
+    const procEmoji = proc?.emojiText.text ?? '';
+
+    // Action label: capitalize processor name, e.g. "Grill!" / "Fry!"
+    const actionLabel = procName
+      ? procName.charAt(0).toUpperCase() + procName.slice(1) + '!'
+      : 'Cook!';
+
+    const btnW = 160;
+    const btnH = 54;
+    const shadowH = 6;
+    const btnX = BD_X + BD_W - btnW / 2 - 10;
+    const btnY = BD_Y + BD_H + (GAME_H - BD_Y - BD_H) / 2;
 
     const container = this.add.container(btnX, btnY).setDepth(150);
 
-    const bg = this.add.graphics();
-    bg.fillStyle(0xe74c3c, 1);
-    bg.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 14);
-    container.add(bg);
+    // Shadow layer
+    const shadow = this.add.graphics();
+    shadow.fillStyle(0x8b2500, 1);
+    shadow.fillRoundedRect(-btnW / 2, -btnH / 2 + shadowH, btnW, btnH, 16);
+    container.add(shadow);
 
+    // Face layer
+    const face = this.add.graphics();
+    face.fillStyle(0xe74c3c, 1);
+    face.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 16);
+    face.lineStyle(3, 0x3e2723, 1);
+    face.strokeRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 16);
+    container.add(face);
+
+    // Emoji icon
+    const icon = this.add
+      .text(-30, 0, procEmoji || '🍳', {
+        fontSize: '24px',
+        fontFamily: FONT_FAMILY,
+      })
+      .setOrigin(0.5);
+    container.add(icon);
+
+    // Label
     const label = this.add
-      .text(0, 0, 'Cook!', {
+      .text(12, 0, actionLabel, {
         fontSize: '22px',
         fontStyle: 'bold',
         color: TEXT_COLORS.WHITE,
@@ -762,27 +1037,52 @@ export class CookingPuzzleScene extends Phaser.Scene {
       .setOrigin(0.5);
     container.add(label);
 
-    container.setSize(btnW, btnH);
+    const hitPadX = 24;
+    const hitPadY = 16;
+    container.setSize(btnW + hitPadX * 2, btnH + hitPadY * 2);
     container.setInteractive({ useHandCursor: true });
+
+    // Hover: press down effect
     container.on('pointerover', () => {
-      bg.clear();
-      bg.fillStyle(0xc0392b, 1);
-      bg.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 14);
+      face.clear();
+      face.fillStyle(0xc0392b, 1);
+      face.fillRoundedRect(-btnW / 2, -btnH / 2 + 3, btnW, btnH, 16);
+      face.lineStyle(3, 0x3e2723, 1);
+      face.strokeRoundedRect(-btnW / 2, -btnH / 2 + 3, btnW, btnH, 16);
+      icon.setY(3);
+      label.setY(3);
     });
     container.on('pointerout', () => {
-      bg.clear();
-      bg.fillStyle(0xe74c3c, 1);
-      bg.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 14);
+      face.clear();
+      face.fillStyle(0xe74c3c, 1);
+      face.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 16);
+      face.lineStyle(3, 0x3e2723, 1);
+      face.strokeRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 16);
+      icon.setY(0);
+      label.setY(0);
     });
     container.on('pointerdown', () => this.onCookButtonPressed());
 
+    // Pop-in animation
     container.setScale(0);
     this.tweens.add({
       targets: container,
       scaleX: 1,
       scaleY: 1,
-      duration: 200,
+      duration: 300,
       ease: 'Back.easeOut',
+    });
+
+    // Idle pulse to draw attention
+    this.tweens.add({
+      targets: container,
+      scaleX: 1.06,
+      scaleY: 1.06,
+      duration: 600,
+      ease: 'Sine.easeInOut',
+      yoyo: true,
+      repeat: -1,
+      delay: 400,
     });
 
     this.cookButton = container;
@@ -792,6 +1092,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     if (!this.cookButton) return;
     const btn = this.cookButton;
     this.cookButton = null;
+    this.tweens.killTweensOf(btn);
     this.tweens.add({
       targets: btn,
       scaleX: 0,
@@ -824,7 +1125,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
   private enableAllProcessors(): void {
     for (const [, card] of this.processorCards) {
-      card.setInteractive({ draggable: true });
+      card.setInteractive();
       card.setAlpha(1);
     }
   }

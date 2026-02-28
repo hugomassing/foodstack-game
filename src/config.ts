@@ -7,8 +7,8 @@ export const FONT_FAMILY = "'Fredoka One', Arial, sans-serif";
 // Quest panel
 export const QUEST_PANEL_W = 240;
 
-// Reserved space at top of board (margin + bar + gap)
-export const TOPBAR_H = 78;
+// Reserved space at top of board (header removed)
+export const TOPBAR_H = 0;
 
 export const QUEST_BOOK = {
   TITLE_Y: 16,
@@ -61,3 +61,14 @@ export const SCATTER = {
 
 // Processor ring
 export const PROCESSOR_RING_PAD = 4;
+
+// Hand arc layout
+export const HAND = {
+  ARC_RADIUS: 350,
+  CARD_SCALE: 0.85,
+  HOVER_LIFT: 60,
+  HOVER_SCALE: 1.2,
+  MAX_ANGLE_SPREAD: 0.85, // radians total spread
+  CENTER_X_OFFSET: -80, // shift left from game center
+  CENTER_Y_OFFSET: -85, // from GAME_H bottom
+} as const;
