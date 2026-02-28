@@ -54,6 +54,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
   private totalSteps!: number;
   private stepText!: Phaser.GameObjects.Text;
   private questBook!: QuestBook;
+  private activeProcessor: PuzzleCard | null = null;
+  private cookButton: Phaser.GameObjects.Container | null = null;
 
   constructor() {
     super({ key: 'CookingPuzzleScene' });
@@ -168,6 +170,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
           (obj.cardType === 'ingredient' || obj.cardType === 'intermediate') &&
           dropZone.cardType === 'processor'
         ) {
+          if (this.activeProcessor && this.activeProcessor !== dropZone) return;
           this.attachToProcessor(obj, dropZone);
         }
       },
@@ -351,7 +354,12 @@ export class CookingPuzzleScene extends Phaser.Scene {
     });
 
     this.layoutAttachedCards(procCard);
-    this.checkProcessorMatch(procCard);
+
+    if (!this.activeProcessor) {
+      this.activeProcessor = procCard;
+      this.disableOtherProcessors(procCard);
+    }
+    this.showCookButton();
   }
 
   private detachFromProcessor(ingredientCard: PuzzleCard): void {
@@ -365,6 +373,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
       this.layoutAttachedCards(procCard);
     }
     ingredientCard.attachedTo = null;
+
+    if (this.activeProcessor === procCard && attachments && attachments.length === 0) {
+      this.deactivateProcessor();
+    }
   }
 
   private layoutAttachedCards(procCard: PuzzleCard): void {
@@ -459,6 +471,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
       });
     }
     attachments.length = 0;
+    this.deactivateProcessor();
   }
 
   // -- Step Success --
@@ -524,6 +537,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     }
 
     this.questBook.refresh();
+    this.deactivateProcessor();
 
     if (isFinal) {
       this.time.delayedCall(400, () => this.onVictory(step.output));
@@ -580,6 +594,100 @@ export class CookingPuzzleScene extends Phaser.Scene {
       ease: 'Quad.easeOut',
       onComplete: () => floatText.destroy(),
     });
+  }
+
+  // -- Cook Button & Processor Activation --
+
+  private showCookButton(): void {
+    if (this.cookButton) return;
+
+    const btnW = 140;
+    const btnH = 50;
+    const btnX = this.gameCenterX;
+    const btnY = GAME_H - 70;
+
+    const container = this.add.container(btnX, btnY).setDepth(150);
+
+    const bg = this.add.graphics();
+    bg.fillStyle(0xe74c3c, 1);
+    bg.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 14);
+    container.add(bg);
+
+    const label = this.add
+      .text(0, 0, 'Cook!', {
+        fontSize: '22px',
+        fontStyle: 'bold',
+        color: TEXT_COLORS.WHITE,
+        fontFamily: FONT_FAMILY,
+      })
+      .setOrigin(0.5);
+    container.add(label);
+
+    container.setSize(btnW, btnH);
+    container.setInteractive({ useHandCursor: true });
+    container.on('pointerover', () => {
+      bg.clear();
+      bg.fillStyle(0xc0392b, 1);
+      bg.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 14);
+    });
+    container.on('pointerout', () => {
+      bg.clear();
+      bg.fillStyle(0xe74c3c, 1);
+      bg.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 14);
+    });
+    container.on('pointerdown', () => this.onCookButtonPressed());
+
+    container.setScale(0);
+    this.tweens.add({
+      targets: container,
+      scaleX: 1,
+      scaleY: 1,
+      duration: 200,
+      ease: 'Back.easeOut',
+    });
+
+    this.cookButton = container;
+  }
+
+  private hideCookButton(): void {
+    if (!this.cookButton) return;
+    const btn = this.cookButton;
+    this.cookButton = null;
+    this.tweens.add({
+      targets: btn,
+      scaleX: 0,
+      scaleY: 0,
+      duration: 150,
+      ease: 'Quad.easeIn',
+      onComplete: () => btn.destroy(),
+    });
+  }
+
+  private onCookButtonPressed(): void {
+    if (!this.activeProcessor) return;
+    this.checkProcessorMatch(this.activeProcessor);
+  }
+
+  private deactivateProcessor(): void {
+    this.activeProcessor = null;
+    this.enableAllProcessors();
+    this.hideCookButton();
+  }
+
+  private disableOtherProcessors(active: PuzzleCard): void {
+    for (const [, card] of this.processorCards) {
+      if (card !== active) {
+        card.disableInteractive();
+        card.setAlpha(0.5);
+      }
+    }
+  }
+
+  private enableAllProcessors(): void {
+    for (const [, card] of this.processorCards) {
+      card.setInteractive({ dropZone: true });
+      card.setAlpha(1);
+    }
   }
 
   // -- Victory --

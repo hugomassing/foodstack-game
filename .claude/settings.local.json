@@ -14,7 +14,10 @@
       "Bash(pnpm lint:*)",
       "Bash(pnpm:*)",
       "Bash(mkdir:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(jj diff:*)",
+      "Bash(jj log:*)",
+      "Bash(jj describe:*)"
     ]
   }
 }
