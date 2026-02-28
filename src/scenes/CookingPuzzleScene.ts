@@ -35,12 +35,58 @@ const PROCESSOR_ASSET: Record<string, string> = {
   assemble: 'fork_knife',
 };
 
+const APPROX_MAP: Record<string, string> = {
+  pork: 'ham', 'pork chops': 'ham', 'ground pork': 'ham',
+  beef: 'steak', 'ground beef': 'steak', 'beef strips': 'steak',
+  chicken: 'drumstick', 'chicken breast': 'drumstick', 'chicken thigh': 'drumstick',
+  'bell pepper': 'pepper', jalapeño: 'pepper', 'chili peppers': 'chili',
+  'spring onion': 'onion', scallion: 'onion', shallot: 'onion',
+  tortilla: 'flatbread', wrap: 'flatbread', 'pita bread': 'pita',
+  'bread crumbs': 'bread_slice', 'cream cheese': 'cream', 'sour cream': 'cream',
+  broth: 'soup', stock: 'soup', 'fish sauce': 'soy_sauce',
+  syrup: 'honey', 'maple syrup': 'honey', vinegar: 'soy_sauce',
+  'rice noodles': 'noodles', 'egg noodles': 'noodles',
+  'sesame oil': 'olive_oil', 'cooking oil': 'olive_oil', oil: 'olive_oil',
+  'lime juice': 'lime', 'lemon juice': 'lemon',
+  'whipped cream': 'cream', 'heavy cream': 'cream',
+  'mozzarella': 'cheese', 'parmesan': 'cheese', 'cheddar': 'cheese',
+};
+
 function localAssetMatch(name: string): string | null {
-  const normalized = name.toLowerCase().replace(/\s+/g, '_');
+  const lower = name.toLowerCase();
+  const normalized = lower.replace(/\s+/g, '_');
+
+  // Exact ID match
   if (FoodAssets.find(normalized)) return normalized;
+
+  // Exact label match
   for (const item of FoodAssets.all) {
-    if (item.label.toLowerCase() === name.toLowerCase()) return item.id;
+    if (item.label.toLowerCase() === lower) return item.id;
   }
+
+  // Strip trailing 's' for plurals (e.g. "onions" → "onion")
+  if (normalized.endsWith('s') && FoodAssets.find(normalized.slice(0, -1))) {
+    return normalized.slice(0, -1);
+  }
+
+  // Hardcoded approximate mappings
+  if (APPROX_MAP[lower]) return APPROX_MAP[lower];
+
+  // Check if any word in the name matches an asset (e.g. "chopped pork" → "ham" via APPROX_MAP, "fresh salmon" → "salmon")
+  const words = lower.split(/\s+/);
+  for (const word of words) {
+    if (FoodAssets.find(word)) return word;
+    const singular = word.endsWith('s') ? word.slice(0, -1) : null;
+    if (singular && FoodAssets.find(singular)) return singular;
+    if (APPROX_MAP[word]) return APPROX_MAP[word];
+  }
+
+  // Tag-based search: find an asset whose tags contain a word from the name
+  for (const word of words) {
+    const tagged = FoodAssets.byTag(word);
+    if (tagged.length > 0) return tagged[0].id;
+  }
+
   return null;
 }
 
@@ -602,12 +648,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
       onUpdate: () => this.drawProgressBar(progObj.value),
     });
 
-    for (const inp of step.inputs) {
-      if (this.availableIntermediates.has(inp)) {
-        this.availableIntermediates.delete(inp);
-      }
-    }
-
     const isFinal = step.stepId === 'final';
 
     // Green flash on processor
@@ -635,19 +675,34 @@ export class CookingPuzzleScene extends Phaser.Scene {
     const attachedCards = attachments ? attachments.map((a) => a.card) : [];
     if (attachments) {
       for (const att of attachments) {
-        this.tweens.add({
-          targets: att.card,
-          scaleX: 0,
-          scaleY: 0,
-          alpha: 0,
-          duration: 300,
-          ease: 'Quad.easeIn',
-          onComplete: () => {
-            const idx = this.cards.indexOf(att.card);
-            if (idx !== -1) this.cards.splice(idx, 1);
-            att.card.destroy();
-          },
-        });
+        att.card.attachedTo = null;
+        if (att.card.cardType === 'intermediate') {
+          // Keep intermediate cards — scatter them back for potential reuse
+          const newX = Phaser.Math.Between(QUEST_PANEL_W + 68, GAME_W - 68);
+          const newY = Phaser.Math.Between(TOPBAR_H + 20, GAME_H - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10);
+          this.tweens.add({
+            targets: att.card,
+            x: newX,
+            y: newY,
+            duration: 400,
+            ease: 'Back.easeOut',
+          });
+        } else {
+          // Destroy raw ingredient cards
+          this.tweens.add({
+            targets: att.card,
+            scaleX: 0,
+            scaleY: 0,
+            alpha: 0,
+            duration: 300,
+            ease: 'Quad.easeIn',
+            onComplete: () => {
+              const idx = this.cards.indexOf(att.card);
+              if (idx !== -1) this.cards.splice(idx, 1);
+              att.card.destroy();
+            },
+          });
+        }
       }
       attachments.length = 0;
     }
@@ -666,26 +721,74 @@ export class CookingPuzzleScene extends Phaser.Scene {
   }
 
   private spawnOutputCard(step: Step, procCard: PuzzleCard, inputCards: PuzzleCard[]): void {
-    // Pick the best asset: AI-provided > local name match > first input ingredient's image
-    let assetId = step.outputAssetId ?? localAssetMatch(step.output);
-    if (!assetId) {
-      for (const c of inputCards) {
-        if (c.foodImage) {
-          // Extract assetId from texture key ("food_shrimp" → "shrimp")
-          const key = c.foodImage.texture.key;
-          if (key.startsWith('food_')) {
-            assetId = key.slice(5);
-            break;
-          }
+    // Asset priority: AI-provided outputAssetId > local fuzzy match on output name
+    const logicalAsset = step.outputAssetId ?? localAssetMatch(step.output);
+
+    // Always collect input texture keys as fallback
+    const inputTextureKeys: string[] = [];
+    for (const c of inputCards) {
+      if (c.foodImage) {
+        const key = c.foodImage.texture.key;
+        if (key.startsWith('food_') && this.textures.exists(key)) {
+          inputTextureKeys.push(key);
         }
       }
     }
+
+    // Decide what to show:
+    // - Logical asset found → use it as-is (single image, no fan)
+    // - No logical asset, 1 input → inherit that input's image
+    // - No logical asset, 2+ inputs → fan all input images
+    const useLogical = logicalAsset && this.textures.exists(`food_${logicalAsset}`);
+    const primaryAsset = useLogical
+      ? logicalAsset
+      : inputTextureKeys.length > 0 ? inputTextureKeys[0].slice(5) : null;
+
     const card = new PuzzleCard(this, procCard.x, procCard.y, step.output, 'intermediate', {
       itemName: step.output,
       stepId: step.stepId,
       emoji: '',
-      assetId,
+      assetId: primaryAsset,
     });
+
+    // Fan multiple input images when no logical asset was resolved
+    if (!useLogical && inputTextureKeys.length > 1) {
+      const fanDim = Math.round(FOOD_CARD_H * 0.32);
+      const imageY = -FOOD_CARD_H / 2 + FOOD_CARD_H * 0.34;
+      const count = inputTextureKeys.length;
+      const spreadX = Math.min(14, 32 / count);
+      const spreadY = Math.min(6, 14 / count);
+      const rotStep = Math.min(0.25, 0.5 / count);
+
+      // Shrink & offset the primary image to participate in the fan
+      if (card.foodImage) {
+        const pScale = Math.min(fanDim / card.foodImage.width, fanDim / card.foodImage.height);
+        card.foodImage.setScale(pScale);
+        const pOffX = (0 - (count - 1) / 2) * spreadX;
+        const pOffY = (0 - (count - 1) / 2) * spreadY;
+        const pRot = (0 - (count - 1) / 2) * rotStep;
+        card.foodImage.setPosition(pOffX, imageY + pOffY);
+        card.foodImage.setRotation(pRot);
+      }
+
+      for (let i = 1; i < count; i++) {
+        const key = inputTextureKeys[i];
+        const offsetX = (i - (count - 1) / 2) * spreadX;
+        const offsetY = (i - (count - 1) / 2) * spreadY;
+        const rot = (i - (count - 1) / 2) * rotStep;
+
+        const shadow = this.add.image(offsetX + 2, imageY + offsetY + 3, key);
+        const shadowScale = Math.min(fanDim / shadow.width, fanDim / shadow.height);
+        shadow.setScale(shadowScale).setOrigin(0.5).setTint(0x000000).setAlpha(0.2).setRotation(rot);
+        card.add(shadow);
+
+        const img = this.add.image(offsetX, imageY + offsetY, key);
+        const scale = Math.min(fanDim / img.width, fanDim / img.height);
+        img.setScale(scale).setOrigin(0.5).setRotation(rot);
+        card.add(img);
+      }
+    }
+
     this.cards.push(card);
 
     card.setScale(0);
