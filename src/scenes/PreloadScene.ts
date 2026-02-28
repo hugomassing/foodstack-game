@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { FoodAssets } from '../data/food-assets';
-import { GAME_W, GAME_H, DPR, FONT_FAMILY } from '../config';
+import { GAME_W, GAME_H, FONT_FAMILY } from '../config';
+import { gameStore } from '../store/gameStore';
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -8,14 +9,14 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   preload(): void {
-    const cx = (GAME_W * DPR) / 2;
-    const cy = (GAME_H * DPR) / 2;
-    const barW = 260 * DPR;
-    const barH = 18 * DPR;
+    const cx = GAME_W / 2;
+    const cy = GAME_H / 2;
+    const barW = 260;
+    const barH = 18;
 
     this.add
-      .text(cx, cy - 40 * DPR, 'Loading assets...', {
-        fontSize: `${14 * DPR}px`,
+      .text(cx, cy - 40, 'Loading assets...', {
+        fontSize: '14px',
         color: '#aaaacc',
         fontFamily: FONT_FAMILY,
       })
@@ -44,6 +45,7 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.scene.start('TitleScene');
+    gameStore.getState().setAssetsReady(true);
+    gameStore.getState().setPhase('menu');
   }
 }

@@ -1,4 +1,5 @@
 import { defineConfig, loadEnv } from 'vite';
+import react from '@vitejs/plugin-react';
 
 function apiPlugin() {
   return {
@@ -38,5 +39,5 @@ function apiPlugin() {
 }
 
 export default defineConfig({
-  plugins: [apiPlugin()],
+  plugins: [react(), apiPlugin()],
 });

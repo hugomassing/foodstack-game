@@ -9,10 +9,13 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint src/",
-    "format": "oxfmt --write 'src/**/*.ts'",
-    "format:check": "oxfmt --check 'src/**/*.ts'"
+    "format": "oxfmt --write 'src/**/*.{ts,tsx}'",
+    "format:check": "oxfmt --check 'src/**/*.{ts,tsx}'"
   },
   "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.4",
     "oxfmt": "^0.35.0",
     "oxlint": "^1.50.0",
     "typescript": "^5.9.3",
@@ -24,6 +27,9 @@
     "ai": "^6.0.105",
     "convex": "^1.32.0",
     "phaser": "^3.80.1",
-    "zod": "^4.3.6"
+    "react": "^19",
+    "react-dom": "^19",
+    "zod": "^4.3.6",
+    "zustand": "^5"
   }
 }
