@@ -4,7 +4,7 @@ export const ALLOWED_PROCESSORS = ['mix', 'chop', 'boil', 'fry', 'bake', 'grill'
 
 const stepSchema = z.object({
   stepId: z.string().describe('Branch steps use "b{branch}_s{step}" format (e.g. "b1_s1"), final uses "final"'),
-  processor: z.enum(ALLOWED_PROCESSORS).describe('A cooking action from the allowed list'),
+  processor: z.enum(['mix', 'chop', 'boil', 'fry', 'bake', 'grill', 'roast', 'knead', 'shape', 'mash', 'steam', 'toast', 'melt', 'assemble']).describe('A cooking action from the allowed list'),
   processorEmoji: z.string().describe('Fixed emoji for the processor'),
   inputs: z.array(z.string()).describe('Ingredient names or previous stepIds'),
   output: z.string().describe('Short descriptive label of what this step produces'),

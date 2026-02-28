@@ -26,3 +26,4 @@ A card/cooking puzzle game built with Phaser 3 and TypeScript.
 ## Skills
 
 - When working on Phaser-related tasks (scenes, sprites, physics, tilemaps, animations, input, game architecture), always use the `/phaser-gamedev` skill.
+- When building Convex backends, writing Convex functions, queries, mutations, actions, or schemas, use the `convex-best-practices` skill.
