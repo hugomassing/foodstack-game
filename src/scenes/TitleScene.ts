@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import { api } from "../../convex/_generated/api";
+import { convex } from "../lib/convex";
 
 type Category = 'Style' | 'Protein' | 'Method' | 'Base';
 type Difficulty = 'easy' | 'medium' | 'hard';
@@ -269,18 +271,10 @@ export class TitleScene extends Phaser.Scene {
     });
 
     try {
-      const res = await fetch('/api/generate-recipe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dishName, difficulty: this.difficulty }),
+      const puzzleData = await convex.action(api.generator.generateOrGetRecipe, {
+        dishName,
+        difficulty: this.difficulty,
       });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error((err as { error: string }).error || `Server error ${res.status}`);
-      }
-
-      const puzzleData = await res.json();
       dots.destroy();
       this.loadingText.setVisible(false);
       this.isLoading = false;
