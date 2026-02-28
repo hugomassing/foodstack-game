@@ -1,10 +1,9 @@
-import { CookingPuzzleScene } from './scenes/CookingPuzzleScene';
-import { Preloader } from './Preloader';
-import { Play } from './Play';
 import Phaser from 'phaser';
+import { TitleScene } from './scenes/TitleScene';
+import { CookingPuzzleScene } from './scenes/CookingPuzzleScene';
 
 const config: Phaser.Types.Core.GameConfig = {
-  title: 'Cooking Puzzle',
+  title: 'FoodStack',
   type: Phaser.AUTO,
   width: 854,
   height: 480,
@@ -15,7 +14,7 @@ const config: Phaser.Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [CookingPuzzleScene, Preloader, Play],
+  scene: [TitleScene, CookingPuzzleScene],
 };
 
 new Phaser.Game(config);

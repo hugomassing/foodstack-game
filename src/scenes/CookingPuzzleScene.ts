@@ -1,12 +1,36 @@
 import Phaser from 'phaser';
-import puzzleData from '../data/mockPuzzle.json';
-import { createFoodCard, FOOD_CARD_COLORS, type FoodCardColor } from '../createFoodCard';
+import { createFoodCard, FOOD_CARD_COLORS, FOOD_CARD_W, FOOD_CARD_H, FOOD_CARD_RADIUS, type FoodCardColor } from '../createFoodCard';
 
 const QUEST_PANEL_W = 250;
-const CARD_W = 80;
-const CARD_H = 90;
 
 type CardType = 'ingredient' | 'intermediate' | 'processor';
+
+interface Step {
+  stepId: string;
+  processor: string;
+  processorEmoji?: string;
+  inputs: string[];
+  output: string;
+}
+
+interface Branch {
+  name: string;
+  steps: Step[];
+}
+
+interface Ingredient {
+  name: string;
+  emoji: string;
+}
+
+interface PuzzleData {
+  dishName: string;
+  branches: Branch[];
+  finalStep: Step;
+  ingredients: Ingredient[];
+  decoys: Ingredient[];
+  processors: { name: string; emoji: string }[];
+}
 
 interface PuzzleCard extends Phaser.GameObjects.Container {
   cardType: CardType;
@@ -25,24 +49,22 @@ interface Attachment {
   stepId: string | null;
 }
 
-interface Step {
-  stepId: string;
-  processor: string;
-  processorEmoji?: string;
-  inputs: string[];
-  output: string;
-}
+const ingredientColors = Object.values(FOOD_CARD_COLORS);
 
-interface CardMeta {
-  emoji?: string;
-  itemName?: string;
-  stepId?: string;
+function nameToColor(n: string): FoodCardColor {
+  let hash = 0;
+  for (let i = 0; i < n.length; i++) {
+    hash = n.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return ingredientColors[Math.abs(hash) % ingredientColors.length];
 }
 
 export class CookingPuzzleScene extends Phaser.Scene {
+  private puzzleData!: PuzzleData;
   private completedSteps!: Set<string>;
   private availableIntermediates!: Map<string, string>;
   private stepCount!: number;
+  private debugMode!: boolean;
   private cards!: PuzzleCard[];
   private processorCards!: Map<string, PuzzleCard>;
   private processorAttachments!: Map<PuzzleCard, Attachment[]>;
@@ -69,14 +91,17 @@ export class CookingPuzzleScene extends Phaser.Scene {
     return this.scale.width - QUEST_PANEL_W;
   }
 
-  create(): void {
+  create(data: { puzzleData: PuzzleData }): void {
     const { width, height } = this.scale;
     this.cameras.main.setBackgroundColor('#1a1a2e');
+
+    this.puzzleData = data.puzzleData;
 
     // -- State --
     this.completedSteps = new Set();
     this.availableIntermediates = new Map();
     this.stepCount = 0;
+    this.debugMode = false;
 
     this.cards = [];
     this.processorCards = new Map();
@@ -84,13 +109,25 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     // Build all steps list for matching
     this.allSteps = [];
-    for (const branch of puzzleData.branches) {
+    for (const branch of this.puzzleData.branches) {
       for (const step of branch.steps) {
         this.allSteps.push(step);
       }
     }
-    this.allSteps.push(puzzleData.finalStep);
+    this.allSteps.push(this.puzzleData.finalStep);
     this.totalSteps = this.allSteps.length;
+
+    // Normalize step inputs: convert output-name references to stepIds
+    // (AI sometimes writes "minced aromatics" instead of "b1_s1")
+    const outputToStepId = new Map<string, string>();
+    for (const step of this.allSteps) {
+      if (step.stepId !== 'final') {
+        outputToStepId.set(step.output, step.stepId);
+      }
+    }
+    for (const step of this.allSteps) {
+      step.inputs = step.inputs.map(inp => outputToStepId.get(inp) ?? inp);
+    }
 
     // -- Quest Book --
     this.questStepTexts = new Map();
@@ -162,7 +199,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     // -- Footer: dish name + step counter --
     this.add
-      .text(this.gameCenterX, height - 20, puzzleData.dishName, {
+      .text(this.gameCenterX, height - 20, this.puzzleData.dishName, {
         fontSize: '16px',
         fontStyle: 'bold',
         color: '#ffffff',
@@ -177,51 +214,80 @@ export class CookingPuzzleScene extends Phaser.Scene {
         fontFamily: 'Arial',
       })
       .setOrigin(1, 0.5);
+
+    // -- Download recipe button --
+    const dlBtn = this.add
+      .text(QUEST_PANEL_W + 10, height - 20, 'Download JSON', {
+        fontSize: '11px',
+        color: '#5dade2',
+        fontFamily: 'Arial',
+      })
+      .setOrigin(0, 0.5)
+      .setInteractive({ useHandCursor: true });
+    dlBtn.on('pointerover', () => dlBtn.setColor('#85c1e9'));
+    dlBtn.on('pointerout', () => dlBtn.setColor('#5dade2'));
+    dlBtn.on('pointerdown', () => {
+      const json = JSON.stringify(this.puzzleData, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${this.puzzleData.dishName.replace(/\s+/g, '-').toLowerCase()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // -- Debug toggle (D key) --
+    this.input.keyboard!.on('keydown-D', () => {
+      this.debugMode = !this.debugMode;
+      this.rebuildQuestBook();
+    });
   }
 
   // -- Card Creation --
 
-  createCard(x: number, y: number, label: string, type: CardType, meta: CardMeta = {}): PuzzleCard {
-    // Pick color: processors get blue, ingredients/intermediates get a
-    // deterministic color based on their name so each ingredient looks unique
-    const ingredientColors = Object.values(FOOD_CARD_COLORS);
-    function nameToColor(n: string): FoodCardColor {
-      let hash = 0;
-      for (let i = 0; i < n.length; i++) {
-        hash = n.charCodeAt(i) + ((hash << 5) - hash);
-      }
-      return ingredientColors[Math.abs(hash) % ingredientColors.length];
-    }
-
-    const cardColor = type === 'processor'
-      ? FOOD_CARD_COLORS.blue
-      : nameToColor(label);
+  createCard(
+    x: number,
+    y: number,
+    label: string,
+    type: CardType,
+    meta: { emoji?: string; itemName?: string; stepId?: string } = {},
+  ): PuzzleCard {
+    const cardColor = type === 'processor' ? FOOD_CARD_COLORS.blue : nameToColor(label);
 
     const container = createFoodCard({
       scene: this,
       x,
       y,
       name: label,
-      emoji: meta.emoji || '',
+      emoji: meta.emoji ?? '',
       color: cardColor,
       wave: type !== 'processor',
-      width: CARD_W,
-      height: CARD_H,
     }) as PuzzleCard;
 
-    // Store card metadata
     container.cardType = type;
     container.cardLabel = label;
     container.cardBg = container.list[1] as Phaser.GameObjects.Graphics;
     container.cardShadow = container.list[0] as Phaser.GameObjects.Graphics;
-    container.itemName = meta.itemName || label;
-    container.stepId = meta.stepId || null;
+    container.itemName = meta.itemName ?? label;
+    container.stepId = meta.stepId ?? null;
     container.attachedTo = null;
     container.cardDepth = type === 'processor' ? 2 : 1;
     container.setDepth(container.cardDepth);
 
     if (type === 'processor') {
       container.setInteractive({ draggable: true, dropZone: true });
+      const ring = this.add.graphics();
+      const pad = 4;
+      ring.lineStyle(2, 0xf1c40f, 0.8);
+      ring.strokeRoundedRect(
+        -FOOD_CARD_W / 2 - pad,
+        -FOOD_CARD_H / 2 - pad,
+        FOOD_CARD_W + pad * 2,
+        FOOD_CARD_H + pad * 2,
+        FOOD_CARD_RADIUS + pad,
+      );
+      container.add(ring);
     } else {
       container.setInteractive({ draggable: true });
     }
@@ -234,10 +300,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
   scatterCards(): void {
     const { width, height } = this.scale;
-    const minX = QUEST_PANEL_W + 60;
-    const maxX = width - 60;
-    const minY = 40;
-    const maxY = height - 60;
+    const minX = QUEST_PANEL_W + FOOD_CARD_W / 2 + 10;
+    const maxX = width - FOOD_CARD_W / 2 - 10;
+    const minY = FOOD_CARD_H / 2 + 10;
+    const maxY = height - FOOD_CARD_H / 2 - 30;
 
     const positions: { x: number; y: number }[] = [];
 
@@ -247,7 +313,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
         const y = Phaser.Math.Between(minY, maxY);
         let overlapping = false;
         for (const pos of positions) {
-          if (Math.abs(x - pos.x) < CARD_W + 8 && Math.abs(y - pos.y) < CARD_H + 8) {
+          if (Math.abs(x - pos.x) < FOOD_CARD_W + 8 && Math.abs(y - pos.y) < FOOD_CARD_H + 8) {
             overlapping = true;
             break;
           }
@@ -258,19 +324,19 @@ export class CookingPuzzleScene extends Phaser.Scene {
         }
       }
       // Fallback: grid with jitter
-      const cols = Math.floor((maxX - minX) / (CARD_W + 12));
+      const cols = Math.max(1, Math.floor((maxX - minX) / (FOOD_CARD_W + 12)));
       const idx = positions.length;
       const col = idx % cols;
       const row = Math.floor(idx / cols);
-      const x = minX + col * (CARD_W + 12) + Phaser.Math.Between(-5, 5);
-      const y = minY + row * (CARD_H + 12) + Phaser.Math.Between(-5, 5);
+      const x = minX + col * (FOOD_CARD_W + 12) + Phaser.Math.Between(-5, 5);
+      const y = minY + row * (FOOD_CARD_H + 12) + Phaser.Math.Between(-5, 5);
       positions.push({ x, y });
       return { x, y };
     };
 
-    // Build processor emoji lookup from JSON objects
+    // Build processor emoji lookup
     const procEmojiMap = new Map<string, string>();
-    for (const p of puzzleData.processors) {
+    for (const p of this.puzzleData.processors) {
       procEmojiMap.set(p.name, p.emoji);
     }
 
@@ -279,22 +345,22 @@ export class CookingPuzzleScene extends Phaser.Scene {
     for (const step of this.allSteps) {
       usedProcessors.add(step.processor);
     }
-    const paletteNames = puzzleData.processors.map((p) => p.name);
+    const paletteNames = this.puzzleData.processors.map(p => p.name);
     const processorSet = new Set([...usedProcessors, ...paletteNames]);
-    const processors = Phaser.Utils.Array.Shuffle([...processorSet]);
+    const processors = Phaser.Utils.Array.Shuffle([...processorSet]) as string[];
 
     // Create processor cards
     for (const procName of processors) {
       const pos = findPosition();
-      const emoji = procEmojiMap.get(procName as string) || '';
-      const card = this.createCard(pos.x, pos.y, procName as string, 'processor', { emoji });
-      this.processorCards.set(procName as string, card);
+      const emoji = procEmojiMap.get(procName) ?? '';
+      const card = this.createCard(pos.x, pos.y, procName, 'processor', { emoji });
+      this.processorCards.set(procName, card);
       this.processorAttachments.set(card, []);
     }
 
     // Create ingredient cards (raw + decoys, shuffled)
-    const rawItems = [...puzzleData.ingredients, ...puzzleData.decoys];
-    const shuffled = Phaser.Utils.Array.Shuffle([...rawItems]);
+    const rawItems = [...this.puzzleData.ingredients, ...this.puzzleData.decoys];
+    const shuffled = Phaser.Utils.Array.Shuffle([...rawItems]) as Ingredient[];
     for (const item of shuffled) {
       const pos = findPosition();
       this.createCard(pos.x, pos.y, item.name, 'ingredient', {
@@ -303,17 +369,17 @@ export class CookingPuzzleScene extends Phaser.Scene {
       });
     }
 
-    // Add "assemble" processor if needed (from finalStep)
-    if (!this.processorCards.has(puzzleData.finalStep.processor)) {
+    // Add final step processor if not already present
+    if (!this.processorCards.has(this.puzzleData.finalStep.processor)) {
       const pos = findPosition();
       const emoji =
-        puzzleData.finalStep.processorEmoji ||
-        procEmojiMap.get(puzzleData.finalStep.processor) ||
+        this.puzzleData.finalStep.processorEmoji ??
+        procEmojiMap.get(this.puzzleData.finalStep.processor) ??
         '';
-      const card = this.createCard(pos.x, pos.y, puzzleData.finalStep.processor, 'processor', {
+      const card = this.createCard(pos.x, pos.y, this.puzzleData.finalStep.processor, 'processor', {
         emoji,
       });
-      this.processorCards.set(puzzleData.finalStep.processor, card);
+      this.processorCards.set(this.puzzleData.finalStep.processor, card);
       this.processorAttachments.set(card, []);
     }
   }
@@ -324,7 +390,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     const attachments = this.processorAttachments.get(procCard);
     if (!attachments) return;
 
-    if (attachments.some((a) => a.card === ingredientCard)) return;
+    if (attachments.some(a => a.card === ingredientCard)) return;
 
     ingredientCard.attachedTo = procCard;
     attachments.push({
@@ -343,7 +409,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     const attachments = this.processorAttachments.get(procCard);
     if (attachments) {
-      const idx = attachments.findIndex((a) => a.card === ingredientCard);
+      const idx = attachments.findIndex(a => a.card === ingredientCard);
       if (idx !== -1) attachments.splice(idx, 1);
       this.layoutAttachedCards(procCard);
     }
@@ -378,7 +444,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     const procName = procCard.cardLabel;
 
-    const resolvedInputs = attachments.map((att) => {
+    const resolvedInputs = attachments.map(att => {
       if (att.stepId) return att.stepId;
       for (const [stepId, outputName] of this.availableIntermediates) {
         if (outputName === att.itemName) return stepId;
@@ -387,11 +453,17 @@ export class CookingPuzzleScene extends Phaser.Scene {
     });
     const inputSet = new Set(resolvedInputs);
 
+    console.log(`[Match] Processor: "${procName}", attached: [${[...inputSet].join(', ')}]`);
+
     for (const step of this.allSteps) {
       if (this.completedSteps.has(step.stepId)) continue;
       if (step.processor !== procName) continue;
 
       const stepInputSet = new Set(step.inputs);
+      console.log(
+        `[Match] Checking step ${step.stepId}: needs [${[...stepInputSet].join(', ')}], have [${[...inputSet].join(', ')}]`,
+      );
+
       if (stepInputSet.size !== inputSet.size) continue;
 
       let match = true;
@@ -458,7 +530,13 @@ export class CookingPuzzleScene extends Phaser.Scene {
     // Green flash on processor
     const flash = this.add.graphics();
     flash.fillStyle(0x2ecc71, 0.5);
-    flash.fillRoundedRect(-CARD_W / 2 - 4, -CARD_H / 2 - 4, CARD_W + 8, CARD_H + 8, 10);
+    flash.fillRoundedRect(
+      -FOOD_CARD_W / 2 - 4,
+      -FOOD_CARD_H / 2 - 4,
+      FOOD_CARD_W + 8,
+      FOOD_CARD_H + 8,
+      10,
+    );
     flash.setPosition(procCard.x, procCard.y);
     flash.setDepth(99);
     this.tweens.add({
@@ -470,7 +548,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     this.cameras.main.flash(300, 46, 204, 113, false);
 
-    // Consume attached ingredient cards (shrink + fade)
     const attachments = this.processorAttachments.get(procCard);
     if (attachments) {
       for (const att of attachments) {
@@ -507,7 +584,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     const card = this.createCard(procCard.x, procCard.y, step.output, 'intermediate', {
       itemName: step.output,
       stepId: step.stepId,
-      emoji: '\u2728',
+      emoji: '✨',
     });
 
     card.setScale(0);
@@ -590,6 +667,25 @@ export class CookingPuzzleScene extends Phaser.Scene {
     });
 
     this.cameras.main.flash(600, 46, 204, 113, false);
+
+    const btnText = this.add
+      .text(width / 2, height / 2 + 80, 'Play Again', {
+        fontSize: '16px',
+        fontStyle: 'bold',
+        color: '#ffffff',
+        fontFamily: 'Arial',
+        backgroundColor: '#2ecc71',
+        padding: { x: 16, y: 8 },
+      })
+      .setOrigin(0.5)
+      .setDepth(201)
+      .setInteractive({ useHandCursor: true });
+
+    btnText.setAlpha(0);
+    this.tweens.add({ targets: btnText, alpha: 1, duration: 500, delay: 1500 });
+    btnText.on('pointerdown', () => {
+      this.scene.start('TitleScene');
+    });
   }
 
   // -- Quest Book --
@@ -618,7 +714,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     const lineH = 20;
     const padX = 12;
 
-    for (const branch of puzzleData.branches) {
+    for (const branch of this.puzzleData.branches) {
       this.add
         .text(padX, curY, `\u2500\u2500 ${branch.name}`, {
           fontSize: '12px',
@@ -660,7 +756,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
         fontFamily: 'Arial',
       })
       .setOrigin(0, 0);
-    this.questStepTexts.set(puzzleData.finalStep.stepId, finalTxt);
+    this.questStepTexts.set(this.puzzleData.finalStep.stepId, finalTxt);
 
     this.rebuildQuestBook();
   }
@@ -673,6 +769,20 @@ export class CookingPuzzleScene extends Phaser.Scene {
       if (this.completedSteps.has(step.stepId)) {
         txt.setText(`\u2713 ${step.output}`);
         txt.setColor('#2ecc71');
+      } else if (this.debugMode) {
+        const inputs = step.inputs
+          .map(inp => {
+            for (const branch of this.puzzleData.branches) {
+              for (const s of branch.steps) {
+                if (s.stepId === inp) return `[${s.output}]`;
+              }
+            }
+            return inp;
+          })
+          .join(' + ');
+        const pe = step.processorEmoji ? `${step.processorEmoji} ` : '';
+        txt.setText(`${pe}${inputs} \u2192 ${step.output}`);
+        txt.setColor('#e67e22');
       } else if (this.isStepActionable(step)) {
         const pe = step.processorEmoji ? `${step.processorEmoji} ` : '';
         txt.setText(`\u25c9 ${pe}${step.processor} \u2190 ${step.inputs.length}`);

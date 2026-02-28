@@ -1,23 +1,27 @@
 {
-  "name": "card-memory",
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "typecheck": "tsc --noEmit",
-    "lint": "oxlint src/",
-    "format": "oxfmt --write 'src/**/*.ts'",
-    "format:check": "oxfmt --check 'src/**/*.ts'"
-  },
-  "devDependencies": {
-    "oxfmt": "^0.35.0",
-    "oxlint": "^1.50.0",
-    "typescript": "^5.9.3",
-    "vite": "^5.2.0"
-  },
-  "dependencies": {
-    "phaser": "^3.80.1"
-  }
+    "name": "foodstack",
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite --port $PORT",
+        "build": "vite build",
+        "preview": "vite preview",
+        "typecheck": "tsc --noEmit",
+        "lint": "oxlint src/",
+        "format": "oxfmt --write 'src/**/*.ts'",
+        "format:check": "oxfmt --check 'src/**/*.ts'"
+    },
+    "devDependencies": {
+        "oxfmt": "^0.35.0",
+        "oxlint": "^1.50.0",
+        "typescript": "^5.9.3",
+        "vercel": "^50.25.4",
+        "vite": "^5.2.0"
+    },
+    "dependencies": {
+        "@ai-sdk/mistral": "^3.0.21",
+        "ai": "^6.0.105",
+        "phaser": "^3.80.1",
+        "zod": "^4.3.6"
+    }
 }
