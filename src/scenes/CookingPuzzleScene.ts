@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import puzzleData from '../data/mockPuzzle.json';
+import { createFoodCard, FOOD_CARD_COLORS, type FoodCardColor } from '../createFoodCard';
 
 const QUEST_PANEL_W = 250;
 const CARD_W = 80;
@@ -181,66 +182,38 @@ export class CookingPuzzleScene extends Phaser.Scene {
   // -- Card Creation --
 
   createCard(x: number, y: number, label: string, type: CardType, meta: CardMeta = {}): PuzzleCard {
-    const palette = {
-      ingredient: { body: 0x3d3d54, bar: 0x2d2d44, border: 0x222238 },
-      intermediate: { body: 0xf5b041, bar: 0xf39c12, border: 0xd68910 },
-      processor: { body: 0x5dade2, bar: 0x3498db, border: 0x2180b8 },
-    };
-    const colors = palette[type] || palette.ingredient;
-    const emoji = meta.emoji || '';
-    const topBarH = 22;
+    // Pick color: processors get blue, ingredients/intermediates get a
+    // deterministic color based on their name so each ingredient looks unique
+    const ingredientColors = Object.values(FOOD_CARD_COLORS);
+    function nameToColor(n: string): FoodCardColor {
+      let hash = 0;
+      for (let i = 0; i < n.length; i++) {
+        hash = n.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return ingredientColors[Math.abs(hash) % ingredientColors.length];
+    }
 
-    // Shadow
-    const shadow = this.add.graphics();
-    shadow.fillStyle(0x000000, 0.3);
-    shadow.fillRoundedRect(-CARD_W / 2 + 3, -CARD_H / 2 + 3, CARD_W, CARD_H, 8);
+    const cardColor = type === 'processor'
+      ? FOOD_CARD_COLORS.blue
+      : nameToColor(label);
 
-    // Card body
-    const bg = this.add.graphics();
-    bg.fillStyle(colors.body, 1);
-    bg.fillRoundedRect(-CARD_W / 2, -CARD_H / 2, CARD_W, CARD_H, 8);
-    bg.lineStyle(2, colors.border, 1);
-    bg.strokeRoundedRect(-CARD_W / 2, -CARD_H / 2, CARD_W, CARD_H, 8);
-
-    // Top bar
-    const bar = this.add.graphics();
-    bar.fillStyle(colors.bar, 1);
-    bar.fillRoundedRect(-CARD_W / 2, -CARD_H / 2, CARD_W, topBarH, {
-      tl: 8,
-      tr: 8,
-      bl: 0,
-      br: 0,
-    });
-
-    // Label text in top bar
-    const text = this.add
-      .text(0, -CARD_H / 2 + topBarH / 2, label, {
-        fontSize: '10px',
-        color: '#ffffff',
-        fontFamily: 'Arial',
-        align: 'center',
-        wordWrap: { width: CARD_W - 8 },
-      })
-      .setOrigin(0.5);
-
-    // Emoji centered in body area below bar
-    const bodyCenter = -CARD_H / 2 + topBarH + (CARD_H - topBarH) / 2;
-    const emojiText = this.add
-      .text(0, bodyCenter, emoji, {
-        fontSize: '28px',
-        fontFamily: 'Arial',
-        align: 'center',
-      })
-      .setOrigin(0.5);
-
-    const container = this.add.container(x, y, [shadow, bg, bar, text, emojiText]) as PuzzleCard;
-    container.setSize(CARD_W, CARD_H);
+    const container = createFoodCard({
+      scene: this,
+      x,
+      y,
+      name: label,
+      emoji: meta.emoji || '',
+      color: cardColor,
+      wave: type !== 'processor',
+      width: CARD_W,
+      height: CARD_H,
+    }) as PuzzleCard;
 
     // Store card metadata
     container.cardType = type;
     container.cardLabel = label;
-    container.cardBg = bg;
-    container.cardShadow = shadow;
+    container.cardBg = container.list[1] as Phaser.GameObjects.Graphics;
+    container.cardShadow = container.list[0] as Phaser.GameObjects.Graphics;
     container.itemName = meta.itemName || label;
     container.stepId = meta.stepId || null;
     container.attachedTo = null;
