@@ -25,6 +25,45 @@ Across the ENTIRE recipe (all branches, all steps, excluding assemble), you must
 - Inputs are either base ingredient names or a previous step's stepId.
 - Every ingredient must be used exactly once across all steps.
 
+### Quest Titles
+Every step MUST have a "questTitle" — a short, evocative title (2-4 words) that names the task like a quest objective. It should NOT reveal the processor or the exact output. Use thematic, atmospheric, or poetic language.
+
+Examples of GOOD quest titles:
+- chop garlic + chili → "Fiery Foundation" (not "Chopped Aromatics")
+- fry shrimp → "The Sizzling Catch" (not "Fried Shrimp")
+- mix glaze → "The Golden Coat" (not "Honey Glaze")
+- boil pasta → "The Rolling Boil" — wait, that reveals boil. Better: "Bubbling Depths"
+- bake dough → "Into the Heat" (not "Baked Bread")
+- assemble final → "The Grand Finale" (not "Assemble Taco")
+
+Examples of BAD quest titles:
+- "Chopped Aromatics" ❌ (reveals the processor and output)
+- "Fry the Shrimp" ❌ (reveals the processor)
+- "Mixed Glaze" ❌ (reveals the processor)
+
+### Hints
+Every step MUST have a "hint" — a short, playful clue (4-8 words) that hints at the cooking action WITHOUT naming the processor directly. The hint should make the player think and feel clever when they figure it out. Use metaphors, sensory descriptions, or wordplay.
+
+Examples of GOOD hints (indirect, fun):
+- chop: "A blade's rhythmic dance awaits" or "Reduce these to tiny pieces"
+- fry: "Oil pops and sizzles call" or "A hot bath, but make it quick"
+- boil: "Bubbles will tell you it's ready" or "Let the water do the work"
+- mix: "Round and round until they're one" or "Stir up some harmony"
+- grill: "Leave your mark with heat lines" or "Smoky char builds character"
+- bake: "The oven's warmth transforms all" or "Patience and heat, sealed away"
+- roast: "Low and slow in dry heat" or "A long warm hug from the oven"
+- knead: "Push, fold, repeat with muscle" or "Give this dough a workout"
+- mash: "Smash until smooth and creamy" or "Flatten these into oblivion"
+- steam: "A gentle cloud does the cooking" or "Hot mist works its magic"
+- toast: "Golden brown and crispy edges" or "A quick tan under heat"
+- melt: "Watch it slowly lose its shape" or "Heat turns solid into silk"
+- assemble: "All the pieces find their place" or "Stack, layer, and unite"
+
+Examples of BAD hints (too obvious):
+- "Chop the onions" ❌ (names the processor)
+- "Use the frying pan" ❌ (names the processor)
+- "Boil this ingredient" ❌ (names the processor)
+
 ### Tree structure
 - 2-3 parallel branches that converge into a final "assemble" node.
 - Each branch represents a component of the dish (e.g. the bun, the filling, the sauce).

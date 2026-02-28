@@ -4,6 +4,8 @@ export interface Step {
   stepId: string;
   processor: string;
   processorEmoji?: string;
+  questTitle?: string;
+  hint?: string;
   inputs: string[];
   output: string;
   outputAssetId?: string | null;

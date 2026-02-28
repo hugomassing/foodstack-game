@@ -305,16 +305,17 @@ function StepRow({
   actionable: boolean;
 }) {
   const Icon = getProcessorIcon(step.processor);
+  const title = step.questTitle ?? step.output;
+  const description = step.hint;
 
   return (
     <div
       style={{
         display: 'flex',
-        alignItems: 'center',
-        height: 30,
+        alignItems: 'flex-start',
         borderRadius: 8,
         marginBottom: 4,
-        padding: '0 6px',
+        padding: '5px 6px',
         background: completed ? '#e8f5e9' : actionable ? '#fff8e1' : 'transparent',
         border: completed
           ? '2px solid #a5d6a7'
@@ -331,6 +332,7 @@ function StepRow({
           borderRadius: '50%',
           flexShrink: 0,
           marginRight: 6,
+          marginTop: 1,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -361,6 +363,7 @@ function StepRow({
           height: 18,
           flexShrink: 0,
           marginRight: 6,
+          marginTop: 1,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -373,39 +376,60 @@ function StepRow({
         />
       </div>
 
-      {/* Label */}
-      <span
-        style={{
-          flex: 1,
-          fontSize: 11,
-          fontWeight: 900,
-          color: completed ? '#4caf50' : actionable ? '#3e2723' : '#9ca3af',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-          letterSpacing: '0.02em',
-        }}
-      >
-        {step.processor.toUpperCase()}
-      </span>
+      {/* Title + description */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        {/* Title row */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span
+            style={{
+              flex: 1,
+              fontSize: 11,
+              fontWeight: 900,
+              color: completed ? '#4caf50' : actionable ? '#3e2723' : '#9ca3af',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              letterSpacing: '0.02em',
+              textTransform: 'capitalize',
+            }}
+          >
+            {title}
+          </span>
 
-      {/* Input count */}
-      {!completed && (
-        <span
-          style={{
-            fontSize: 11,
-            color: actionable ? '#8d6e63' : '#bdbdbd',
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2,
-            fontWeight: 900,
-          }}
-        >
-          <ArrowLeft size={10} strokeWidth={3} />
-          {step.inputs.length}
-        </span>
-      )}
+          {/* Input count */}
+          {!completed && (
+            <span
+              style={{
+                fontSize: 10,
+                color: actionable ? '#8d6e63' : '#bdbdbd',
+                flexShrink: 0,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                fontWeight: 900,
+              }}
+            >
+              <ArrowLeft size={9} strokeWidth={3} />
+              {step.inputs.length}
+            </span>
+          )}
+        </div>
+
+        {/* Description (hint) */}
+        {description && !completed && (
+          <div
+            style={{
+              fontSize: 9,
+              fontStyle: 'italic',
+              color: actionable ? '#8d6e63' : '#bdbdbd',
+              marginTop: 1,
+              lineHeight: 1.3,
+            }}
+          >
+            {description}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
