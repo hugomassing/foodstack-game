@@ -1,11 +1,9 @@
 import Phaser from 'phaser';
 import { FOOD_CARD_W, FOOD_CARD_H, FOOD_CARD_RADIUS } from '../gameObjects/FoodCard';
 import { PuzzleCard } from '../gameObjects/PuzzleCard';
-import { QuestBook } from '../gameObjects/QuestBook';
 import {
   GAME_W,
   GAME_H,
-  DPR,
   FONT_FAMILY,
   QUEST_PANEL_W,
   TOPBAR_H,
@@ -16,6 +14,7 @@ import {
   PROCESSOR_RING_PAD,
 } from '../config';
 import { FoodAssets } from '../data/food-assets';
+import { gameStore } from '../store/gameStore';
 import type { PuzzleData, Step, Ingredient, Attachment } from '../types';
 
 const PROCESSOR_ASSET: Record<string, string> = {
@@ -56,23 +55,18 @@ function localAssetMatch(name: string): string | null {
   const lower = name.toLowerCase();
   const normalized = lower.replace(/\s+/g, '_');
 
-  // Exact ID match
   if (FoodAssets.find(normalized)) return normalized;
 
-  // Exact label match
   for (const item of FoodAssets.all) {
     if (item.label.toLowerCase() === lower) return item.id;
   }
 
-  // Strip trailing 's' for plurals (e.g. "onions" → "onion")
   if (normalized.endsWith('s') && FoodAssets.find(normalized.slice(0, -1))) {
     return normalized.slice(0, -1);
   }
 
-  // Hardcoded approximate mappings
   if (APPROX_MAP[lower]) return APPROX_MAP[lower];
 
-  // Check if any word in the name matches an asset (e.g. "chopped pork" → "ham" via APPROX_MAP, "fresh salmon" → "salmon")
   const words = lower.split(/\s+/);
   for (const word of words) {
     if (FoodAssets.find(word)) return word;
@@ -81,7 +75,6 @@ function localAssetMatch(name: string): string | null {
     if (APPROX_MAP[word]) return APPROX_MAP[word];
   }
 
-  // Tag-based search: find an asset whose tags contain a word from the name
   for (const word of words) {
     const tagged = FoodAssets.byTag(word);
     if (tagged.length > 0) return tagged[0].id;
@@ -100,16 +93,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
   private processorAttachments!: Map<PuzzleCard, Attachment[]>;
   private allSteps!: Step[];
   private totalSteps!: number;
-  private stepText!: Phaser.GameObjects.Text;
-  private questBook!: QuestBook;
   private hoveredProcessor: PuzzleCard | null = null;
   private dropHighlight!: Phaser.GameObjects.Graphics;
   private activeProcessor: PuzzleCard | null = null;
   private cookButton: Phaser.GameObjects.Container | null = null;
-  private progressBarGfx!: Phaser.GameObjects.Graphics;
-  private progressBarMaxW = 0;
-  private progressBarInnerX = 0;
-  private progressBarInnerY = 0;
 
   constructor() {
     super({ key: 'CookingPuzzleScene' });
@@ -121,15 +108,12 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
   create(data: { puzzleData: PuzzleData }): void {
     this.cameras.main.setBackgroundColor('#d32f2f');
-    this.cameras.main.setZoom(DPR);
-    this.cameras.main.centerOn(GAME_W / 2, GAME_H / 2);
 
     // ── Background food icons ─────────────────────────────────
     this.drawBgIcons();
 
     // ── Layout constants ──────────────────────────────────────
     const BD_X = 248, BD_Y = 78, BD_W = 704, BD_H = 454, BD_R = 20;
-    const TB_X = 248, TB_Y = 8, TB_W = 704, TB_H = 62, TB_R = 14;
 
     // ── Board card shadow ─────────────────────────────────────
     const boardShadow = this.add.graphics().setDepth(-2);
@@ -153,11 +137,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
       const x = BD_X + (BD_W / 9) * i;
       board.lineBetween(x, BD_Y, x, BD_Y + BD_H);
     }
-
-    // Auto-set high resolution on all text objects
-    const _addText = this.add.text.bind(this.add);
-    (this.add as any).text = (...args: Parameters<typeof _addText>) =>
-      _addText(...args).setResolution(DPR);
 
     this.puzzleData = data.puzzleData;
 
@@ -190,64 +169,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
       step.inputs = step.inputs.map((inp) => outputToStepId.get(inp) ?? inp);
     }
 
-    // -- Quest Book --
-    this.questBook = new QuestBook(
-      this,
-      this.puzzleData,
-      this.allSteps,
-      this.completedSteps,
-      this.availableIntermediates,
-    );
-
-    // -- Top bar card --
-    const topBarShadow = this.add.graphics().setDepth(5);
-    topBarShadow.fillStyle(0x3e2723, 1);
-    topBarShadow.fillRoundedRect(TB_X + 6, TB_Y + 6, TB_W, TB_H, TB_R);
-
-    const topBarBg = this.add.graphics().setDepth(6);
-    topBarBg.fillStyle(0xfffaf0, 1);
-    topBarBg.fillRoundedRect(TB_X, TB_Y, TB_W, TB_H, TB_R);
-    topBarBg.lineStyle(4, 0x3e2723, 1);
-    topBarBg.strokeRoundedRect(TB_X, TB_Y, TB_W, TB_H, TB_R);
-
-    // Dish name — left-aligned, uppercase
-    this.add
-      .text(TB_X + 16, TB_Y + TB_H / 2, this.puzzleData.dishName.toUpperCase(), {
-        fontSize: '16px',
-        fontStyle: 'bold',
-        color: '#3e2723',
-        fontFamily: FONT_FAMILY,
-      })
-      .setOrigin(0, 0.5)
-      .setDepth(7);
-
-    // Step counter — right-aligned
-    this.stepText = this.add
-      .text(TB_X + TB_W - 14, TB_Y + TB_H / 2, `0/${this.totalSteps} STEPS`, {
-        fontSize: '11px',
-        color: '#8d6e63',
-        fontFamily: FONT_FAMILY,
-      })
-      .setOrigin(1, 0.5)
-      .setDepth(7);
-
-    // Progress bar (track + animated fill) — near bottom of top bar
-    const PROG_H = 10;
-    const PROG_Y = TB_Y + TB_H - 18;
-    const PROG_X = TB_X + 16;
-    const PROG_W = TB_W - 32;
-
-    const progTrack = this.add.graphics().setDepth(7);
-    progTrack.fillStyle(0xe5e7eb, 1);
-    progTrack.fillRoundedRect(PROG_X, PROG_Y, PROG_W, PROG_H, 5);
-    progTrack.lineStyle(2, 0x3e2723, 1);
-    progTrack.strokeRoundedRect(PROG_X, PROG_Y, PROG_W, PROG_H, 5);
-
-    this.progressBarGfx = this.add.graphics().setDepth(8);
-    this.progressBarMaxW = PROG_W;
-    this.progressBarInnerX = PROG_X;
-    this.progressBarInnerY = PROG_Y;
-    this.drawProgressBar(0);
+    // Seed the zustand store with gameplay data
+    gameStore.getState().initGameplay(this.allSteps, this.totalSteps);
 
     // -- Drop highlight graphic (pulsing outline drawn over the hovered processor) --
     this.dropHighlight = this.add.graphics();
@@ -277,7 +200,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
             });
           }
         } else {
-          // Spatial overlap — find the processor most overlapped by this card
           const proc = this.findOverlappingProcessor(obj);
           this.hoveredProcessor = proc;
           if (proc) {
@@ -318,7 +240,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
           });
         }
       }
-      // Spatial drop: attach if an overlapping processor was found
       if ((obj.cardType === 'ingredient' || obj.cardType === 'intermediate') && this.hoveredProcessor) {
         if (this.activeProcessor && this.activeProcessor !== this.hoveredProcessor) return;
         this.attachToProcessor(obj, this.hoveredProcessor);
@@ -329,12 +250,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     // -- Scatter cards --
     this.scatterCards();
-
-
-    // -- Debug toggle (D key) --
-    this.input.keyboard!.on('keydown-D', () => {
-      this.questBook.toggleDebugMode();
-    });
   }
 
   // -- Scatter cards across game area --
@@ -591,17 +506,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
   private onStepSuccess(step: Step, procCard: PuzzleCard): void {
     this.completedSteps.add(step.stepId);
     this.stepCount++;
-    this.stepText.setText(`${this.stepCount}/${this.totalSteps} STEPS`);
-
-    // Animate progress bar
-    const progObj = { value: (this.stepCount - 1) / this.totalSteps };
-    this.tweens.add({
-      targets: progObj,
-      value: this.stepCount / this.totalSteps,
-      duration: 500,
-      ease: 'Sine.easeOut',
-      onUpdate: () => this.drawProgressBar(progObj.value),
-    });
 
     const isFinal = step.stepId === 'final';
 
@@ -631,29 +535,15 @@ export class CookingPuzzleScene extends Phaser.Scene {
     if (attachments) {
       for (const att of attachments) {
         att.card.attachedTo = null;
-        if (att.card.cardType === 'intermediate') {
-          // Keep intermediate cards — scatter them back for potential reuse
-          const newX = Phaser.Math.Between(QUEST_PANEL_W + 68, GAME_W - 68);
-          const newY = Phaser.Math.Between(TOPBAR_H + 20, GAME_H - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10);
-          this.tweens.add({
-            targets: att.card,
-            x: newX,
-            y: newY,
-            duration: 400,
-            ease: 'Back.easeOut',
-          });
-        } else {
-          // Scatter ingredient cards back onto the board for reuse
-          const newX = Phaser.Math.Between(QUEST_PANEL_W + 68, GAME_W - 68);
-          const newY = Phaser.Math.Between(TOPBAR_H + 20, GAME_H - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10);
-          this.tweens.add({
-            targets: att.card,
-            x: newX,
-            y: newY,
-            duration: 400,
-            ease: 'Back.easeOut',
-          });
-        }
+        const newX = Phaser.Math.Between(QUEST_PANEL_W + 68, GAME_W - 68);
+        const newY = Phaser.Math.Between(TOPBAR_H + 20, GAME_H - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10);
+        this.tweens.add({
+          targets: att.card,
+          x: newX,
+          y: newY,
+          duration: 400,
+          ease: 'Back.easeOut',
+        });
       }
       attachments.length = 0;
     }
@@ -663,19 +553,24 @@ export class CookingPuzzleScene extends Phaser.Scene {
       this.spawnOutputCard(step, procCard, attachedCards);
     }
 
-    this.questBook.refresh();
+    // Update zustand store — triggers React re-renders for QuestBookPanel and GameHUD
+    gameStore.getState().completeStep(
+      step.stepId,
+      isFinal ? undefined : [step.stepId, step.output],
+    );
+
     this.deactivateProcessor();
 
     if (isFinal) {
-      this.time.delayedCall(400, () => this.onVictory(step.output));
+      this.time.delayedCall(400, () => {
+        gameStore.getState().setVictory(step.output);
+      });
     }
   }
 
   private spawnOutputCard(step: Step, procCard: PuzzleCard, inputCards: PuzzleCard[]): void {
-    // Asset priority: AI-provided outputAssetId > local fuzzy match on output name
     const logicalAsset = step.outputAssetId ?? localAssetMatch(step.output);
 
-    // Always collect input texture keys as fallback
     const inputTextureKeys: string[] = [];
     for (const c of inputCards) {
       if (c.foodImage) {
@@ -686,16 +581,11 @@ export class CookingPuzzleScene extends Phaser.Scene {
       }
     }
 
-    // Decide what to show:
-    // - Logical asset found → use it as-is (single image, no fan)
-    // - No logical asset, 1 input → inherit that input's image
-    // - No logical asset, 2+ inputs → fan all input images
     const useLogical = logicalAsset && this.textures.exists(`food_${logicalAsset}`);
     const primaryAsset = useLogical
       ? logicalAsset
       : inputTextureKeys.length > 0 ? inputTextureKeys[0].slice(5) : null;
 
-    // Spawn away from the processor so the new card isn't hidden underneath it
     const boardMinX = QUEST_PANEL_W + FOOD_CARD_W / 2 + SCATTER.PAD;
     const boardMaxX = GAME_W - FOOD_CARD_W / 2 - SCATTER.PAD;
     const boardMinY = TOPBAR_H + FOOD_CARD_H / 2 + SCATTER.PAD;
@@ -706,7 +596,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
     for (let attempt = 0; attempt < SCATTER.MAX_ATTEMPTS; attempt++) {
       spawnX = Phaser.Math.Between(boardMinX, boardMaxX);
       spawnY = Phaser.Math.Between(boardMinY, boardMaxY);
-      // Accept if far enough from the processor
       if (
         Math.abs(spawnX - procCard.x) > FOOD_CARD_W + SCATTER.CARD_GAP ||
         Math.abs(spawnY - procCard.y) > FOOD_CARD_H + SCATTER.CARD_GAP
@@ -714,11 +603,9 @@ export class CookingPuzzleScene extends Phaser.Scene {
         break;
       }
     }
-    // TypeScript: spawnX/spawnY are always assigned by the loop (MAX_ATTEMPTS >= 1)
     spawnX ??= Phaser.Math.Between(boardMinX, boardMaxX);
     spawnY ??= Phaser.Math.Between(boardMinY, boardMaxY);
 
-    // Find the highest depth among existing cards so the new one renders on top
     let maxDepth = 0;
     for (const c of this.cards) {
       if (c.depth > maxDepth) maxDepth = c.depth;
@@ -733,7 +620,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
     card.cardDepth = maxDepth + 1;
     card.setDepth(maxDepth + 1);
 
-    // Fan multiple input images when no logical asset was resolved
     if (!useLogical && inputTextureKeys.length > 1) {
       const fanDim = Math.round(FOOD_CARD_H * 0.32);
       const imageY = -FOOD_CARD_H / 2 + FOOD_CARD_H * 0.34;
@@ -742,7 +628,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
       const spreadY = Math.min(6, 14 / count);
       const rotStep = Math.min(0.25, 0.5 / count);
 
-      // Shrink & offset the primary image to participate in the fan
       if (card.foodImage) {
         const pScale = Math.min(fanDim / card.foodImage.width, fanDim / card.foodImage.height);
         card.foodImage.setScale(pScale);
@@ -850,21 +735,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
     this.dropHighlight.setVisible(true);
   }
 
-  private drawProgressBar(fraction: number): void {
-    this.progressBarGfx.clear();
-    const w = this.progressBarMaxW * Math.min(1, Math.max(0, fraction));
-    if (w > 0) {
-      this.progressBarGfx.fillStyle(0x4caf50, 1);
-      this.progressBarGfx.fillRoundedRect(
-        this.progressBarInnerX,
-        this.progressBarInnerY,
-        w,
-        10,
-        5,
-      );
-    }
-  }
-
   // -- Cook Button & Processor Activation --
 
   private showCookButton(): void {
@@ -957,76 +827,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
       card.setInteractive({ draggable: true });
       card.setAlpha(1);
     }
-  }
-
-  // -- Victory --
-
-  private onVictory(dishName: string): void {
-    const overlay = this.add.graphics();
-    overlay.fillStyle(COLORS.OVERLAY, 0.6);
-    overlay.fillRect(0, 0, GAME_W, GAME_H);
-    overlay.setDepth(200);
-
-    const victoryText = this.add
-      .text(GAME_W / 2, -100, dishName, {
-        fontSize: '32px',
-        fontStyle: 'bold',
-        color: TEXT_COLORS.GOLD,
-        fontFamily: FONT_FAMILY,
-        align: 'center',
-        stroke: '#000000',
-        strokeThickness: 4,
-      })
-      .setOrigin(0.5)
-      .setDepth(201);
-
-    this.tweens.add({
-      targets: victoryText,
-      y: GAME_H / 2 - 22,
-      ease: 'Bounce.Out',
-      duration: 1200,
-    });
-
-    const subtitle = this.add
-      .text(GAME_W / 2, -100, 'YOU WIN!', {
-        fontSize: '22px',
-        fontStyle: 'bold',
-        color: TEXT_COLORS.SUCCESS,
-        fontFamily: FONT_FAMILY,
-        stroke: '#000000',
-        strokeThickness: 3,
-      })
-      .setOrigin(0.5)
-      .setDepth(201);
-
-    this.tweens.add({
-      targets: subtitle,
-      y: GAME_H / 2 + 34,
-      ease: 'Bounce.Out',
-      duration: 1200,
-      delay: 300,
-    });
-
-    this.cameras.main.flash(600, 46, 204, 113, false);
-
-    const btnText = this.add
-      .text(GAME_W / 2, GAME_H / 2 + 80, 'Play Again', {
-        fontSize: '16px',
-        fontStyle: 'bold',
-        color: TEXT_COLORS.WHITE,
-        fontFamily: FONT_FAMILY,
-        backgroundColor: '#2ecc71',
-        padding: { x: 16, y: 8 },
-      })
-      .setOrigin(0.5)
-      .setDepth(201)
-      .setInteractive({ useHandCursor: true });
-
-    btnText.setAlpha(0);
-    this.tweens.add({ targets: btnText, alpha: 1, duration: 500, delay: 1500 });
-    btnText.on('pointerdown', () => {
-      this.scene.start('TitleScene');
-    });
   }
 
   private drawBgIcons(): void {
