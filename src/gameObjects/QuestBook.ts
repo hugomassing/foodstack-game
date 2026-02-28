@@ -1,11 +1,19 @@
 import Phaser from 'phaser';
-import { GAME_H, QUEST_PANEL_W, QUEST_BOOK, COLORS, TEXT_COLORS, FONT_FAMILY } from '../config';
+import { GAME_H, QUEST_PANEL_W, FONT_FAMILY } from '../config';
 import type { PuzzleData, Step } from '../types';
 
-const HEADER_H = 60;
-const PROG_H = 5;
-const PROG_Y = HEADER_H + 1;
-const LIST_START_Y = HEADER_H + PROG_H + 28;
+const M = 8;
+const SB_X = M;
+const SB_Y = M;
+const SB_W = QUEST_PANEL_W - M * 2; // 224
+const SB_H = GAME_H - M * 2;        // 524
+const SB_R = 20;
+const HEADER_H = 80;
+const PAD = 12;
+const STEP_H = 30;
+const STEP_GAP = 4;
+const GROUP_GAP = 10;
+const BODY_Y = SB_Y + HEADER_H; // 88
 
 export class QuestBook {
   private scene: Phaser.Scene;
@@ -14,11 +22,11 @@ export class QuestBook {
   private completedSteps: Set<string>;
   private availableIntermediates: Map<string, string>;
   private questStepTexts = new Map<string, Phaser.GameObjects.Text>();
+  private questStepCounts = new Map<string, Phaser.GameObjects.Text>();
   private debugMode = false;
   private stepHighlights!: Phaser.GameObjects.Graphics;
   private questStepY = new Map<string, number>();
   private stepCountText!: Phaser.GameObjects.Text;
-  private sidebarProgressGfx!: Phaser.GameObjects.Graphics;
 
   constructor(
     scene: Phaser.Scene,
@@ -36,214 +44,239 @@ export class QuestBook {
   }
 
   private build(): void {
-    const PAD_X = QUEST_BOOK.PAD_X;
-    const INDENT = QUEST_BOOK.INDENT;
-    const LINE_H = QUEST_BOOK.LINE_H;
-    const BRANCH_GAP = QUEST_BOOK.BRANCH_GAP;
+    const add = this.scene.add;
 
-    // ── Panel background ─────────────────────────────────────
-    const bg = this.scene.add.graphics();
-    bg.fillStyle(COLORS.QUEST_BG, 1);
-    bg.fillRect(0, 0, QUEST_PANEL_W, GAME_H);
+    // ── Card shadow ──────────────────────────────────────────
+    const shadow = add.graphics();
+    shadow.fillStyle(0x3e2723, 1);
+    shadow.fillRect(SB_X + 6, SB_Y + 8, SB_W, SB_H);
 
-    // ── Right separator: thick dark + soft inner highlight ───
-    const sep = this.scene.add.graphics();
-    sep.lineStyle(4, COLORS.SEPARATOR, 1);
-    sep.lineBetween(QUEST_PANEL_W, 0, QUEST_PANEL_W, GAME_H);
-    sep.lineStyle(1, 0xffffff, 0.18);
-    sep.lineBetween(QUEST_PANEL_W - 4, 0, QUEST_PANEL_W - 4, GAME_H);
+    // ── Cream card fill ──────────────────────────────────────
+    const gfx = add.graphics();
+    gfx.fillStyle(0xfffaf0, 1);
+    gfx.fillRoundedRect(SB_X, SB_Y, SB_W, SB_H, SB_R);
 
-    // ── Header bar ───────────────────────────────────────────
-    const header = this.scene.add.graphics();
-    // Amber accent stripe at top
-    header.fillStyle(0xf59e0b, 1);
-    header.fillRect(0, 0, QUEST_PANEL_W, 4);
-    // Cream fill below stripe
-    header.fillStyle(COLORS.QUEST_BG, 1);
-    header.fillRect(0, 4, QUEST_PANEL_W, HEADER_H - 4);
-    // Bottom border
-    header.lineStyle(3, COLORS.SEPARATOR, 1);
-    header.lineBetween(0, HEADER_H, QUEST_PANEL_W, HEADER_H);
+    // ── Yellow header (rounded top, flat bottom) ─────────────
+    gfx.fillStyle(0xffca28, 1);
+    gfx.fillRoundedRect(SB_X, SB_Y, SB_W, HEADER_H, {
+      tl: SB_R,
+      tr: SB_R,
+      bl: 0,
+      br: 0,
+    });
+    gfx.lineStyle(4, 0x3e2723, 1);
+    gfx.lineBetween(SB_X, SB_Y + HEADER_H, SB_X + SB_W, SB_Y + HEADER_H);
 
-    // "Recipe" title
-    this.scene.add
-      .text(QUEST_PANEL_W / 2, 14, 'Recipe', {
-        fontSize: '15px',
-        fontStyle: 'bold',
-        color: TEXT_COLORS.DARK,
-        fontFamily: FONT_FAMILY,
-      })
-      .setOrigin(0.5, 0);
+    // ── White body (rounded bottom corners to match card) ────
+    gfx.fillStyle(0xffffff, 1);
+    gfx.fillRoundedRect(SB_X, BODY_Y, SB_W, SB_H - HEADER_H, { tl: 0, tr: 0, bl: SB_R, br: SB_R });
 
-    // Dish name subtitle (truncated to one line)
+    // ── Card border (drawn last, on top) ─────────────────────
+    gfx.lineStyle(4, 0x3e2723, 1);
+    gfx.strokeRoundedRect(SB_X, SB_Y, SB_W, SB_H, SB_R);
+
+    // ── White pin circle ────────────────────────────────────
+    gfx.fillStyle(0xffffff, 1);
+    gfx.fillCircle(SB_X + SB_W - 16, SB_Y + 14, 8);
+    gfx.lineStyle(2, 0x3e2723, 1);
+    gfx.strokeCircle(SB_X + SB_W - 16, SB_Y + 14, 8);
+
+    // ── Header text ─────────────────────────────────────────
+    add.text(SB_X + PAD, SB_Y + 16, 'RECIPE', {
+      fontSize: '18px',
+      fontStyle: 'bold',
+      color: '#3e2723',
+      fontFamily: FONT_FAMILY,
+    });
+
     const raw = this.puzzleData.dishName;
     const dishLabel = raw.length > 26 ? raw.slice(0, 24) + '\u2026' : raw;
-    this.scene.add
-      .text(QUEST_PANEL_W / 2, 36, dishLabel, {
-        fontSize: '11px',
-        color: TEXT_COLORS.BRANCH,
+    add.text(SB_X + PAD, SB_Y + 42, dishLabel, {
+      fontSize: '11px',
+      color: '#d84315',
+      fontFamily: FONT_FAMILY,
+    });
+
+    // ── PROGRESS row ─────────────────────────────────────────
+    add.text(SB_X + PAD, BODY_Y + 10, 'PROGRESS', {
+      fontSize: '10px',
+      color: '#a1887f',
+      fontFamily: FONT_FAMILY,
+    });
+
+    // Badge background
+    const badgeX = SB_X + SB_W - PAD - 60;
+    const badgeY = BODY_Y + 7;
+    const badgeBg = add.graphics();
+    badgeBg.fillStyle(0xe0e0e0, 1);
+    badgeBg.fillRoundedRect(badgeX, badgeY, 60, 18, 4);
+
+    this.stepCountText = add.text(
+      badgeX + 60 - 4,
+      badgeY + 9,
+      `0/${this.allSteps.length} STEPS`,
+      {
+        fontSize: '9px',
+        fontStyle: 'bold',
+        color: '#3e2723',
         fontFamily: FONT_FAMILY,
-      })
-      .setOrigin(0.5, 0);
+      },
+    ).setOrigin(1, 0.5);
 
-    // ── Progress bar strip ───────────────────────────────────
-    const progTrack = this.scene.add.graphics();
-    progTrack.fillStyle(0xe5e7eb, 1);
-    progTrack.fillRect(0, PROG_Y, QUEST_PANEL_W, PROG_H);
+    // ── Step highlights layer ────────────────────────────────
+    this.stepHighlights = add.graphics().setDepth(0);
 
-    this.sidebarProgressGfx = this.scene.add.graphics();
+    // ── Step rows ────────────────────────────────────────────
+    let curY = BODY_Y + 34;
 
-    // ── Step count header ────────────────────────────────────
-    this.stepCountText = this.scene.add
-      .text(PAD_X, HEADER_H + PROG_H + 9, `0 / ${this.allSteps.length} steps`, {
-        fontSize: '11px',
-        color: TEXT_COLORS.DIM,
+    const addStepRow = (step: Step): void => {
+      this.questStepY.set(step.stepId, curY);
+
+      const leftTxt = add.text(SB_X + PAD + 30, curY + STEP_H / 2, '', {
+        fontSize: '12px',
+        fontStyle: 'bold',
+        color: '#3e2723',
         fontFamily: FONT_FAMILY,
-      })
-      .setOrigin(0, 0);
+      }).setOrigin(0, 0.5).setDepth(1);
+      this.questStepTexts.set(step.stepId, leftTxt);
 
-    // ── Step highlights + state bars (drawn under text) ──────
-    this.stepHighlights = this.scene.add.graphics().setDepth(0);
-
-    // ── Faint horizontal rule lines between step rows ────────
-    const rules = this.scene.add.graphics().setDepth(0);
-    rules.lineStyle(1, 0x000000, 0.05);
-
-    // ── Branch + step list ───────────────────────────────────
-    let curY = LIST_START_Y;
+      const cntTxt = add.text(SB_X + SB_W - PAD - 8, curY + STEP_H / 2, '', {
+        fontSize: '12px',
+        color: '#8d6e63',
+        fontFamily: FONT_FAMILY,
+      }).setOrigin(1, 0.5).setDepth(1);
+      this.questStepCounts.set(step.stepId, cntTxt);
+    };
 
     for (const branch of this.puzzleData.branches) {
-      this.scene.add
-        .text(PAD_X, curY, `\u2500\u2500 ${branch.name}`, {
-          fontSize: '11px',
-          color: TEXT_COLORS.BRANCH,
-          fontFamily: FONT_FAMILY,
-        })
-        .setOrigin(0, 0)
-        .setDepth(1);
-      curY += LINE_H;
+      add.text(SB_X + PAD, curY, `\u2014  ${branch.name.toUpperCase()}`, {
+        fontSize: '10px',
+        color: '#8d6e63',
+        fontFamily: FONT_FAMILY,
+      }).setOrigin(0, 0).setDepth(1);
+      curY += 18;
 
       for (const step of branch.steps) {
-        this.questStepY.set(step.stepId, curY);
-        const txt = this.scene.add
-          .text(PAD_X + INDENT, curY, '', {
-            fontSize: '12px',
-            color: TEXT_COLORS.DIM,
-            fontFamily: FONT_FAMILY,
-          })
-          .setOrigin(0, 0)
-          .setDepth(1);
-        this.questStepTexts.set(step.stepId, txt);
-        rules.lineBetween(PAD_X, curY + LINE_H - 1, QUEST_PANEL_W - PAD_X, curY + LINE_H - 1);
-        curY += LINE_H;
+        addStepRow(step);
+        curY += STEP_H + STEP_GAP;
       }
-      curY += BRANCH_GAP;
+      curY += GROUP_GAP;
     }
 
-    // ── Final branch ─────────────────────────────────────────
-    this.scene.add
-      .text(PAD_X, curY, '\u2500\u2500 final', {
-        fontSize: '11px',
-        color: TEXT_COLORS.BRANCH,
-        fontFamily: FONT_FAMILY,
-      })
-      .setOrigin(0, 0)
-      .setDepth(1);
-    curY += LINE_H;
+    // Final branch
+    add.text(SB_X + PAD, curY, '\u2014  FINAL', {
+      fontSize: '10px',
+      color: '#8d6e63',
+      fontFamily: FONT_FAMILY,
+    }).setOrigin(0, 0).setDepth(1);
+    curY += 18;
+    addStepRow(this.puzzleData.finalStep);
 
-    const finalStep = this.puzzleData.finalStep;
-    this.questStepY.set(finalStep.stepId, curY);
-    const finalTxt = this.scene.add
-      .text(PAD_X + INDENT, curY, '', {
-        fontSize: '12px',
-        color: TEXT_COLORS.DIM,
-        fontFamily: FONT_FAMILY,
-      })
-      .setOrigin(0, 0)
-      .setDepth(1);
-    this.questStepTexts.set(finalStep.stepId, finalTxt);
-    rules.lineBetween(PAD_X, curY + LINE_H - 1, QUEST_PANEL_W - PAD_X, curY + LINE_H - 1);
+    // ── Export JSON button (bottom of sidebar) ───────────────
+    const EX_W = SB_W - PAD * 2;
+    const EX_H = 28;
+    const EX_X = SB_X + PAD;
+    const EX_Y = SB_Y + SB_H - PAD - EX_H;
+    const EX_R = 8;
+
+    const exBg = add.graphics().setDepth(1);
+    const drawExBg = (hover: boolean) => {
+      exBg.clear();
+      exBg.fillStyle(0x8d6e63, hover ? 0.7 : 0.35);
+      exBg.fillRoundedRect(EX_X + 2, EX_Y + 3, EX_W, EX_H, EX_R);
+      exBg.fillStyle(0xffffff, 1);
+      exBg.fillRoundedRect(EX_X, EX_Y, EX_W, EX_H, EX_R);
+      exBg.lineStyle(2, hover ? 0x3e2723 : 0x8d6e63, 1);
+      exBg.strokeRoundedRect(EX_X, EX_Y, EX_W, EX_H, EX_R);
+    };
+    drawExBg(false);
+
+    const exBtn = add.text(EX_X + EX_W / 2, EX_Y + EX_H / 2, '\u2193 EXPORT JSON', {
+      fontSize: '10px',
+      fontStyle: 'bold',
+      color: '#8d6e63',
+      fontFamily: FONT_FAMILY,
+    }).setOrigin(0.5).setDepth(2).setInteractive({ useHandCursor: true });
+
+    exBtn.on('pointerover', () => { drawExBg(true); exBtn.setColor('#3e2723'); });
+    exBtn.on('pointerout', () => { drawExBg(false); exBtn.setColor('#8d6e63'); });
+    exBtn.on('pointerdown', () => {
+      const json = JSON.stringify(this.puzzleData, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${this.puzzleData.dishName.replace(/\s+/g, '-').toLowerCase()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
 
     this.refresh();
   }
 
   refresh(): void {
-    // ── Step highlights + left accent bars ───────────────────
     this.stepHighlights.clear();
+
+    const cx = SB_X + PAD + 12;
+    const rowX = SB_X + PAD;
+    const rowW = SB_W - PAD * 2;
+
     for (const step of this.allSteps) {
       const y = this.questStepY.get(step.stepId);
       if (y === undefined) continue;
 
-      if (this.completedSteps.has(step.stepId)) {
-        // Subtle green row tint
-        this.stepHighlights.fillStyle(0x16a34a, 0.08);
-        this.stepHighlights.fillRect(0, y - 1, QUEST_PANEL_W, QUEST_BOOK.LINE_H);
-        // Solid green left bar
-        this.stepHighlights.fillStyle(0x16a34a, 1);
-        this.stepHighlights.fillRect(0, y - 1, 3, QUEST_BOOK.LINE_H);
-      } else if (this.isStepActionable(step)) {
-        // Amber row highlight
-        this.stepHighlights.fillStyle(COLORS.QUEST_ITEM_ACTIVE, 1);
-        this.stepHighlights.fillRect(0, y - 3, QUEST_PANEL_W, QUEST_BOOK.LINE_H + 4);
-        // Amber left bar
-        this.stepHighlights.fillStyle(0xf59e0b, 1);
-        this.stepHighlights.fillRect(0, y - 3, 3, QUEST_BOOK.LINE_H + 4);
+      const cy = y + STEP_H / 2;
+      const completed = this.completedSteps.has(step.stepId);
+      const actionable = !completed && this.isStepActionable(step);
+
+      if (completed) {
+        this.stepHighlights.fillStyle(0x4caf50, 1);
+        this.stepHighlights.fillCircle(cx, cy, 8);
+      } else if (actionable) {
+        // Yellow row background
+        this.stepHighlights.fillStyle(0xffecb3, 1);
+        this.stepHighlights.fillRoundedRect(rowX, y, rowW, STEP_H, 8);
+        this.stepHighlights.lineStyle(2, 0xffca28, 1);
+        this.stepHighlights.strokeRoundedRect(rowX, y, rowW, STEP_H, 8);
+        // Yellow circle outline + center dot
+        this.stepHighlights.lineStyle(2, 0xffca28, 1);
+        this.stepHighlights.strokeCircle(cx, cy, 8);
+        this.stepHighlights.fillStyle(0xffca28, 1);
+        this.stepHighlights.fillCircle(cx, cy, 4);
       } else {
-        // Subtle gray left bar for pending steps
-        this.stepHighlights.fillStyle(0xd1d5db, 1);
-        this.stepHighlights.fillRect(0, y - 1, 3, QUEST_BOOK.LINE_H);
+        // Grey circle outline
+        this.stepHighlights.lineStyle(2, 0xbdbdbd, 1);
+        this.stepHighlights.strokeCircle(cx, cy, 8);
       }
     }
 
-    // ── Progress bar ─────────────────────────────────────────
+    // ── Per-step text updates ─────────────────────────────────
+    for (const step of this.allSteps) {
+      const leftTxt = this.questStepTexts.get(step.stepId);
+      const cntTxt = this.questStepCounts.get(step.stepId);
+      if (!leftTxt || !cntTxt) continue;
+
+      const completed = this.completedSteps.has(step.stepId);
+      const actionable = !completed && this.isStepActionable(step);
+
+      if (completed) {
+        leftTxt.setText('\u2713 ' + step.processor.toUpperCase()).setColor('#4caf50');
+        cntTxt.setText('');
+      } else if (actionable) {
+        const emoji = step.processorEmoji ?? '';
+        leftTxt.setText((emoji ? emoji + ' ' : '') + step.processor.toUpperCase()).setColor('#3e2723');
+        cntTxt.setText('\u2190 ' + step.inputs.length).setColor('#8d6e63');
+      } else {
+        const emoji = step.processorEmoji ?? '';
+        leftTxt.setText((emoji ? emoji + ' ' : '') + step.processor.toUpperCase()).setColor('#9ca3af');
+        cntTxt.setText('\u2190 ' + step.inputs.length).setColor('#9ca3af');
+      }
+    }
+
+    // ── Step count badge ─────────────────────────────────────
     const done = this.completedSteps.size;
     const total = this.allSteps.length;
-    this.drawSidebarProgress(total > 0 ? done / total : 0);
-
-    // ── Step count text ───────────────────────────────────────
-    this.stepCountText.setText(`${done} / ${total} steps`);
-
-    // ── Per-step text ─────────────────────────────────────────
-    for (const step of this.allSteps) {
-      const txt = this.questStepTexts.get(step.stepId);
-      if (!txt) continue;
-
-      if (this.completedSteps.has(step.stepId)) {
-        txt.setText(`\u2713 ${step.output}`);
-        txt.setColor(TEXT_COLORS.SUCCESS);
-      } else if (this.debugMode) {
-        const inputs = step.inputs
-          .map((inp) => {
-            for (const branch of this.puzzleData.branches) {
-              for (const s of branch.steps) {
-                if (s.stepId === inp) return `[${s.output}]`;
-              }
-            }
-            return inp;
-          })
-          .join(' + ');
-        const pe = step.processorEmoji ? `${step.processorEmoji} ` : '';
-        txt.setText(`${pe}${inputs} \u2192 ${step.output}`);
-        txt.setColor(TEXT_COLORS.DEBUG);
-      } else if (this.isStepActionable(step)) {
-        const pe = step.processorEmoji ? `${step.processorEmoji} ` : '';
-        txt.setText(`\u25c9 ${pe}${step.processor} \u2190 ${step.inputs.length}`);
-        txt.setColor(TEXT_COLORS.DARK);
-      } else {
-        const pe = step.processorEmoji ? `${step.processorEmoji} ` : '';
-        txt.setText(`\u25cb ${pe}${step.processor} \u2190 ${step.inputs.length}`);
-        txt.setColor(TEXT_COLORS.DIM);
-      }
-    }
-  }
-
-  private drawSidebarProgress(fraction: number): void {
-    this.sidebarProgressGfx.clear();
-    const w = QUEST_PANEL_W * Math.min(1, Math.max(0, fraction));
-    if (w > 0) {
-      this.sidebarProgressGfx.fillStyle(0x22c55e, 1);
-      this.sidebarProgressGfx.fillRect(0, PROG_Y, w, PROG_H);
-    }
+    this.stepCountText.setText(`${done}/${total} STEPS`);
   }
 
   toggleDebugMode(): void {
