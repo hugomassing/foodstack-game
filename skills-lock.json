@@ -1,10 +1,17 @@
 {
   "version": 1,
   "skills": {
+<<<<<<< HEAD
     "phaser-gamedev": {
       "source": "chongdashu/phaserjs-tinyswords",
       "sourceType": "github",
       "computedHash": "784c91cd1cd227a46500435d24a5e7dd157c2cc61ff37e4683ebdc0a6ed21b1a"
+=======
+    "ai-sdk": {
+      "source": "vercel/ai",
+      "sourceType": "github",
+      "computedHash": "58ce68f628890c3925aea2b5435a649251ac182057541045c68fc19a27aaa0ec"
+>>>>>>> 782834e (add mistral api)
     }
   }
 }
