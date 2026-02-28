@@ -34,6 +34,13 @@ export class PreloadScene extends Phaser.Scene {
     });
 
     FoodAssets.preload(this);
+
+    // Background food icons
+    this.load.image('bg_burrito', 'assets/bg/burrito.png');
+    this.load.image('bg_pizza', 'assets/bg/pizza.png');
+    this.load.image('bg_ramen', 'assets/bg/ramen.png');
+    this.load.image('bg_chicken', 'assets/bg/chicken.png');
+    this.load.image('bg_shrimp', 'assets/bg/shrimp.png');
   }
 
   create(): void {

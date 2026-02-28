@@ -2,13 +2,13 @@ export const GAME_W = 960;
 export const GAME_H = 540;
 export const DPR = Math.min(window.devicePixelRatio || 1, 2);
 
-export const FONT_FAMILY = 'Arial, sans-serif';
+export const FONT_FAMILY = "'Fredoka One', Arial, sans-serif";
 
 // Quest panel
 export const QUEST_PANEL_W = 240;
 
 // Reserved space at top of board (margin + bar + gap)
-export const TOPBAR_H = 70;
+export const TOPBAR_H = 78;
 
 export const QUEST_BOOK = {
   TITLE_Y: 16,

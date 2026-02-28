@@ -120,33 +120,39 @@ export class CookingPuzzleScene extends Phaser.Scene {
   }
 
   create(data: { puzzleData: PuzzleData }): void {
-    this.cameras.main.setBackgroundColor('#c4a070');
+    this.cameras.main.setBackgroundColor('#d32f2f');
     this.cameras.main.setZoom(DPR);
     this.cameras.main.centerOn(GAME_W / 2, GAME_H / 2);
 
-    // Board plank texture
-    const planks = this.add.graphics().setDepth(-1);
-    // Alternating plank shading
-    let alt = false;
-    for (let x = QUEST_PANEL_W; x < GAME_W; x += 130) {
-      if (alt) {
-        planks.fillStyle(0x000000, 0.04);
-        planks.fillRect(x, 0, 130, GAME_H);
-      }
-      alt = !alt;
-    }
-    // Warmer, slightly more visible dividing lines
-    planks.lineStyle(1, 0x7a4a20, 0.22);
-    for (let x = QUEST_PANEL_W + 130; x < GAME_W; x += 130) {
-      planks.lineBetween(x, 0, x, GAME_H);
-    }
+    // ── Background food icons ─────────────────────────────────
+    this.drawBgIcons();
 
-    // Left-edge depth shadow (cue between sidebar and board)
-    const edgeShadow = this.add.graphics().setDepth(0);
-    edgeShadow.fillStyle(0x000000, 0.14);
-    edgeShadow.fillRect(QUEST_PANEL_W + 2, 0, 16, GAME_H);
-    edgeShadow.fillStyle(0x000000, 0.05);
-    edgeShadow.fillRect(QUEST_PANEL_W + 18, 0, 14, GAME_H);
+    // ── Layout constants ──────────────────────────────────────
+    const BD_X = 248, BD_Y = 78, BD_W = 704, BD_H = 454, BD_R = 20;
+    const TB_X = 248, TB_Y = 8, TB_W = 704, TB_H = 62, TB_R = 14;
+
+    // ── Board card shadow ─────────────────────────────────────
+    const boardShadow = this.add.graphics().setDepth(-2);
+    boardShadow.fillStyle(0x3e2723, 1);
+    boardShadow.fillRect(BD_X + 8, BD_Y + 10, BD_W, BD_H);
+
+    // ── Board card fill + border ──────────────────────────────
+    const board = this.add.graphics().setDepth(-1);
+    board.fillStyle(0xf5e6d3, 1);
+    board.fillRoundedRect(BD_X, BD_Y, BD_W, BD_H, BD_R);
+    board.lineStyle(4, 0x3e2723, 1);
+    board.strokeRoundedRect(BD_X, BD_Y, BD_W, BD_H, BD_R);
+
+    // ── Board grid lines ─────────────────────────────────────
+    board.lineStyle(1, 0x8d6e63, 0.18);
+    for (let i = 1; i <= 5; i++) {
+      const y = BD_Y + (BD_H / 6) * i;
+      board.lineBetween(BD_X, y, BD_X + BD_W, y);
+    }
+    for (let i = 1; i <= 8; i++) {
+      const x = BD_X + (BD_W / 9) * i;
+      board.lineBetween(x, BD_Y, x, BD_Y + BD_H);
+    }
 
     // Auto-set high resolution on all text objects
     const _addText = this.add.text.bind(this.add);
@@ -193,56 +199,49 @@ export class CookingPuzzleScene extends Phaser.Scene {
       this.availableIntermediates,
     );
 
-    // -- Top bar --
-    const TBAR_MARGIN = 8;
-    const TBAR_H = 54;
-    const TBAR_X = QUEST_PANEL_W + 12;
-    const TBAR_W = GAME_W - QUEST_PANEL_W - 24;
-    const TBAR_Y = TBAR_MARGIN;
-
-    // Drop shadow
+    // -- Top bar card --
     const topBarShadow = this.add.graphics().setDepth(5);
-    topBarShadow.fillStyle(0x000000, 0.22);
-    topBarShadow.fillRoundedRect(TBAR_X + 4, TBAR_Y + 6, TBAR_W, TBAR_H, 12);
+    topBarShadow.fillStyle(0x3e2723, 1);
+    topBarShadow.fillRoundedRect(TB_X + 6, TB_Y + 6, TB_W, TB_H, TB_R);
 
-    // Card body
     const topBarBg = this.add.graphics().setDepth(6);
-    topBarBg.fillStyle(0xffffff, 1);
-    topBarBg.fillRoundedRect(TBAR_X, TBAR_Y, TBAR_W, TBAR_H, 12);
-    topBarBg.lineStyle(3, 0x222222, 1);
-    topBarBg.strokeRoundedRect(TBAR_X, TBAR_Y, TBAR_W, TBAR_H, 12);
+    topBarBg.fillStyle(0xfffaf0, 1);
+    topBarBg.fillRoundedRect(TB_X, TB_Y, TB_W, TB_H, TB_R);
+    topBarBg.lineStyle(4, 0x3e2723, 1);
+    topBarBg.strokeRoundedRect(TB_X, TB_Y, TB_W, TB_H, TB_R);
 
-    // Dish name — centered in upper portion
+    // Dish name — left-aligned, uppercase
     this.add
-      .text(TBAR_X + TBAR_W / 2, TBAR_Y + 22, this.puzzleData.dishName, {
-        fontSize: '17px',
+      .text(TB_X + 16, TB_Y + TB_H / 2, this.puzzleData.dishName.toUpperCase(), {
+        fontSize: '16px',
         fontStyle: 'bold',
-        color: '#1a1a1a',
+        color: '#3e2723',
         fontFamily: FONT_FAMILY,
       })
-      .setOrigin(0.5)
+      .setOrigin(0, 0.5)
       .setDepth(7);
 
     // Step counter — right-aligned
     this.stepText = this.add
-      .text(TBAR_X + TBAR_W - 14, TBAR_Y + 22, `0/${this.totalSteps} steps`, {
-        fontSize: '12px',
-        color: '#6b7280',
+      .text(TB_X + TB_W - 14, TB_Y + TB_H / 2, `0/${this.totalSteps} STEPS`, {
+        fontSize: '11px',
+        color: '#8d6e63',
         fontFamily: FONT_FAMILY,
       })
       .setOrigin(1, 0.5)
       .setDepth(7);
 
-    // Progress bar (track + animated fill)
-    const PROG_PAD = 14;
-    const PROG_H = 6;
-    const PROG_Y = TBAR_Y + TBAR_H - PROG_H - 8;
-    const PROG_X = TBAR_X + PROG_PAD;
-    const PROG_W = TBAR_W - PROG_PAD * 2;
+    // Progress bar (track + animated fill) — near bottom of top bar
+    const PROG_H = 10;
+    const PROG_Y = TB_Y + TB_H - 18;
+    const PROG_X = TB_X + 16;
+    const PROG_W = TB_W - 32;
 
     const progTrack = this.add.graphics().setDepth(7);
     progTrack.fillStyle(0xe5e7eb, 1);
-    progTrack.fillRoundedRect(PROG_X, PROG_Y, PROG_W, PROG_H, 3);
+    progTrack.fillRoundedRect(PROG_X, PROG_Y, PROG_W, PROG_H, 5);
+    progTrack.lineStyle(2, 0x3e2723, 1);
+    progTrack.strokeRoundedRect(PROG_X, PROG_Y, PROG_W, PROG_H, 5);
 
     this.progressBarGfx = this.add.graphics().setDepth(8);
     this.progressBarMaxW = PROG_W;
@@ -331,50 +330,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
     // -- Scatter cards --
     this.scatterCards();
 
-    // -- Board footer strip --
-    const FOOTER_H = 36;
-    const footerBg = this.add.graphics().setDepth(4);
-    footerBg.fillStyle(0x000000, 0.2);
-    footerBg.fillRect(QUEST_PANEL_W, GAME_H - FOOTER_H, GAME_W - QUEST_PANEL_W, FOOTER_H);
-    footerBg.lineStyle(1, 0x000000, 0.25);
-    footerBg.lineBetween(QUEST_PANEL_W, GAME_H - FOOTER_H, GAME_W, GAME_H - FOOTER_H);
-
-    // Download pill button
-    const DL_W = 108;
-    const DL_H = 22;
-    const DL_X = QUEST_PANEL_W + 14;
-    const DL_Y = GAME_H - FOOTER_H / 2 - DL_H / 2;
-    const dlBtnBg = this.add.graphics().setDepth(5);
-    const drawDlBg = (hover: boolean) => {
-      dlBtnBg.clear();
-      dlBtnBg.fillStyle(0xffffff, hover ? 0.28 : 0.16);
-      dlBtnBg.lineStyle(1, 0xffffff, hover ? 0.7 : 0.4);
-      dlBtnBg.fillRoundedRect(DL_X, DL_Y, DL_W, DL_H, 6);
-      dlBtnBg.strokeRoundedRect(DL_X, DL_Y, DL_W, DL_H, 6);
-    };
-    drawDlBg(false);
-
-    const dlBtn = this.add
-      .text(DL_X + DL_W / 2, GAME_H - FOOTER_H / 2, '\u2193 Export JSON', {
-        fontSize: '11px',
-        color: '#ffffff',
-        fontFamily: FONT_FAMILY,
-      })
-      .setOrigin(0.5)
-      .setDepth(6)
-      .setInteractive({ useHandCursor: true });
-    dlBtn.on('pointerover', () => drawDlBg(true));
-    dlBtn.on('pointerout', () => drawDlBg(false));
-    dlBtn.on('pointerdown', () => {
-      const json = JSON.stringify(this.puzzleData, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${this.puzzleData.dishName.replace(/\s+/g, '-').toLowerCase()}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    });
 
     // -- Debug toggle (D key) --
     this.input.keyboard!.on('keydown-D', () => {
@@ -385,10 +340,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
   // -- Scatter cards across game area --
 
   private scatterCards(): void {
-    const minX = QUEST_PANEL_W + FOOD_CARD_W / 2 + SCATTER.PAD;
-    const maxX = GAME_W - FOOD_CARD_W / 2 - SCATTER.PAD;
-    const minY = TOPBAR_H + FOOD_CARD_H / 2 + SCATTER.PAD;
-    const maxY = GAME_H - FOOD_CARD_H / 2 - SCATTER.FOOTER;
+    const minX = 248 + FOOD_CARD_W / 2 + SCATTER.PAD;
+    const maxX = 248 + 704 - FOOD_CARD_W / 2 - SCATTER.PAD;
+    const minY = 78 + FOOD_CARD_H / 2 + SCATTER.PAD;
+    const maxY = 78 + 454 - FOOD_CARD_H / 2 - SCATTER.FOOTER;
 
     const positions: { x: number; y: number }[] = [];
 
@@ -617,8 +572,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
     const toDetach = [...attachments];
     for (const att of toDetach) {
       att.card.attachedTo = null;
-      const newX = Phaser.Math.Between(QUEST_PANEL_W + 68, GAME_W - 68);
-      const newY = Phaser.Math.Between(TOPBAR_H + 20, GAME_H - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10);
+      const newX = Phaser.Math.Between(248 + 68, 248 + 704 - 68);
+      const newY = Phaser.Math.Between(78 + 20, 78 + 454 - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10);
       this.tweens.add({
         targets: att.card,
         x: newX,
@@ -636,7 +591,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
   private onStepSuccess(step: Step, procCard: PuzzleCard): void {
     this.completedSteps.add(step.stepId);
     this.stepCount++;
-    this.stepText.setText(`${this.stepCount}/${this.totalSteps} steps`);
+    this.stepText.setText(`${this.stepCount}/${this.totalSteps} STEPS`);
 
     // Animate progress bar
     const progObj = { value: (this.stepCount - 1) / this.totalSteps };
@@ -872,13 +827,13 @@ export class CookingPuzzleScene extends Phaser.Scene {
     this.progressBarGfx.clear();
     const w = this.progressBarMaxW * Math.min(1, Math.max(0, fraction));
     if (w > 0) {
-      this.progressBarGfx.fillStyle(0x22c55e, 1);
+      this.progressBarGfx.fillStyle(0x4caf50, 1);
       this.progressBarGfx.fillRoundedRect(
         this.progressBarInnerX,
         this.progressBarInnerY,
         w,
-        6,
-        3,
+        10,
+        5,
       );
     }
   }
@@ -1045,5 +1000,33 @@ export class CookingPuzzleScene extends Phaser.Scene {
     btnText.on('pointerdown', () => {
       this.scene.start('TitleScene');
     });
+  }
+
+  private drawBgIcons(): void {
+    const keys = ['bg_burrito', 'bg_pizza', 'bg_ramen', 'bg_chicken', 'bg_shrimp'];
+    const rng = new Phaser.Math.RandomDataGenerator(['foodstack-bg']);
+    const cols = 12;
+    const rows = 7;
+    const cellW = GAME_W / cols;
+    const cellH = GAME_H / rows;
+    const iconSize = Math.min(cellW, cellH) * 0.58;
+
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const key = keys[(row * cols + col) % keys.length];
+        const jitterX = rng.between(-cellW * 0.08, cellW * 0.08);
+        const jitterY = rng.between(-cellH * 0.08, cellH * 0.08);
+        const x = cellW * (col + 0.5) + jitterX;
+        const y = cellH * (row + 0.5) + jitterY;
+        const angle = rng.between(-25, 25);
+
+        const img = this.add.image(x, y, key);
+        img.setScale(iconSize / 512)
+          .setAngle(angle)
+          .setAlpha(0.12)
+          .setDepth(-3)
+          .setBlendMode(Phaser.BlendModes.MULTIPLY);
+      }
+    }
   }
 }
