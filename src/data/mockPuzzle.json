@@ -9,6 +9,8 @@
           "stepId": "b1_s1",
           "processor": "chop",
           "processorEmoji": "🔪",
+          "questTitle": "Fiery Foundation",
+          "hint": "A blade's rhythmic dance awaits",
           "inputs": ["garlic", "chili peppers"],
           "output": "chopped aromatics",
           "outputAssetId": "chili"
@@ -17,6 +19,8 @@
           "stepId": "b1_s2",
           "processor": "fry",
           "processorEmoji": "🍳",
+          "questTitle": "The Sizzling Catch",
+          "hint": "Oil pops and sizzles call",
           "inputs": ["shrimp", "b1_s1"],
           "output": "spicy shrimp",
           "outputAssetId": "shrimp"
@@ -25,6 +29,8 @@
           "stepId": "b1_s3",
           "processor": "mix",
           "processorEmoji": "🥣",
+          "questTitle": "The Golden Coat",
+          "hint": "Stir up some sweet harmony",
           "inputs": ["b1_s2", "honey"],
           "output": "glazed shrimp",
           "outputAssetId": "shrimp"
@@ -38,6 +44,8 @@
           "stepId": "b2_s1",
           "processor": "fry",
           "processorEmoji": "🍳",
+          "questTitle": "Crispy Shell",
+          "hint": "A hot bath, but make it quick",
           "inputs": ["tortillas"],
           "output": "crispy tortillas",
           "outputAssetId": "flatbread"
@@ -46,6 +54,8 @@
           "stepId": "b2_s2",
           "processor": "chop",
           "processorEmoji": "🔪",
+          "questTitle": "Ribbon Work",
+          "hint": "Reduce these to ribbons",
           "inputs": ["lettuce"],
           "output": "shredded lettuce",
           "outputAssetId": "lettuce"
@@ -57,6 +67,8 @@
     "stepId": "final",
     "processor": "assemble",
     "processorEmoji": "🍽️",
+    "questTitle": "The Grand Finale",
+    "hint": "All the pieces find their place",
     "inputs": ["b1_s3", "b2_s1", "b2_s2"],
     "output": "Spicy Shrimp Glazed Taco",
     "outputAssetId": "taco"
