@@ -1,10 +1,23 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { api } from '../../convex/_generated/api';
 import { convex } from '../lib/convex';
 import { gameStore } from '../store/gameStore';
 import { FONT_FAMILY } from '../config';
 import type { PuzzleData } from '../types';
 import { ChevronLeft, ChevronRight, Play, Upload } from 'lucide-react';
+
+const LOADING_MESSAGES = [
+  { emoji: '🥕', text: 'Preparing ingredients' },
+  { emoji: '🔪', text: 'Chopping vegetables' },
+  { emoji: '🍳', text: 'Heating up the pan' },
+  { emoji: '🧂', text: 'Gathering spices' },
+  { emoji: '🥄', text: 'Grabbing utensils' },
+  { emoji: '📖', text: 'Reading the cookbook' },
+  { emoji: '👨‍🍳', text: 'Calling the chef' },
+  { emoji: '🔥', text: 'Preheating the oven' },
+  { emoji: '🧈', text: 'Melting the butter' },
+  { emoji: '🫗', text: 'Mixing the batter' },
+];
 
 type Category = 'Style' | 'Filling' | 'Method' | 'Base';
 
@@ -27,12 +40,165 @@ function randomSelections(): Record<Category, number> {
   return result;
 }
 
+function LoadingCard({ dishName }: { dishName: string }) {
+  const [msgIndex, setMsgIndex] = useState(0);
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFading(true);
+      setTimeout(() => {
+        setMsgIndex((i) => (i + 1) % LOADING_MESSAGES.length);
+        setFading(false);
+      }, 300);
+    }, 1800);
+    return () => clearInterval(interval);
+  }, []);
+
+  const msg = LOADING_MESSAGES[msgIndex];
+
+  return (
+    <>
+      <style>{`
+        @keyframes loadingSpin {
+          0% { transform: rotate(0deg) scale(1); }
+          25% { transform: rotate(10deg) scale(1.15); }
+          50% { transform: rotate(0deg) scale(1); }
+          75% { transform: rotate(-10deg) scale(1.15); }
+          100% { transform: rotate(0deg) scale(1); }
+        }
+        @keyframes loadingDots {
+          0%, 20% { content: ''; }
+          40% { content: '.'; }
+          60% { content: '..'; }
+          80%, 100% { content: '...'; }
+        }
+        @keyframes loadingDot {
+          0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
+          40% { transform: scale(1); opacity: 1; }
+        }
+      `}</style>
+      <div
+        style={{
+          width: 380,
+          padding: '36px 28px 32px',
+          background: '#fffaf0',
+          borderRadius: 28,
+          border: '4px solid #3e2723',
+          boxShadow: '0 10px 0 #3e2723',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 16,
+          position: 'relative',
+          zIndex: 10,
+        }}
+      >
+        {/* Top pin */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          <div
+            style={{
+              width: 26,
+              height: 26,
+              background: '#ff5252',
+              borderRadius: '50%',
+              border: '3px solid #3e2723',
+              boxShadow: '0 2px 0 #3e2723',
+            }}
+          />
+        </div>
+
+        {/* Dish name */}
+        <div
+          style={{
+            fontSize: 14,
+            fontWeight: 900,
+            color: '#d84315',
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
+            fontFamily: FONT_FAMILY,
+          }}
+        >
+          Cooking up...
+        </div>
+        <div
+          style={{
+            fontSize: 22,
+            fontWeight: 900,
+            color: '#3e2723',
+            textTransform: 'uppercase',
+            letterSpacing: '-0.02em',
+            fontFamily: FONT_FAMILY,
+            textAlign: 'center',
+          }}
+        >
+          {dishName}
+        </div>
+
+        {/* Animated emoji */}
+        <div
+          style={{
+            fontSize: 64,
+            animation: 'loadingSpin 1.6s ease-in-out infinite',
+            lineHeight: 1,
+            margin: '8px 0',
+            transition: 'opacity 0.3s',
+            opacity: fading ? 0 : 1,
+          }}
+        >
+          {msg.emoji}
+        </div>
+
+        {/* Rotating message */}
+        <div
+          style={{
+            fontSize: 18,
+            fontWeight: 900,
+            color: '#5d4037',
+            fontFamily: FONT_FAMILY,
+            textAlign: 'center',
+            transition: 'opacity 0.3s',
+            opacity: fading ? 0 : 1,
+            minHeight: 28,
+          }}
+        >
+          {msg.text}
+        </div>
+
+        {/* Bouncing dots */}
+        <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: '50%',
+                background: '#ffca28',
+                border: '2px solid #3e2723',
+                animation: `loadingDot 1.2s ease-in-out ${i * 0.2}s infinite`,
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
 export function GameMenu() {
   const [indices, setIndices] = useState(randomSelections);
   const [customName, setCustomName] = useState('');
+  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [loadingMsg, setLoadingMsg] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const getDishName = useCallback(() => {
@@ -55,18 +221,16 @@ export function GameMenu() {
     setIsLoading(true);
     setError('');
     const dishName = getDishName();
-    setLoadingMsg(`Generating "${dishName}"…`);
 
     try {
       const puzzleData = await convex.action(
         api.generator.generateOrGetRecipe,
-        { dishName, difficulty: 'medium' },
+        { dishName, difficulty },
       );
       setIsLoading(false);
       gameStore.getState().startGame(puzzleData as PuzzleData);
     } catch (err) {
       setIsLoading(false);
-      setLoadingMsg('');
       setError((err as Error).message);
     }
   };
@@ -100,6 +264,64 @@ export function GameMenu() {
   };
 
   const font = FONT_FAMILY;
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: font,
+          zIndex: 10,
+          overflow: 'hidden',
+        }}
+      >
+        {/* Background food pattern */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            opacity: 0.12,
+            overflow: 'hidden',
+          }}
+        >
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(8, 1fr)',
+              gap: 40,
+              padding: 24,
+              height: '100%',
+              width: '100%',
+              transform: 'rotate(-5deg) scale(1.3)',
+            }}
+          >
+            {Array.from({ length: 48 }).map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 32,
+                }}
+              >
+                {FOOD_ICONS[i % FOOD_ICONS.length]}
+              </div>
+            ))}
+          </div>
+        </div>
+        <LoadingCard dishName={getDishName()} />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -285,10 +507,13 @@ export function GameMenu() {
                 setTimeout(() => inputRef.current?.focus(), 0);
               }}
             >
-              {isLoading && loadingMsg ? loadingMsg : generatedName}
+              {generatedName}
             </div>
           )}
         </div>
+
+        {/* Difficulty selector */}
+        <DifficultySelector value={difficulty} onChange={setDifficulty} disabled={isLoading} />
 
         {/* START RECIPE button */}
         <PushButton
@@ -422,6 +647,69 @@ function ArrowBtn({ direction, onClick, disabled }: { direction: 'left' | 'right
       }}
     >
       <Icon size={20} strokeWidth={3} />
+    </div>
+  );
+}
+
+const DIFFICULTIES = [
+  { value: 'easy' as const, label: 'EASY', icon: '🌶️' },
+  { value: 'medium' as const, label: 'MEDIUM', icon: '🌶️🌶️' },
+  { value: 'hard' as const, label: 'HARD', icon: '🌶️🌶️🌶️' },
+];
+
+function DifficultySelector({
+  value,
+  onChange,
+  disabled,
+}: {
+  value: 'easy' | 'medium' | 'hard';
+  onChange: (v: 'easy' | 'medium' | 'hard') => void;
+  disabled: boolean;
+}) {
+  return (
+    <div
+      style={{
+        width: '100%',
+        display: 'flex',
+        gap: 6,
+        marginBottom: 4,
+      }}
+    >
+      {DIFFICULTIES.map((d) => {
+        const active = value === d.value;
+        return (
+          <div
+            key={d.value}
+            onClick={disabled ? undefined : () => onChange(d.value)}
+            style={{
+              flex: 1,
+              padding: '6px 0',
+              borderRadius: 10,
+              border: `2px solid ${active ? '#3e2723' : '#e0e0e0'}`,
+              background: active ? '#3e2723' : '#ffffff',
+              color: active ? '#ffffff' : '#3e2723',
+              textAlign: 'center',
+              cursor: disabled ? 'default' : 'pointer',
+              userSelect: 'none',
+              transition: 'all 0.15s',
+              boxShadow: active ? '0 3px 0 #2a1a12' : '0 3px 0 #e0e0e0',
+            }}
+          >
+            <div style={{ fontSize: 12, lineHeight: 1 }}>{d.icon}</div>
+            <div
+              style={{
+                fontSize: 11,
+                fontWeight: 900,
+                letterSpacing: '0.08em',
+                fontFamily: FONT_FAMILY,
+                marginTop: 2,
+              }}
+            >
+              {d.label}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
