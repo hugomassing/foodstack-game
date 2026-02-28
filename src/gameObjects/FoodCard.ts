@@ -19,6 +19,7 @@ export const FOOD_CARD_COLORS: Record<string, FoodCardColor> = {
   blue: { bg: 0x5dade2, wave: 0x3498db, border: 0x2e86c1 },
   purple: { bg: 0x9b59b6, wave: 0x8e44ad, border: 0x7d3c98 },
   pink: { bg: 0xe91e63, wave: 0xc2185b, border: 0xad1457 },
+  dark: { bg: 0x2c2c3a, wave: 0x1e1e2a, border: 0x14141e },
 };
 
 const ingredientColors = Object.values(FOOD_CARD_COLORS);
@@ -319,13 +320,20 @@ export class FoodCard extends Phaser.GameObjects.Container {
     if (textureKey && scene.textures.exists(textureKey)) {
       const maxDim = Math.round(h * 0.42);
 
-      // Drop shadow: offset, tinted black, semi-transparent
+      // Drop shadow: offset, tinted for contrast against card bg
+      const bgR = (color.bg >> 16) & 0xff;
+      const bgG = (color.bg >> 8) & 0xff;
+      const bgB = color.bg & 0xff;
+      const bgLuma = (0.299 * bgR + 0.587 * bgG + 0.114 * bgB) / 255;
+      const shadowTint = bgLuma < 0.3 ? 0xffffff : 0x000000;
+      const shadowAlpha = bgLuma < 0.3 ? 0.3 : 0.2;
+
       imgShadow = scene.add.image(2, imageY + 3, textureKey);
       const shadowScale = Math.min(maxDim / imgShadow.width, maxDim / imgShadow.height);
       imgShadow.setScale(shadowScale);
       imgShadow.setOrigin(0.5, 0.5);
-      imgShadow.setTint(0x000000);
-      imgShadow.setAlpha(0.2);
+      imgShadow.setTint(shadowTint);
+      imgShadow.setAlpha(shadowAlpha);
 
       const img = scene.add.image(0, imageY, textureKey);
       const scale = Math.min(maxDim / img.width, maxDim / img.height);

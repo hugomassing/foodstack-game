@@ -267,10 +267,12 @@ export class CookingPuzzleScene extends Phaser.Scene {
       return { x, y };
     };
 
-    // Processor emoji lookup
+    // Processor emoji + asset lookup
     const procEmojiMap = new Map<string, string>();
+    const procAssetMap = new Map<string, string | null>();
     for (const p of this.puzzleData.processors) {
       procEmojiMap.set(p.name, p.emoji);
+      procAssetMap.set(p.name, p.assetId ?? null);
     }
 
     // Collect all processors
@@ -285,7 +287,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     for (const procName of processors) {
       const pos = findPosition();
       const emoji = procEmojiMap.get(procName) ?? '';
-      const assetId = PROCESSOR_ASSET[procName] ?? null;
+      const assetId = procAssetMap.get(procName) ?? PROCESSOR_ASSET[procName] ?? null;
       const card = new PuzzleCard(this, pos.x, pos.y, procName, 'processor', { emoji, assetId });
       this.cards.push(card);
       this.processorCards.set(procName, card);
@@ -313,7 +315,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
         this.puzzleData.finalStep.processorEmoji ??
         procEmojiMap.get(this.puzzleData.finalStep.processor) ??
         '';
-      const finalAssetId = PROCESSOR_ASSET[this.puzzleData.finalStep.processor] ?? null;
+      const finalAssetId =
+        procAssetMap.get(this.puzzleData.finalStep.processor) ??
+        PROCESSOR_ASSET[this.puzzleData.finalStep.processor] ??
+        null;
       const card = new PuzzleCard(
         this,
         pos.x,
@@ -493,6 +498,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     this.cameras.main.flash(300, 46, 204, 113, false);
 
     const attachments = this.processorAttachments.get(procCard);
+    const attachedCards = attachments ? attachments.map((a) => a.card) : [];
     if (attachments) {
       for (const att of attachments) {
         this.tweens.add({
@@ -514,7 +520,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     if (!isFinal) {
       this.availableIntermediates.set(step.stepId, step.output);
-      this.spawnOutputCard(step, procCard);
+      this.spawnOutputCard(step, procCard, attachedCards);
     }
 
     this.questBook.refresh();
@@ -524,11 +530,26 @@ export class CookingPuzzleScene extends Phaser.Scene {
     }
   }
 
-  private spawnOutputCard(step: Step, procCard: PuzzleCard): void {
+  private spawnOutputCard(step: Step, procCard: PuzzleCard, inputCards: PuzzleCard[]): void {
+    // Pick the best asset: AI-provided > local name match > first input ingredient's image
+    let assetId = step.outputAssetId ?? localAssetMatch(step.output);
+    if (!assetId) {
+      for (const c of inputCards) {
+        if (c.foodImage) {
+          // Extract assetId from texture key ("food_shrimp" → "shrimp")
+          const key = c.foodImage.texture.key;
+          if (key.startsWith('food_')) {
+            assetId = key.slice(5);
+            break;
+          }
+        }
+      }
+    }
     const card = new PuzzleCard(this, procCard.x, procCard.y, step.output, 'intermediate', {
       itemName: step.output,
       stepId: step.stepId,
-      emoji: '✨',
+      emoji: '',
+      assetId,
     });
     this.cards.push(card);
 

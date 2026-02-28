@@ -8,6 +8,7 @@ const stepSchema = z.object({
   processorEmoji: z.string().describe('Fixed emoji for the processor'),
   inputs: z.array(z.string()).describe('Ingredient names or previous stepIds'),
   output: z.string().describe('Short descriptive label of what this step produces'),
+  outputAssetId: z.string().nullable().describe('Best matching sprite asset ID for the step output, or null'),
 });
 
 export const recipeSchema = z.object({
@@ -21,6 +22,7 @@ export const recipeSchema = z.object({
   processors: z.array(z.object({
     name: z.string(),
     emoji: z.string(),
+    assetId: z.string().nullable(),
   })),
   ingredients: z.array(z.object({
     name: z.string(),

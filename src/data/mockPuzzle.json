@@ -10,21 +10,24 @@
                     "processor": "chop",
                     "processorEmoji": "🔪",
                     "inputs": ["garlic", "chili peppers"],
-                    "output": "chopped aromatics"
+                    "output": "chopped aromatics",
+                    "outputAssetId": "chili"
                 },
                 {
                     "stepId": "b1_s2",
                     "processor": "fry",
                     "processorEmoji": "🍳",
                     "inputs": ["shrimp", "b1_s1"],
-                    "output": "spicy shrimp"
+                    "output": "spicy shrimp",
+                    "outputAssetId": "shrimp"
                 },
                 {
                     "stepId": "b1_s3",
                     "processor": "mix",
                     "processorEmoji": "🥣",
                     "inputs": ["b1_s2", "honey"],
-                    "output": "glazed shrimp"
+                    "output": "glazed shrimp",
+                    "outputAssetId": "shrimp"
                 }
             ]
         },
@@ -36,14 +39,16 @@
                     "processor": "fry",
                     "processorEmoji": "🍳",
                     "inputs": ["tortillas"],
-                    "output": "crispy tortillas"
+                    "output": "crispy tortillas",
+                    "outputAssetId": "flatbread"
                 },
                 {
                     "stepId": "b2_s2",
                     "processor": "chop",
                     "processorEmoji": "🔪",
                     "inputs": ["lettuce"],
-                    "output": "shredded lettuce"
+                    "output": "shredded lettuce",
+                    "outputAssetId": "lettuce"
                 }
             ]
         }
@@ -53,20 +58,24 @@
         "processor": "assemble",
         "processorEmoji": "🍽️",
         "inputs": ["b1_s3", "b2_s1", "b2_s2"],
-        "output": "Spicy Shrimp Glazed Taco"
+        "output": "Spicy Shrimp Glazed Taco",
+        "outputAssetId": "taco"
     },
     "processors": [
         {
             "name": "chop",
-            "emoji": "🔪"
+            "emoji": "🔪",
+            "assetId": "knife"
         },
         {
             "name": "fry",
-            "emoji": "🍳"
+            "emoji": "🍳",
+            "assetId": "frying_pan"
         },
         {
             "name": "mix",
-            "emoji": "🥣"
+            "emoji": "🥣",
+            "assetId": "bowl_spoon"
         }
     ],
     "ingredients": [
