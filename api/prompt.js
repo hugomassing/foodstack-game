@@ -65,7 +65,12 @@ Default to medium if unspecified.
 
 ## ASSET MATCHING
 
-For each ingredient and decoy, pick the best matching sprite assetId from the catalog below. Set assetId to null if no sprite is a reasonable match.
+Pick the best matching sprite assetId from the catalog below for:
+- Each **ingredient** and **decoy** → \`assetId\` field
+- Each **processor** → \`assetId\` field (look in the utensil category)
+- Each **step output** (intermediate result) → \`outputAssetId\` field (pick the closest food item that represents the transformed result, e.g. "spicy shrimp" → "shrimp", "shredded lettuce" → "lettuce")
+
+Set to null when no sprite is a reasonable match.
 
 ### Asset catalog (id list grouped by category)
 ${ASSET_CATALOG}`;

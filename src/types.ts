@@ -6,6 +6,7 @@ export interface Step {
   processorEmoji?: string;
   inputs: string[];
   output: string;
+  outputAssetId?: string | null;
 }
 
 export interface Branch {
@@ -25,7 +26,7 @@ export interface PuzzleData {
   finalStep: Step;
   ingredients: Ingredient[];
   decoys: Ingredient[];
-  processors: { name: string; emoji: string }[];
+  processors: { name: string; emoji: string; assetId?: string | null }[];
 }
 
 export interface Attachment {

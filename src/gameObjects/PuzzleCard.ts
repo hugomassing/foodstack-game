@@ -32,9 +32,11 @@ export class PuzzleCard extends FoodCard {
     const cardColor =
       type === 'processor'
         ? FOOD_CARD_COLORS.blue
-        : asset
-          ? hexToCardColor(asset.color)
-          : nameToColor(label);
+        : type === 'intermediate'
+          ? FOOD_CARD_COLORS.dark
+          : asset
+            ? hexToCardColor(asset.color)
+            : nameToColor(label);
 
     super(scene, x, y, {
       name: label,
