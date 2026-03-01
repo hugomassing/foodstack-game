@@ -1,0 +1,46 @@
+{
+  "Style": [
+    "Knusprig", "Rauchig", "Scharf", "Käsig", "Säuerlich", "Kräuter-", "Zitronig",
+    "Buttrig", "Kross", "Klebrig", "Umami", "Feurig", "Duftend", "Samtig",
+    "Verkohlt", "Eingelegt", "Fermentiert", "Unheimlich", "Verflucht", "Verboten",
+    "Vulkanisch", "Frostig", "Golden", "Zäh", "Geflammt", "Funky", "Verwunschen",
+    "Atomar", "Geschmolzen", "Himmlisch", "Teuflisch", "Betrunken", "Kandiert",
+    "Höllisch", "Dekadent", "Mystisch", "Salzig", "Überbacken", "Geschwärzt",
+    "Szechuan", "Tandoori", "Cajun", "Trüffel", "Safran", "Wasabi",
+    "Gochujang", "Miso", "Chimichurri", "Abgründig", "Urig"
+  ],
+  "Filling": [
+    "Schinken", "Hähnchen", "Tofu", "Garnele", "Pilz", "Fleischklößchen",
+    "Oktopus", "Froschschenkel", "Schnecke", "Wagyu", "Jackfrucht", "Tempeh",
+    "Grille", "Durian", "Aal", "Tintenfisch", "Bison", "Känguru",
+    "Kaktus", "Paneer", "Krabbe", "Knochenmark", "Qualle", "Seeigel",
+    "Kaninchen", "Ziege", "Ente", "Lamm", "Wachtel", "Sardelle",
+    "Taube", "Flusskrebs", "Wild", "Seetang", "Lotuswurzel", "Bries",
+    "Yak", "Alligator", "Skorpion", "Kimchi", "Drachenfrucht", "Kochbanane",
+    "Haggis", "Tausendjähriges Ei", "Seidenraupe", "Sternfrucht", "Taro",
+    "Kugelfisch", "Blutwurst", "Kutteln"
+  ],
+  "Method": [
+    "Gefüllt", "Glasiert", "Gegrillt", "Geschmort", "Gebraten", "Karamellisiert",
+    "Frittiert", "Geräuchert", "Pochiert", "Geflammt", "Gedämpft", "Angebraten",
+    "Gepökelt", "Flambiert", "Sous-Vide", "Gedörrt", "Paniert", "Aufgegossen",
+    "Geschlagen", "Confit", "Blanchiert", "Pfannengerührt", "Tatar", "Tempura",
+    "Tataki", "Wok-gebraten", "Tonofengebacken", "Grubengebraten", "Salzkrustig",
+    "Honigbeträufelt", "Misoglasiert", "Bierteig-", "Rumgetränkt", "Langsamgegart",
+    "Kurzgebraten", "Doppeltgegart", "Glutgebraten", "Geflämmt", "Lavastein-",
+    "Stickstoffgefroren", "Sonnengetrocknet", "Sakegedämpft", "Bananenblatt-",
+    "Ascheüberzogen", "Kräuterkrustig", "Butterbegossen", "Holzkohlegeküsst",
+    "Ahornlackiert", "Pandangewickelt", "Vulkangebacken"
+  ],
+  "Base": [
+    "Brötchen", "Bowl", "Wrap", "Taco", "Pasta", "Salat",
+    "Ramen", "Gyoza", "Pizza", "Risotto", "Curry", "Eintopf",
+    "Pastete", "Sushi", "Crêpe", "Knödel", "Fladenbrot", "Burrito",
+    "Pho", "Gnocchi", "Paella", "Kebab", "Empanada", "Pierogi",
+    "Bao", "Bibimbap", "Gulasch", "Tajine", "Ceviche", "Poutine",
+    "Arepa", "Roti", "Udon", "Brioche", "Croissant", "Waffel",
+    "Shakshuka", "Congee", "Dosa", "Baklava", "Calzone", "Auflauf",
+    "Frühlingsrolle", "Samosa", "Krokette", "Pita", "Naan", "Soufflé",
+    "Cobbler", "Crumble"
+  ]
+}

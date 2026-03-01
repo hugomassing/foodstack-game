@@ -1,0 +1,46 @@
+{
+  "Style": [
+    "Crujiente", "Ahumado", "Picante", "Quesoso", "Ácido", "Herbal", "Cítrico",
+    "Mantecoso", "Crocante", "Pegajoso", "Umami", "Ardiente", "Fragante", "Aterciopelado",
+    "Carbonizado", "Encurtido", "Fermentado", "Arcano", "Maldito", "Prohibido",
+    "Volcánico", "Helado", "Dorado", "Pegajoso", "Flameado", "Funky", "Embrujado",
+    "Atómico", "Fundido", "Celestial", "Perverso", "Ebrio", "Confitado",
+    "Infernal", "Decadente", "Místico", "Salobre", "Gratinado", "Ennegrecido",
+    "Szechuan", "Tandoori", "Cajún", "Trufa", "Azafrán", "Wasabi",
+    "Gochujang", "Miso", "Chimichurri", "Abisal", "Primigenio"
+  ],
+  "Filling": [
+    "Jamón", "Pollo", "Tofu", "Camarón", "Champiñón", "Albóndiga",
+    "Pulpo", "Ancas de Rana", "Caracol", "Wagyu", "Yaca", "Tempeh",
+    "Grillo", "Durián", "Anguila", "Calamar", "Bisonte", "Canguro",
+    "Cactus", "Paneer", "Cangrejo", "Tuétano", "Medusa", "Erizo de Mar",
+    "Conejo", "Cabra", "Pato", "Cordero", "Codorniz", "Anchoa",
+    "Paloma", "Cangrejo de Río", "Venado", "Alga", "Raíz de Loto", "Mollejas",
+    "Yak", "Caimán", "Escorpión", "Kimchi", "Pitahaya", "Plátano",
+    "Haggis", "Huevo Centenario", "Gusano de Seda", "Carambola", "Taro",
+    "Pez Globo", "Morcilla", "Callos"
+  ],
+  "Method": [
+    "Relleno", "Glaseado", "Asado", "Estofado", "Rostizado", "Caramelizado",
+    "Frito", "Ahumado", "Escalfado", "Flameado", "Al Vapor", "Sellado",
+    "Curado", "Flambeado", "Sous-Vide", "Deshidratado", "Empanizado", "Infusionado",
+    "Batido", "Confitado", "Blanqueado", "Salteado", "Tártaro", "Tempura",
+    "Tataki", "Al Wok", "Al Barro", "Al Hoyo", "En Costra de Sal",
+    "Con Miel", "Glaseado con Miso", "En Cerveza", "Bañado en Ron", "Cocción Lenta",
+    "Sellado Rápido", "Doble Cocción", "Al Rescoldo", "Sopletado", "En Piedra",
+    "Congelado al Nitrógeno", "Secado al Sol", "Al Vapor de Sake", "En Hoja de Plátano",
+    "En Ceniza", "En Costra de Hierbas", "Bañado en Manteca", "Beso de Carbón",
+    "Lacado con Maple", "Envuelto en Pandán", "Horneado Volcánico"
+  ],
+  "Base": [
+    "Pan", "Bowl", "Wrap", "Taco", "Pasta", "Ensalada",
+    "Ramen", "Gyoza", "Pizza", "Risotto", "Curry", "Guiso",
+    "Empanada", "Sushi", "Crêpe", "Dumpling", "Pan Plano", "Burrito",
+    "Pho", "Gnocchi", "Paella", "Kebab", "Empanada", "Pierogi",
+    "Bao", "Bibimbap", "Goulash", "Tajín", "Ceviche", "Poutine",
+    "Arepa", "Roti", "Udon", "Brioche", "Croissant", "Waffle",
+    "Shakshuka", "Congee", "Dosa", "Baklava", "Calzone", "Pastel",
+    "Rollito", "Samosa", "Croqueta", "Pita", "Naan", "Soufflé",
+    "Cobbler", "Crumble"
+  ]
+}

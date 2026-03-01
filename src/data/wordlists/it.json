@@ -1,0 +1,46 @@
+{
+  "Style": [
+    "Croccante", "Affumicato", "Piccante", "Formaggioso", "Acidulo", "Erbaceo", "Agrumato",
+    "Burroso", "Croccante", "Appiccicoso", "Umami", "Infuocato", "Fragrante", "Vellutato",
+    "Carbonizzato", "Sottaceto", "Fermentato", "Arcano", "Maledetto", "Proibito",
+    "Vulcanico", "Ghiacciato", "Dorato", "Colloso", "Fiammato", "Funky", "Stregato",
+    "Atomico", "Fuso", "Celeste", "Diabolico", "Ubriaco", "Candito",
+    "Infernale", "Decadente", "Mistico", "Salmastro", "Gratinato", "Annerito",
+    "Szechuan", "Tandoori", "Cajun", "Tartufo", "Zafferano", "Wasabi",
+    "Gochujang", "Miso", "Chimichurri", "Abissale", "Primordiale"
+  ],
+  "Filling": [
+    "Prosciutto", "Pollo", "Tofu", "Gambero", "Fungo", "Polpetta",
+    "Polpo", "Coscia di Rana", "Lumaca", "Wagyu", "Jackfruit", "Tempeh",
+    "Grillo", "Durian", "Anguilla", "Calamaro", "Bisonte", "Canguro",
+    "Cactus", "Paneer", "Granchio", "Midollo", "Medusa", "Riccio di Mare",
+    "Coniglio", "Capra", "Anatra", "Agnello", "Quaglia", "Acciuga",
+    "Piccione", "Gambero di Fiume", "Cervo", "Alga", "Radice di Loto", "Animelle",
+    "Yak", "Alligatore", "Scorpione", "Kimchi", "Frutto del Drago", "Platano",
+    "Haggis", "Uovo Centenario", "Baco da Seta", "Carambola", "Taro",
+    "Pesce Palla", "Sanguinaccio", "Trippa"
+  ],
+  "Method": [
+    "Farcito", "Glassato", "Grigliato", "Brasato", "Arrosto", "Caramellato",
+    "Fritto", "Affumicato", "In Camicia", "Fiammeggiato", "Al Vapore", "Scottato",
+    "Stagionato", "Flambé", "Sous-Vide", "Disidratato", "Impanato", "Infuso",
+    "Montato", "Confit", "Sbollentato", "Saltato", "Tartare", "Tempura",
+    "Tataki", "Al Wok", "Al Forno", "Alla Brace", "In Crosta di Sale",
+    "Al Miele", "Glassato al Miso", "Alla Birra", "Al Rum", "A Fuoco Lento",
+    "Scottato Rapido", "Cotto Due Volte", "Alla Cenere", "Al Cannello", "Su Pietra",
+    "Congelato all'Azoto", "Essiccato al Sole", "Al Vapore di Sake", "In Foglia di Banano",
+    "Alla Cenere", "In Crosta d'Erbe", "Al Burro", "Al Carbone",
+    "Laccato all'Acero", "In Foglia di Pandan", "Cotto al Vulcano"
+  ],
+  "Base": [
+    "Panino", "Bowl", "Wrap", "Taco", "Pasta", "Insalata",
+    "Ramen", "Gyoza", "Pizza", "Risotto", "Curry", "Stufato",
+    "Torta Salata", "Sushi", "Crêpe", "Ravioli", "Focaccia", "Burrito",
+    "Pho", "Gnocchi", "Paella", "Kebab", "Empanada", "Pierogi",
+    "Bao", "Bibimbap", "Goulash", "Tajine", "Ceviche", "Poutine",
+    "Arepa", "Roti", "Udon", "Brioche", "Croissant", "Waffle",
+    "Shakshuka", "Congee", "Dosa", "Baklava", "Calzone", "Sformato",
+    "Involtino", "Samosa", "Crocchetta", "Pita", "Naan", "Soufflé",
+    "Cobbler", "Crumble"
+  ]
+}
