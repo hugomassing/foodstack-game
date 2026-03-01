@@ -9,7 +9,7 @@ import {
   hexToCardColor,
 } from './FoodCard';
 import { FoodAssets } from '../data/food-assets';
-import { COLORS, PROCESSOR_RING_PAD, FONT_FAMILY } from '../config';
+import { COLORS, PROCESSOR_RING_PAD, FONT_FAMILY, DPR } from '../config';
 import type { CardType } from '../types';
 
 export class PuzzleCard extends FoodCard {
@@ -120,7 +120,7 @@ export class PuzzleCard extends FoodCard {
         fontStyle: 'bold',
         color: '#ffffff',
         fontFamily: FONT_FAMILY,
-      }).setOrigin(0.5);
+      }).setOrigin(0.5).setResolution(DPR);
       this.add(exclaim);
     }
   }

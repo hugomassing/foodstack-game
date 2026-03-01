@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import Phaser from 'phaser';
 import { PreloadScene } from '../scenes/PreloadScene';
 import { CookingPuzzleScene } from '../scenes/CookingPuzzleScene';
-import { GAME_W, GAME_H } from '../config';
+import { GAME_W, GAME_H, DPR } from '../config';
 import { gameStore } from '../store/gameStore';
 
 export function PhaserCanvas() {
@@ -15,8 +15,8 @@ export function PhaserCanvas() {
     const game = new Phaser.Game({
       title: 'FoodStack',
       type: Phaser.AUTO,
-      width: GAME_W,
-      height: GAME_H,
+      width: Math.round(GAME_W * DPR),
+      height: Math.round(GAME_H * DPR),
       parent: containerRef.current,
       backgroundColor: '#d32f2f',
       scale: {
@@ -25,6 +25,11 @@ export function PhaserCanvas() {
       dom: { createContainer: true },
       scene: [PreloadScene, CookingPuzzleScene],
     });
+
+    // Render at DPR resolution but display at logical size for CSS transform scaling
+    game.canvas.style.width = `${GAME_W}px`;
+    game.canvas.style.height = `${GAME_H}px`;
+
     gameRef.current = game;
 
     // Listen for phase changes to start/stop the CookingPuzzleScene

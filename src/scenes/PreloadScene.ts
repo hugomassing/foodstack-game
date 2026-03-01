@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { FoodAssets } from '../data/food-assets';
-import { GAME_W, GAME_H, FONT_FAMILY } from '../config';
+import { GAME_W, GAME_H, DPR, FONT_FAMILY } from '../config';
 import { gameStore } from '../store/gameStore';
 
 export class PreloadScene extends Phaser.Scene {
@@ -9,6 +9,9 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   preload(): void {
+    this.cameras.main.setZoom(DPR);
+    this.cameras.main.centerOn(GAME_W / 2, GAME_H / 2);
+
     const cx = GAME_W / 2;
     const cy = GAME_H / 2;
     const barW = 260;
@@ -20,7 +23,8 @@ export class PreloadScene extends Phaser.Scene {
         color: '#aaaacc',
         fontFamily: FONT_FAMILY,
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setResolution(DPR);
 
     const barBg = this.add.graphics();
     barBg.fillStyle(0x333355, 1);

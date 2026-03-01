@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { FONT_FAMILY } from '../config';
+import { FONT_FAMILY, DPR } from '../config';
 
 export interface FoodCardColor {
   bg: number;
@@ -314,6 +314,7 @@ export class FoodCard extends Phaser.GameObjects.Container {
       align: 'center',
     });
     this.emojiText.setOrigin(0.5, 0.5);
+    this.emojiText.setResolution(DPR);
 
     // 6. Sprite image (if assetId provided and texture loaded)
     let imgShadow: Phaser.GameObjects.Image | null = null;
@@ -354,6 +355,7 @@ export class FoodCard extends Phaser.GameObjects.Container {
       wordWrap: { width: w - 16 },
     });
     this.nameText.setOrigin(0.5, 0.5);
+    this.nameText.setResolution(DPR);
 
     // Assemble container
     const children: Phaser.GameObjects.GameObject[] = [this.shadow, this.cardBody];
