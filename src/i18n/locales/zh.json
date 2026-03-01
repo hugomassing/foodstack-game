@@ -60,7 +60,7 @@
     "back": "返回",
     "chooseDifficulty": "选择难度",
     "daily": {
-      "title": "每日挑战",
+      "title": "今日食谱",
       "description": "今天的食谱挑战。所有人同一道菜！",
       "best": "最佳: {count}"
     },

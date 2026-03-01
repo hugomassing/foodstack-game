@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { api } from '../../convex/_generated/api';
 import { convex } from '../lib/convex';
 import { gameStore } from '../store/gameStore';
-import { FONT_FAMILY } from '../config';
+import { FONT_FAMILY, TITLE_FONT_FAMILY } from '../config';
 import type { PuzzleData } from '../types';
 import { ChevronLeft, ChevronRight, Play, ArrowLeft, Shuffle, Heart, HeartOff } from 'lucide-react';
 import { getWordlists } from '../data/wordlists/index';
@@ -470,12 +470,15 @@ export function GameMenu() {
         {/* Header */}
         <h1
           style={{
-            fontSize: 26,
+            fontSize: 32,
             fontWeight: 900,
-            color: '#3e2723',
+            fontFamily: TITLE_FONT_FAMILY,
+            color: '#ffffff',
             margin: '2px 0 6px',
             letterSpacing: '-0.03em',
             textTransform: 'uppercase',
+            WebkitTextStroke: '6px #3e2723',
+            paintOrder: 'stroke fill',
           }}
         >
           {t('menu.title')}
