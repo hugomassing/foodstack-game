@@ -801,20 +801,10 @@ function DifficultySelector({
               boxShadow: active ? '0 3px 0 #2a1a12' : '0 3px 0 #e0e0e0',
             }}
           >
-            <div style={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
               {Array.from({ length: d.count }).map((_, i) => (
-                <img key={i} src={CHILI_SRC} alt="" style={{ width: 16, height: 16 }} />
+                <img key={i} src={CHILI_SRC} alt="" style={{ width: 20, height: 20 }} />
               ))}
-            </div>
-            <div
-              style={{
-                fontSize: 11,
-                fontWeight: 900,
-                letterSpacing: '0.08em',
-                fontFamily: FONT_FAMILY,
-              }}
-            >
-              {t(d.labelKey)}
             </div>
           </div>
         );
