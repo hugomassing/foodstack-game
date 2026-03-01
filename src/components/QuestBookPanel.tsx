@@ -119,10 +119,7 @@ export function QuestBookPanel() {
 
   if (!puzzleData) return null;
 
-  const dishLabel =
-    puzzleData.dishName.length > 26
-      ? puzzleData.dishName.slice(0, 24) + '\u2026'
-      : puzzleData.dishName;
+  const dishLabel = puzzleData.dishName;
 
   return (
     <div
@@ -175,10 +172,10 @@ export function QuestBookPanel() {
               border: '2px solid #3e2723',
             }}
           />
-          <div style={{ fontSize: 16, fontWeight: 900, color: '#3e2723', letterSpacing: '0.04em' }}>
+          <div style={{ fontSize: 11, fontWeight: 900, color: '#3e2723', letterSpacing: '0.04em' }}>
             {t('quest.recipe')}
           </div>
-          <div style={{ fontSize: 11, color: '#d84315', marginTop: 2, fontWeight: 900 }}>
+          <div style={{ fontSize: 13, color: '#d84315', marginTop: 2, fontWeight: 900, lineHeight: 1.3 }}>
             {dishLabel}
           </div>
           {gameMode === 'survival' && (

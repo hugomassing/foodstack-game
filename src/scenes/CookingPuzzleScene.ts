@@ -157,6 +157,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
   private handToBoardCard!: Map<PuzzleCard, PuzzleCard>;
   private boardToHandCard!: Map<PuzzleCard, PuzzleCard>;
   private ingredientMeta!: Map<PuzzleCard, { emoji: string; assetId: string | null }>;
+  private hoverTimer: ReturnType<typeof setTimeout> | null = null;
+  private pendingHoverCard: PuzzleCard | null = null;
   private removeIndicator!: Phaser.GameObjects.Graphics;
   private errorCounterText!: Phaser.GameObjects.Text;
 
@@ -502,7 +504,14 @@ export class CookingPuzzleScene extends Phaser.Scene {
       });
       card.setScale(HAND.CARD_SCALE);
       card.disableInteractive();
-      card.setInteractive({ draggable: true, useHandCursor: true });
+      // Only the top 3/4 of the card is hoverable to avoid overlap issues
+      const hH = FOOD_CARD_H * 0.75;
+      card.setInteractive({
+        hitArea: new Phaser.Geom.Rectangle(-FOOD_CARD_W / 2, -FOOD_CARD_H / 2, FOOD_CARD_W, hH),
+        hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+        draggable: true,
+        useHandCursor: true,
+      });
 
       this.ingredientMeta.set(card, { emoji: item.emoji, assetId: assetId ?? null });
 
@@ -528,11 +537,15 @@ export class CookingPuzzleScene extends Phaser.Scene {
       const t = n > 1 ? (i - (n - 1) / 2) / ((n - 1) / 2) : 0;
       const angle = t * (HAND.MAX_ANGLE_SPREAD / 2);
 
+      // Add a small pseudo-random tilt so cards don't look perfectly fanned
+      const jitter = (((i * 7 + 3) % 5) - 2) * 0.02;
+      const rotation = angle + jitter;
+
       const x = arcCenterX + HAND.ARC_RADIUS * Math.sin(angle);
       const y = arcCenterY - HAND.ARC_RADIUS * Math.cos(angle);
       const depth = 10 + i;
 
-      this.handSlots.set(card, { x, y, rotation: angle, depth });
+      this.handSlots.set(card, { x, y, rotation, depth });
       this.tweens.killTweensOf(card);
       card.setDepth(depth);
 
@@ -580,22 +593,50 @@ export class CookingPuzzleScene extends Phaser.Scene {
     const slot = this.handSlots.get(card);
     if (!slot) return;
 
-    this.tweens.killTweensOf(card);
-    this.tweens.add({
-      targets: card,
-      y: slot.y - HAND.HOVER_LIFT,
-      scaleX: HAND.HOVER_SCALE,
-      scaleY: HAND.HOVER_SCALE,
-      rotation: 0,
-      duration: 200,
-      ease: 'Quad.easeOut',
-    });
-    card.setDepth(200);
+    // Cancel any pending hover for a different card
+    if (this.hoverTimer && this.pendingHoverCard !== card) {
+      clearTimeout(this.hoverTimer);
+      this.hoverTimer = null;
+    }
+
+    this.pendingHoverCard = card;
+    this.hoverTimer = setTimeout(() => {
+      this.hoverTimer = null;
+      this.pendingHoverCard = null;
+
+      this.tweens.killTweensOf(card);
+      this.tweens.add({
+        targets: card,
+        y: slot.y - HAND.HOVER_LIFT,
+        scaleX: HAND.HOVER_SCALE,
+        scaleY: HAND.HOVER_SCALE,
+        rotation: 0,
+        duration: 200,
+        ease: 'Quad.easeOut',
+      });
+      card.setDepth(200);
+    }, HAND.HOVER_DEBOUNCE_MS);
   }
 
   private onHandCardOut(card: PuzzleCard): void {
     const slot = this.handSlots.get(card);
     if (!slot) return;
+
+    // Cancel pending hover if we're leaving before it fired
+    if (this.hoverTimer && this.pendingHoverCard === card) {
+      clearTimeout(this.hoverTimer);
+      this.hoverTimer = null;
+      this.pendingHoverCard = null;
+    }
+
+    // Restore top-3/4 hit area
+    const hH = FOOD_CARD_H * 0.75;
+    card.setInteractive({
+      hitArea: new Phaser.Geom.Rectangle(-FOOD_CARD_W / 2, -FOOD_CARD_H / 2, FOOD_CARD_W, hH),
+      hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+      draggable: true,
+      useHandCursor: true,
+    });
 
     this.tweens.killTweensOf(card);
     this.tweens.add({
@@ -1394,19 +1435,29 @@ export class CookingPuzzleScene extends Phaser.Scene {
     face.strokeRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 16);
     container.add(face);
 
-    // Emoji icon
-    const icon = this.add
-      .text(-30, 0, procEmoji || '🍳', {
-        fontSize: '24px',
-        fontFamily: FONT_FAMILY,
-      })
-      .setOrigin(0.5)
-      .setResolution(DPR);
+    // Icon — prefer asset image, fall back to emoji
+    const iconSize = 28;
+    const zoneIcon = zone?.icon;
+    const textureKey =
+      zoneIcon instanceof Phaser.GameObjects.Image ? (zoneIcon.texture.key as string) : null;
+
+    let icon: Phaser.GameObjects.Image | Phaser.GameObjects.Text;
+    if (textureKey && this.textures.exists(textureKey)) {
+      const img = this.add.image(0, 0, textureKey);
+      const scale = Math.min(iconSize / img.width, iconSize / img.height);
+      img.setScale(scale).setOrigin(0.5);
+      icon = img;
+    } else {
+      icon = this.add
+        .text(0, 0, procEmoji || '🍳', { fontSize: '24px', fontFamily: FONT_FAMILY })
+        .setOrigin(0.5)
+        .setResolution(DPR);
+    }
     container.add(icon);
 
     // Label
     const label = this.add
-      .text(12, 0, actionLabel, {
+      .text(0, 0, actionLabel, {
         fontSize: '22px',
         fontStyle: 'bold',
         color: TEXT_COLORS.WHITE,
@@ -1415,6 +1466,12 @@ export class CookingPuzzleScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setResolution(DPR);
     container.add(label);
+
+    // Position icon and label side-by-side with gap
+    const gap = 6;
+    const totalW = iconSize + gap + label.width;
+    icon.setX(-totalW / 2 + iconSize / 2);
+    label.setX(-totalW / 2 + iconSize + gap + label.width / 2);
 
     const hitPadX = 24;
     const hitPadY = 16;
