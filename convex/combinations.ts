@@ -23,6 +23,7 @@ export const saveCombination = internalMutation({
     resultName: v.string(),
     resultEmoji: v.string(),
     resultAssetId: v.string(),
+    resultNameI18n: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
     await ctx.db.insert("combinations", {
@@ -31,6 +32,7 @@ export const saveCombination = internalMutation({
       resultName: args.resultName,
       resultEmoji: args.resultEmoji,
       resultAssetId: args.resultAssetId,
+      resultNameI18n: args.resultNameI18n,
       createdAt: Date.now(),
     });
   },

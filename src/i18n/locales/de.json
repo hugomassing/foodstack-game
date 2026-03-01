@@ -64,7 +64,15 @@
     "playAgain": "NOCHMAL SPIELEN",
     "saveCard": "KARTE SPEICHERN",
     "steps": "{current}/{total} Schritte",
-    "errors": "{count} Fehler"
+    "errors": "{count} Fehler",
+    "trophyMessages": [
+      "Trophäe wird gebastelt...",
+      "Details werden gemalt...",
+      "Glitzer wird hinzugefügt...",
+      "Meisterwerk wird angerichtet...",
+      "Foto wird geschossen...",
+      "Gold wird poliert..."
+    ]
   },
   "modes": {
     "title": "FOODSTACK",
@@ -96,7 +104,8 @@
     "lives": "{count} Leben",
     "continue": "WEITER",
     "chooseNext": "Nächstes Rezept wählen",
-    "errors": "Fehler"
+    "errors": "Fehler",
+    "errorsShort": "Fehl."
   },
   "gameOver": {
     "title": "Küchenkatastrophe!",

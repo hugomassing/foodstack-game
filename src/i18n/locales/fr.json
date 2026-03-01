@@ -64,7 +64,15 @@
     "playAgain": "REJOUER",
     "saveCard": "SAUVEGARDER",
     "steps": "{current}/{total} étapes",
-    "errors": "{count} erreurs"
+    "errors": "{count} erreurs",
+    "trophyMessages": [
+      "Fabrication du trophée...",
+      "Peinture des détails...",
+      "Ajout des paillettes...",
+      "Dressage du chef-d'œuvre...",
+      "Prise de la photo...",
+      "Polissage de l'or..."
+    ]
   },
   "modes": {
     "title": "FOODSTACK",
@@ -96,7 +104,8 @@
     "lives": "{count} vies",
     "continue": "CONTINUER",
     "chooseNext": "Choisir la prochaine recette",
-    "errors": "erreurs"
+    "errors": "erreurs",
+    "errorsShort": "err"
   },
   "gameOver": {
     "title": "Catastrophe en cuisine !",

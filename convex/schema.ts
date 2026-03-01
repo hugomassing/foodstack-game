@@ -52,6 +52,7 @@ export default defineSchema({
     resultName: v.string(),
     resultEmoji: v.string(),
     resultAssetId: v.string(),
+    resultNameI18n: v.optional(v.any()),
     createdAt: v.number(),
   }).index("by_processor_and_inputs", ["processor", "inputKey"]),
 });

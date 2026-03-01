@@ -64,7 +64,15 @@
     "playAgain": "再来一局",
     "saveCard": "保存卡片",
     "steps": "{current}/{total} 步骤",
-    "errors": "{count} 个错误"
+    "errors": "{count} 个错误",
+    "trophyMessages": [
+      "制作奖杯中...",
+      "绘制细节中...",
+      "添加闪光中...",
+      "摆盘杰作中...",
+      "拍照中...",
+      "抛光金色中..."
+    ]
   },
   "modes": {
     "title": "FOODSTACK",
@@ -96,7 +104,8 @@
     "lives": "{count} 条命",
     "continue": "继续",
     "chooseNext": "选择下一个食谱",
-    "errors": "错误"
+    "errors": "错误",
+    "errorsShort": "错误"
   },
   "gameOver": {
     "title": "厨房灾难！",

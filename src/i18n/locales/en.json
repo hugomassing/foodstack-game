@@ -64,7 +64,15 @@
     "playAgain": "PLAY AGAIN",
     "saveCard": "SAVE CARD",
     "steps": "{current}/{total} steps",
-    "errors": "{count} errors"
+    "errors": "{count} errors",
+    "trophyMessages": [
+      "Crafting your trophy...",
+      "Painting the details...",
+      "Adding the sparkle...",
+      "Plating the masterpiece...",
+      "Taking the photo...",
+      "Polishing the gold..."
+    ]
   },
   "modes": {
     "title": "FOODSTACK",
@@ -96,7 +104,8 @@
     "lives": "{count} lives",
     "continue": "CONTINUE",
     "chooseNext": "Choose Next Recipe",
-    "errors": "errors"
+    "errors": "errors",
+    "errorsShort": "err"
   },
   "gameOver": {
     "title": "Kitchen Disaster!",

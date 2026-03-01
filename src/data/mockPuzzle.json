@@ -1,63 +1,243 @@
 {
   "dishName": "Spicy Shrimp Glazed Taco",
+  "dishNameI18n": {
+    "fr": "Taco Glac\u00e9 aux Crevettes \u00c9pic\u00e9es",
+    "de": "W\u00fcrziger Glasierter Shrimp-Taco",
+    "es": "Taco Glaseado de Camarones Picantes",
+    "it": "Taco Glassato di Gamberi Piccanti",
+    "ja": "\u30b9\u30d1\u30a4\u30b7\u30fc\u30b7\u30e5\u30ea\u30f3\u30d7\u30b0\u30ec\u30fc\u30ba\u30c9\u30bf\u30b3",
+    "ko": "\ub9e4\ucf64\ud55c \uc0c8\uc6b0 \uae00\ub808\uc774\uc988\ub4dc \ud0c0\ucf54",
+    "pt": "Taco Glaceado de Camar\u00f5es Picantes",
+    "zh": "\u9999\u8fa3\u899c\u8679\u91c9\u7389\u7c73\u5377\u997c"
+  },
   "difficulty": "easy",
   "branches": [
     {
       "name": "shrimp",
+      "nameI18n": {
+        "fr": "crevettes",
+        "de": "Shrimps",
+        "es": "camarones",
+        "it": "gamberi",
+        "ja": "\u30a8\u30d3",
+        "ko": "\uc0c8\uc6b0",
+        "pt": "camar\u00f5es",
+        "zh": "\u899c\u8679"
+      },
       "steps": [
         {
           "stepId": "b1_s1",
           "processor": "chop",
-          "processorEmoji": "🔪",
+          "processorEmoji": "\ud83d\udd2a",
           "questTitle": "Fiery Foundation",
+          "questTitleI18n": {
+            "fr": "Base Ardente",
+            "de": "Feurige Basis",
+            "es": "Base Ardiente",
+            "it": "Base Infuocata",
+            "ja": "\u71b1\u3044\u571f\u53f0",
+            "ko": "\ub9e4\uc6b4 \uae30\ucd08",
+            "pt": "Base Ardente",
+            "zh": "\u706b\u8fa3\u57fa\u5e95"
+          },
           "hint": "A blade's rhythmic dance awaits",
+          "hintI18n": {
+            "fr": "La danse rythmique d'une lame vous attend",
+            "de": "Ein rhythmischer Klingentanz erwartet dich",
+            "es": "La danza r\u00edtmica de una cuchilla espera",
+            "it": "La danza ritmica di una lama vi attende",
+            "ja": "\u5203\u306e\u30ea\u30ba\u30df\u30ab\u30eb\u306a\u30c0\u30f3\u30b9\u304c\u5f85\u3063\u3066\u3044\u308b",
+            "ko": "\uce7c\ub0a0\uc758 \ub9ac\ub4ec\ubbf8\uceec\ud55c \uc6c0\uc9c1\uc784\uc774 \uae30\ub2e4\ub9bd\ub2c8\ub2e4",
+            "pt": "A dan\u00e7a r\u00edtmica de uma l\u00e2mina espera",
+            "zh": "\u5200\u5203\u7684\u8282\u594f\u8d77\u821e\u7b49\u5f85\u7740\u4f60"
+          },
           "inputs": ["garlic", "chili peppers"],
           "output": "chopped aromatics",
+          "outputI18n": {
+            "fr": "aromates hach\u00e9s",
+            "de": "gehackte Gew\u00fcrze",
+            "es": "arom\u00e1ticos picados",
+            "it": "aromi tritati",
+            "ja": "\u5207\u3063\u305f\u9999\u8f9b\u6599",
+            "ko": "\ub2e4\uc9c4 \ud5a5\uc2e0\ub8cc",
+            "pt": "arom\u00e1ticos picados",
+            "zh": "\u5207\u788e\u7684\u9999\u6599"
+          },
           "outputAssetId": "chili"
         },
         {
           "stepId": "b1_s2",
           "processor": "fry",
-          "processorEmoji": "🍳",
+          "processorEmoji": "\ud83c\udf73",
           "questTitle": "The Sizzling Catch",
+          "questTitleI18n": {
+            "fr": "La Prise Gr\u00e9sillante",
+            "de": "Der Brutzelnde Fang",
+            "es": "La Captura Chisporroteante",
+            "it": "La Presa Sfrigolante",
+            "ja": "\u30b8\u30e5\u30fc\u30b8\u30e5\u30fc\u3044\u3046\u6f01\u7372",
+            "ko": "\uc9c0\uae00\uc9c0\uae00 \uc7a1\uc774",
+            "pt": "A Captura Crepitante",
+            "zh": "\u5632\u5632\u4f5c\u54cd\u7684\u6536\u83b7"
+          },
           "hint": "Oil pops and sizzles call",
+          "hintI18n": {
+            "fr": "L'huile cr\u00e9pite et gr\u00e9sille",
+            "de": "\u00d6l knistert und brutzelt",
+            "es": "El aceite chisporrotea y llama",
+            "it": "L'olio scoppietta e sfrigola",
+            "ja": "\u6cb9\u304c\u306f\u306d\u3066\u30b8\u30e5\u30fc\u30b8\u30e5\u30fc\u3044\u3046",
+            "ko": "\uae30\ub984\uc774 \ud0c0\ub2e5\ud0c0\ub2e5 \uc18c\ub9ac\ub97c \ub0b4\uc694",
+            "pt": "O \u00f3leo estala e chiia",
+            "zh": "\u6cb9\u70b9\u5893\u5687\u566c\u4f5c\u54cd"
+          },
           "inputs": ["shrimp", "b1_s1"],
           "output": "spicy shrimp",
+          "outputI18n": {
+            "fr": "crevettes \u00e9pic\u00e9es",
+            "de": "w\u00fcrzige Shrimps",
+            "es": "camarones picantes",
+            "it": "gamberi piccanti",
+            "ja": "\u30b9\u30d1\u30a4\u30b7\u30fc\u30b7\u30e5\u30ea\u30f3\u30d7",
+            "ko": "\ub9e4\ucf64\ud55c \uc0c8\uc6b0",
+            "pt": "camar\u00f5es picantes",
+            "zh": "\u9999\u8fa3\u899c\u8679"
+          },
           "outputAssetId": "shrimp"
         },
         {
           "stepId": "b1_s3",
           "processor": "mix",
-          "processorEmoji": "🥣",
+          "processorEmoji": "\ud83e\udd63",
           "questTitle": "The Golden Coat",
+          "questTitleI18n": {
+            "fr": "L'Enrobage Dor\u00e9",
+            "de": "Der Goldene Mantel",
+            "es": "El Ba\u00f1o Dorado",
+            "it": "Il Rivestimento Dorato",
+            "ja": "\u9ec4\u91d1\u306e\u30b3\u30fc\u30c6\u30a3\u30f3\u30b0",
+            "ko": "\ud669\uae08 \ucf54\ud305",
+            "pt": "O Revestimento Dourado",
+            "zh": "\u91d1\u8272\u6d47\u6c41"
+          },
           "hint": "Stir up some sweet harmony",
+          "hintI18n": {
+            "fr": "Cr\u00e9ez une douce harmonie en m\u00e9langeant",
+            "de": "R\u00fchre eine s\u00fc\u00dfe Harmonie an",
+            "es": "Revuelve una dulce armon\u00eda",
+            "it": "Mescola una dolce armonia",
+            "ja": "\u7518\u3044\u30cf\u30fc\u30e2\u30cb\u30fc\u3092\u304b\u304d\u6df7\u305c\u3066",
+            "ko": "\ub2ec\ucf64\ud55c \uc870\ud654\ub97c \uc800\uc5b4\uc8fc\uc138\uc694",
+            "pt": "Misture uma doce harmonia",
+            "zh": "\u6405\u52a8\u51fa\u7518\u871c\u548c\u8c10"
+          },
           "inputs": ["b1_s2", "honey"],
           "output": "glazed shrimp",
+          "outputI18n": {
+            "fr": "crevettes glac\u00e9es",
+            "de": "glasierte Shrimps",
+            "es": "camarones glaseados",
+            "it": "gamberi glassati",
+            "ja": "\u30b0\u30ec\u30fc\u30ba\u30c9\u30b7\u30e5\u30ea\u30f3\u30d7",
+            "ko": "\uae00\ub808\uc774\uc988\ub4dc \uc0c8\uc6b0",
+            "pt": "camar\u00f5es glaceados",
+            "zh": "\u91c9\u899c\u8679"
+          },
           "outputAssetId": "shrimp"
         }
       ]
     },
     {
       "name": "taco",
+      "nameI18n": {
+        "fr": "taco",
+        "de": "Taco",
+        "es": "taco",
+        "it": "taco",
+        "ja": "\u30bf\u30b3",
+        "ko": "\ud0c0\ucf54",
+        "pt": "taco",
+        "zh": "\u7389\u7c73\u5377\u997c"
+      },
       "steps": [
         {
           "stepId": "b2_s1",
           "processor": "fry",
-          "processorEmoji": "🍳",
+          "processorEmoji": "\ud83c\udf73",
           "questTitle": "Crispy Shell",
+          "questTitleI18n": {
+            "fr": "Coque Croustillante",
+            "de": "Knusprige Schale",
+            "es": "C\u00e1scara Crujiente",
+            "it": "Guscio Croccante",
+            "ja": "\u30ab\u30ea\u30ab\u30ea\u30b7\u30a7\u30eb",
+            "ko": "\ubc14\uc0ad\ubc14\uc0ad \uaecd\ub370\uae30",
+            "pt": "Casca Crocante",
+            "zh": "\u8106\u58f3"
+          },
           "hint": "A hot bath, but make it quick",
+          "hintI18n": {
+            "fr": "Un bain chaud, mais rapide",
+            "de": "Ein hei\u00dfes Bad, aber schnell",
+            "es": "Un ba\u00f1o caliente, pero r\u00e1pido",
+            "it": "Un bagno caldo, ma veloce",
+            "ja": "\u71b1\u3044\u304a\u98a8\u5442\u3001\u3067\u3082\u624b\u65e9\u304f",
+            "ko": "\ub728\uac70\uc6b4 \ubaa9\uc695, \ud558\uc9c0\ub9cc \ube60\ub974\uac8c",
+            "pt": "Um banho quente, mas r\u00e1pido",
+            "zh": "\u70ed\u6d74\uff0c\u4f46\u8981\u5feb"
+          },
           "inputs": ["tortillas"],
           "output": "crispy tortillas",
+          "outputI18n": {
+            "fr": "tortillas croustillantes",
+            "de": "knusprige Tortillas",
+            "es": "tortillas crujientes",
+            "it": "tortillas croccanti",
+            "ja": "\u30ab\u30ea\u30ab\u30ea\u30c8\u30eb\u30c6\u30a3\u30fc\u30e4",
+            "ko": "\ubc14\uc0ad\ubc14\uc0ad \ud1a0\ub974\ud2f0\uc57c",
+            "pt": "tortilhas crocantes",
+            "zh": "\u8106\u7389\u7c73\u997c"
+          },
           "outputAssetId": "flatbread"
         },
         {
           "stepId": "b2_s2",
           "processor": "chop",
-          "processorEmoji": "🔪",
+          "processorEmoji": "\ud83d\udd2a",
           "questTitle": "Ribbon Work",
+          "questTitleI18n": {
+            "fr": "Travail en Rubans",
+            "de": "B\u00e4nderarbeit",
+            "es": "Trabajo de Cintas",
+            "it": "Lavoro a Nastro",
+            "ja": "\u30ea\u30dc\u30f3\u30ef\u30fc\u30af",
+            "ko": "\ub9ac\ubcf8 \uc791\uc5c5",
+            "pt": "Trabalho de Fitas",
+            "zh": "\u5207\u4e1d\u5de5\u4f5c"
+          },
           "hint": "Reduce these to ribbons",
+          "hintI18n": {
+            "fr": "R\u00e9duisez-les en rubans",
+            "de": "Schneide sie in B\u00e4nder",
+            "es": "Reduce estos en cintas",
+            "it": "Riducili a nastri",
+            "ja": "\u3053\u308c\u3089\u3092\u30ea\u30dc\u30f3\u72b6\u306b\u3057\u3066",
+            "ko": "\uc774\uac83\ub4e4\uc744 \ub9ac\ubcf8\uc73c\ub85c \ub9cc\ub4dc\uc138\uc694",
+            "pt": "Reduza estes em fitas",
+            "zh": "\u628a\u5b83\u4eec\u5207\u6210\u4e1d\u5e26"
+          },
           "inputs": ["lettuce"],
           "output": "shredded lettuce",
+          "outputI18n": {
+            "fr": "laitue \u00e9minc\u00e9e",
+            "de": "geschnittener Salat",
+            "es": "lechuga rallada",
+            "it": "lattuga tagliata",
+            "ja": "\u5343\u5207\u308a\u30ec\u30bf\u30b9",
+            "ko": "\ucc44 \uc36c \uc0c1\ucd94",
+            "pt": "alface ralada",
+            "zh": "\u5207\u4e1d\u751f\u83dc"
+          },
           "outputAssetId": "lettuce"
         }
       ]
@@ -66,68 +246,226 @@
   "finalStep": {
     "stepId": "final",
     "processor": "assemble",
-    "processorEmoji": "🍽️",
+    "processorEmoji": "\ud83c\udf7d\ufe0f",
     "questTitle": "The Grand Finale",
+    "questTitleI18n": {
+      "fr": "Le Grand Final",
+      "de": "Das gro\u00dfe Finale",
+      "es": "El Gran Final",
+      "it": "Il Gran Finale",
+      "ja": "\u30b0\u30e9\u30f3\u30c9\u30d5\u30a3\u30ca\u30fc\u30ec",
+      "ko": "\uadf8\ub79c\ub4dc \ud53c\ub0a0\ub808",
+      "pt": "O Grande Final",
+      "zh": "\u76db\u5927\u7ec8\u7ae0"
+    },
     "hint": "All the pieces find their place",
+    "hintI18n": {
+      "fr": "Toutes les pi\u00e8ces trouvent leur place",
+      "de": "Alle Teile finden ihren Platz",
+      "es": "Todas las piezas encuentran su lugar",
+      "it": "Tutti i pezzi trovano il loro posto",
+      "ja": "\u5168\u3066\u306e\u30d4\u30fc\u30b9\u304c\u5c45\u5834\u6240\u3092\u898b\u3064\u3051\u308b",
+      "ko": "\ubaa8\ub4e0 \uc870\uac01\uc774 \uc81c\uc790\ub9ac\ub97c \ucc3e\ub294\ub2e4",
+      "pt": "Todas as pe\u00e7as encontram seu lugar",
+      "zh": "\u6240\u6709\u7684\u90e8\u5206\u627e\u5230\u4e86\u5b83\u4eec\u7684\u4f4d\u7f6e"
+    },
     "inputs": ["b1_s3", "b2_s1", "b2_s2"],
     "output": "Spicy Shrimp Glazed Taco",
+    "outputI18n": {
+      "fr": "Taco Glac\u00e9 aux Crevettes \u00c9pic\u00e9es",
+      "de": "W\u00fcrziger Glasierter Shrimp-Taco",
+      "es": "Taco Glaseado de Camarones Picantes",
+      "it": "Taco Glassato di Gamberi Piccanti",
+      "ja": "\u30b9\u30d1\u30a4\u30b7\u30fc\u30b7\u30e5\u30ea\u30f3\u30d7\u30b0\u30ec\u30fc\u30ba\u30c9\u30bf\u30b3",
+      "ko": "\ub9e4\ucf64\ud55c \uc0c8\uc6b0 \uae00\ub808\uc774\uc988\ub4dc \ud0c0\ucf54",
+      "pt": "Taco Glaceado de Camar\u00f5es Picantes",
+      "zh": "\u9999\u8fa3\u899c\u8679\u91c9\u7389\u7c73\u5377\u997c"
+    },
     "outputAssetId": "taco"
   },
   "processors": [
     {
       "name": "chop",
-      "emoji": "🔪"
+      "displayNameI18n": {
+        "fr": "hacher",
+        "de": "hacken",
+        "es": "picar",
+        "it": "tritare",
+        "ja": "\u5207\u308b",
+        "ko": "\ub2e4\uc9c0\ub2e4",
+        "pt": "picar",
+        "zh": "\u5207"
+      },
+      "emoji": "\ud83d\udd2a",
+      "assetId": "knife"
     },
     {
       "name": "fry",
-      "emoji": "🍳"
+      "displayNameI18n": {
+        "fr": "frire",
+        "de": "braten",
+        "es": "fre\u00edr",
+        "it": "friggere",
+        "ja": "\u63da\u3052\u308b",
+        "ko": "\ud280\uae30\ub2e4",
+        "pt": "fritar",
+        "zh": "\u7092"
+      },
+      "emoji": "\ud83c\udf73",
+      "assetId": "frying_pan"
     },
     {
       "name": "mix",
-      "emoji": "🥣"
+      "displayNameI18n": {
+        "fr": "m\u00e9langer",
+        "de": "mischen",
+        "es": "mezclar",
+        "it": "mescolare",
+        "ja": "\u6df7\u305c\u308b",
+        "ko": "\uc11e\ub2e4",
+        "pt": "misturar",
+        "zh": "\u6df7\u5408"
+      },
+      "emoji": "\ud83e\udd63",
+      "assetId": "bowl_spoon"
+    },
+    {
+      "name": "assemble",
+      "displayNameI18n": {
+        "fr": "assembler",
+        "de": "zusammenstellen",
+        "es": "ensamblar",
+        "it": "assemblare",
+        "ja": "\u7d44\u307f\u7acb\u3066\u308b",
+        "ko": "\uc870\ub9bd\ud558\ub2e4",
+        "pt": "montar",
+        "zh": "\u7ec4\u88c5"
+      },
+      "emoji": "\ud83c\udf7d\ufe0f",
+      "assetId": "fork_knife"
     }
   ],
   "ingredients": [
     {
       "name": "shrimp",
-      "emoji": "🍤",
+      "nameI18n": {
+        "fr": "crevettes",
+        "de": "Shrimps",
+        "es": "camarones",
+        "it": "gamberi",
+        "ja": "\u30a8\u30d3",
+        "ko": "\uc0c8\uc6b0",
+        "pt": "camar\u00f5es",
+        "zh": "\u899c\u8679"
+      },
+      "emoji": "\ud83c\udf64",
       "assetId": "shrimp"
     },
     {
       "name": "garlic",
-      "emoji": "🧄",
+      "nameI18n": {
+        "fr": "ail",
+        "de": "Knoblauch",
+        "es": "ajo",
+        "it": "aglio",
+        "ja": "\u30cb\u30f3\u30cb\u30af",
+        "ko": "\ub9c8\ub298",
+        "pt": "alho",
+        "zh": "\u5927\u849c"
+      },
+      "emoji": "\ud83e\uddc4",
       "assetId": "garlic"
     },
     {
       "name": "chili peppers",
-      "emoji": "🌶️",
+      "nameI18n": {
+        "fr": "piments",
+        "de": "Chilischoten",
+        "es": "chiles",
+        "it": "peperoncini",
+        "ja": "\u5510\u8f9b\u5b50",
+        "ko": "\uace0\ucd94",
+        "pt": "pimentas",
+        "zh": "\u8fa3\u6912"
+      },
+      "emoji": "\ud83c\udf36\ufe0f",
       "assetId": "chili"
     },
     {
       "name": "honey",
-      "emoji": "🍯",
+      "nameI18n": {
+        "fr": "miel",
+        "de": "Honig",
+        "es": "miel",
+        "it": "miele",
+        "ja": "\u306f\u3061\u307f\u3064",
+        "ko": "\uafb8",
+        "pt": "mel",
+        "zh": "\u8702\u871c"
+      },
+      "emoji": "\ud83c\udf6f",
       "assetId": "honey"
     },
     {
       "name": "tortillas",
-      "emoji": "🌮",
+      "nameI18n": {
+        "fr": "tortillas",
+        "de": "Tortillas",
+        "es": "tortillas",
+        "it": "tortillas",
+        "ja": "\u30c8\u30eb\u30c6\u30a3\u30fc\u30e4",
+        "ko": "\ud1a0\ub974\ud2f0\uc57c",
+        "pt": "tortilhas",
+        "zh": "\u7389\u7c73\u997c"
+      },
+      "emoji": "\ud83c\udf2e",
       "assetId": "flatbread"
     },
     {
       "name": "lettuce",
-      "emoji": "🥬",
+      "nameI18n": {
+        "fr": "laitue",
+        "de": "Salat",
+        "es": "lechuga",
+        "it": "lattuga",
+        "ja": "\u30ec\u30bf\u30b9",
+        "ko": "\uc0c1\ucd94",
+        "pt": "alface",
+        "zh": "\u751f\u83dc"
+      },
+      "emoji": "\ud83e\udd6c",
       "assetId": "lettuce"
     }
   ],
   "decoys": [
     {
       "name": "cumin",
-      "emoji": "🌿",
+      "nameI18n": {
+        "fr": "cumin",
+        "de": "Kreuzkümmel",
+        "es": "comino",
+        "it": "cumino",
+        "ja": "\u30af\u30df\u30f3",
+        "ko": "\ucfe0\ubbfc",
+        "pt": "cominho",
+        "zh": "\u5b5c\u7136"
+      },
+      "emoji": "\ud83c\udf3f",
       "assetId": "herb"
     },
     {
       "name": "lime",
-      "emoji": "🍋",
+      "nameI18n": {
+        "fr": "citron vert",
+        "de": "Limette",
+        "es": "lima",
+        "it": "lime",
+        "ja": "\u30e9\u30a4\u30e0",
+        "ko": "\ub77c\uc784",
+        "pt": "lima",
+        "zh": "\u9752\u67e0"
+      },
+      "emoji": "\ud83c\udf4b",
       "assetId": "lime"
     }
   ]

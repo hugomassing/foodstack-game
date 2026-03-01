@@ -64,7 +64,15 @@
     "playAgain": "JUGAR DE NUEVO",
     "saveCard": "GUARDAR TARJETA",
     "steps": "{current}/{total} pasos",
-    "errors": "{count} errores"
+    "errors": "{count} errores",
+    "trophyMessages": [
+      "Creando tu trofeo...",
+      "Pintando los detalles...",
+      "Añadiendo el brillo...",
+      "Emplatando la obra maestra...",
+      "Tomando la foto...",
+      "Puliendo el oro..."
+    ]
   },
   "modes": {
     "title": "FOODSTACK",
@@ -96,7 +104,8 @@
     "lives": "{count} vidas",
     "continue": "CONTINUAR",
     "chooseNext": "Elige la siguiente receta",
-    "errors": "errores"
+    "errors": "errores",
+    "errorsShort": "err"
   },
   "gameOver": {
     "title": "¡Desastre en la cocina!",

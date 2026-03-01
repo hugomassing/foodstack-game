@@ -11,14 +11,7 @@ import { useTranslation } from '../i18n';
 import type { TranslationKeys } from '../i18n/types';
 import { setDailyBestScore } from '../lib/daily';
 
-const TROPHY_MESSAGES = [
-  { emoji: '\u{1F3C6}', text: 'Crafting your trophy...' },
-  { emoji: '\u{1F3A8}', text: 'Painting the details...' },
-  { emoji: '\u2728', text: 'Adding the sparkle...' },
-  { emoji: '\u{1F37D}\uFE0F', text: 'Plating the masterpiece...' },
-  { emoji: '\u{1F4F8}', text: 'Taking the photo...' },
-  { emoji: '\u{1F947}', text: 'Polishing the gold...' },
-];
+const TROPHY_EMOJIS = ['\u{1F3C6}', '\u{1F3A8}', '\u2728', '\u{1F37D}\uFE0F', '\u{1F4F8}', '\u{1F947}'];
 
 const DIFFICULTY_LABELS = {
   easy: {
@@ -101,7 +94,7 @@ export function VictoryOverlay() {
     const interval = setInterval(() => {
       setFading(true);
       setTimeout(() => {
-        setMsgIndex((i) => (i + 1) % TROPHY_MESSAGES.length);
+        setMsgIndex((i) => (i + 1) % TROPHY_EMOJIS.length);
         setFading(false);
       }, 300);
     }, 2200);
@@ -156,7 +149,8 @@ export function VictoryOverlay() {
     }
   };
   const diffConfig = DIFFICULTY_LABELS[difficulty];
-  const msg = TROPHY_MESSAGES[msgIndex];
+  const trophyText = t(`victory.trophyMessages.${msgIndex}` as TranslationKeys);
+  const trophyEmoji = TROPHY_EMOJIS[msgIndex];
   const hasImage = !!victoryImageUrl;
   const showFallback = !victoryImageLoading && !hasImage;
 
@@ -264,7 +258,7 @@ export function VictoryOverlay() {
                     opacity: fading ? 0 : 1,
                   }}
                 >
-                  {msg.emoji}
+                  {trophyEmoji}
                 </div>
                 <div
                   style={{
@@ -276,7 +270,7 @@ export function VictoryOverlay() {
                     opacity: fading ? 0 : 1,
                   }}
                 >
-                  {msg.text}
+                  {trophyText}
                 </div>
                 <div style={{ display: 'flex', gap: 6 }}>
                   {[0, 1, 2].map((i) => (
