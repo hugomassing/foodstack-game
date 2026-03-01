@@ -6,6 +6,8 @@ import { gameStore } from '../store/gameStore';
 import { api } from '../../convex/_generated/api';
 import { convex } from '../lib/convex';
 import { Trophy, RotateCcw, Download } from 'lucide-react';
+import { useTranslation } from '../i18n';
+import type { TranslationKeys } from '../i18n/types';
 
 const TROPHY_MESSAGES = [
   { emoji: '🏆', text: 'Crafting your trophy...' },
@@ -17,9 +19,9 @@ const TROPHY_MESSAGES = [
 ];
 
 const DIFFICULTY_LABELS = {
-  easy: { label: 'EASY', icon: '🌶️', color: '#4caf50' },
-  medium: { label: 'MEDIUM', icon: '🌶️🌶️', color: '#ff9800' },
-  hard: { label: 'HARD', icon: '🌶️🌶️🌶️', color: '#e53935' },
+  easy: { labelKey: 'menu.difficulty.easy' as TranslationKeys, icon: '🌶️', color: '#4caf50' },
+  medium: { labelKey: 'menu.difficulty.medium' as TranslationKeys, icon: '🌶️🌶️', color: '#ff9800' },
+  hard: { labelKey: 'menu.difficulty.hard' as TranslationKeys, icon: '🌶️🌶️🌶️', color: '#e53935' },
 } as const;
 
 export function VictoryOverlay() {
@@ -36,6 +38,7 @@ export function VictoryOverlay() {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [msgIndex, setMsgIndex] = useState(0);
   const [fading, setFading] = useState(false);
+  const { t } = useTranslation();
 
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -270,7 +273,7 @@ export function VictoryOverlay() {
                     letterSpacing: '0.06em',
                   }}
                 >
-                  YOU WIN!
+                  {t('victory.youWin')}
                 </div>
               </div>
             )}
@@ -325,7 +328,7 @@ export function VictoryOverlay() {
                 }}
               >
                 <span>{diffConfig.icon}</span>
-                <span>{diffConfig.label}</span>
+                <span>{t(diffConfig.labelKey)}</span>
               </div>
               <div
                 style={{
@@ -334,7 +337,7 @@ export function VictoryOverlay() {
                   color: '#8d6e63',
                 }}
               >
-                {stepCount}/{totalSteps} steps
+                {t('victory.steps', { current: stepCount, total: totalSteps })}
               </div>
             </div>
           </div>
@@ -368,7 +371,7 @@ export function VictoryOverlay() {
             }}
           >
             <Download size={16} strokeWidth={3} />
-            SAVE CARD
+            {t('victory.saveCard')}
           </button>
           <button
             onClick={() => gameStore.getState().resetGameplay()}
@@ -389,7 +392,7 @@ export function VictoryOverlay() {
             }}
           >
             <RotateCcw size={16} strokeWidth={3} />
-            PLAY AGAIN
+            {t('victory.playAgain')}
           </button>
         </div>
       </div>

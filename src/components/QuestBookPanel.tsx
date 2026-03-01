@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { QUEST_PANEL_W, GAME_H, FONT_FAMILY } from '../config';
 import { useGameStore } from '../App';
 import type { Step } from '../types';
+import { useTranslation } from '../i18n';
 import {
   Check,
   Download,
@@ -86,6 +87,7 @@ export function QuestBookPanel() {
   const availableIntermediates = useGameStore((s) => s.availableIntermediates);
   const stepCount = useGameStore((s) => s.stepCount);
   const totalSteps = useGameStore((s) => s.totalSteps);
+  const { t } = useTranslation();
 
   const isStepActionable = useCallback(
     (step: Step) => {
@@ -170,7 +172,7 @@ export function QuestBookPanel() {
             }}
           />
           <div style={{ fontSize: 16, fontWeight: 900, color: '#3e2723', letterSpacing: '0.04em' }}>
-            RECIPE
+            {t('quest.recipe')}
           </div>
           <div style={{ fontSize: 11, color: '#d84315', marginTop: 2, fontWeight: 900 }}>{dishLabel}</div>
         </div>
@@ -189,7 +191,7 @@ export function QuestBookPanel() {
         >
           {/* Progress row */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-            <span style={{ fontSize: 10, color: '#a1887f', fontWeight: 900, letterSpacing: '0.08em' }}>PROGRESS</span>
+            <span style={{ fontSize: 10, color: '#a1887f', fontWeight: 900, letterSpacing: '0.08em' }}>{t('quest.progress')}</span>
             <span
               style={{
                 fontSize: 9,
@@ -201,7 +203,7 @@ export function QuestBookPanel() {
                 border: '1.5px solid #e0d6c8',
               }}
             >
-              {stepCount} / {totalSteps} STEPS
+              {t('game.steps', { current: stepCount, total: totalSteps })}
             </span>
           </div>
 
@@ -249,7 +251,7 @@ export function QuestBookPanel() {
               }}
             >
               <div style={{ width: 12, height: 1.5, background: '#d7ccc8', borderRadius: 1 }} />
-              FINAL
+              {t('quest.final')}
             </div>
             <StepRow
               step={puzzleData.finalStep}
@@ -287,7 +289,7 @@ export function QuestBookPanel() {
             }}
           >
             <Download size={12} strokeWidth={3} />
-            EXPORT JSON
+            {t('quest.exportJson')}
           </button>
         </div>
       </div>

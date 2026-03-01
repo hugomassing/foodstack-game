@@ -6,6 +6,8 @@ import { FONT_FAMILY } from "../config";
 import type { PuzzleData } from "../types";
 import { ChevronLeft, ChevronRight, Play, Upload } from "lucide-react";
 import wordlists from "../data/wordlists.json";
+import { useTranslation } from "../i18n";
+import type { TranslationKeys } from "../i18n/types";
 
 const LOADING_MESSAGES = [
   { emoji: "🥕", text: "Preparing ingredients" },
@@ -26,6 +28,13 @@ const WORD_LISTS: Record<Category, string[]> = wordlists;
 
 const CATEGORIES: Category[] = ["Style", "Filling", "Method", "Base"];
 
+const CATEGORY_KEYS: Record<Category, TranslationKeys> = {
+  Style: "menu.category.style",
+  Filling: "menu.category.filling",
+  Method: "menu.category.method",
+  Base: "menu.category.base",
+};
+
 const FOOD_ICONS = ["🍖", "🥩", "🍕", "🥪", "🥕", "🍴", "🔥", "💧", "☕"];
 
 function randomSelections(): Record<Category, number> {
@@ -36,7 +45,13 @@ function randomSelections(): Record<Category, number> {
   return result;
 }
 
-function LoadingCard({ dishName }: { dishName: string }) {
+function LoadingCard({
+  dishName,
+  cookingUpLabel,
+}: {
+  dishName: string;
+  cookingUpLabel: string;
+}) {
   const [msgIndex, setMsgIndex] = useState(0);
   const [fading, setFading] = useState(false);
 
@@ -122,7 +137,7 @@ function LoadingCard({ dishName }: { dishName: string }) {
             fontFamily: FONT_FAMILY,
           }}
         >
-          Cooking up...
+          {cookingUpLabel}
         </div>
         <div
           style={{
@@ -198,6 +213,7 @@ export function GameMenu() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation();
 
   const getDishName = useCallback(() => {
     const raw = customName.trim();
@@ -256,7 +272,7 @@ export function GameMenu() {
           const puzzleData = JSON.parse(ev.target!.result as string);
           gameStore.getState().startGame(puzzleData, "medium");
         } catch {
-          setError("Invalid JSON file");
+          setError(t("menu.invalidJson"));
         }
       };
       reader.readAsText(file);
@@ -319,7 +335,10 @@ export function GameMenu() {
             ))}
           </div>
         </div>
-        <LoadingCard dishName={getDishName()} />
+        <LoadingCard
+          dishName={getDishName()}
+          cookingUpLabel={t("menu.cookingUp")}
+        />
       </div>
     );
   }
@@ -427,7 +446,7 @@ export function GameMenu() {
             textTransform: "uppercase",
           }}
         >
-          Create Recipe
+          {t("menu.title")}
         </h1>
 
         {/* Summary box */}
@@ -454,7 +473,7 @@ export function GameMenu() {
               letterSpacing: "0.1em",
             }}
           >
-            SELECTED ORDER
+            {t("menu.selectedOrder")}
           </div>
           {customName.trim() ? (
             <input
@@ -531,7 +550,7 @@ export function GameMenu() {
         {/* START RECIPE button */}
         <PushButton
           icon={<Play size={18} fill="currentColor" strokeWidth={0} />}
-          label="START RECIPE"
+          label={t("menu.startRecipe")}
           color="#4caf50"
           hoverColor="#43a047"
           height={44}
@@ -544,7 +563,7 @@ export function GameMenu() {
         {/* DEMO / LOAD buttons */}
         <div style={{ display: "flex", gap: 8, width: "100%", marginTop: 2 }}>
           <PushButton
-            label="DEMO"
+            label={t("menu.demo")}
             color="#29b6f6"
             hoverColor="#03a9f4"
             height={36}
@@ -555,7 +574,7 @@ export function GameMenu() {
           />
           <PushButton
             icon={<Upload size={14} strokeWidth={3} />}
-            label="LOAD"
+            label={t("menu.load")}
             color="#9e9e9e"
             hoverColor="#757575"
             height={36}
@@ -597,6 +616,7 @@ function SelectorRow({
   onNext: () => void;
   disabled: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <div
       style={{
@@ -621,7 +641,7 @@ function SelectorRow({
             textTransform: "uppercase",
           }}
         >
-          {category}
+          {t(CATEGORY_KEYS[category])}
         </span>
       </div>
       <ArrowBtn direction="left" onClick={onPrev} disabled={disabled} />
@@ -683,9 +703,21 @@ function ArrowBtn({
 const CHILI_SRC = "/assets/sprites/food/vegetable/chili.png";
 
 const DIFFICULTIES = [
-  { value: "easy" as const, label: "EASY", count: 1 },
-  { value: "medium" as const, label: "MEDIUM", count: 2 },
-  { value: "hard" as const, label: "HARD", count: 3 },
+  {
+    value: "easy" as const,
+    labelKey: "menu.difficulty.easy" as TranslationKeys,
+    count: 1,
+  },
+  {
+    value: "medium" as const,
+    labelKey: "menu.difficulty.medium" as TranslationKeys,
+    count: 2,
+  },
+  {
+    value: "hard" as const,
+    labelKey: "menu.difficulty.hard" as TranslationKeys,
+    count: 3,
+  },
 ];
 
 function DifficultySelector({
@@ -697,6 +729,7 @@ function DifficultySelector({
   onChange: (v: "easy" | "medium" | "hard") => void;
   disabled: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <div
       style={{
@@ -747,7 +780,7 @@ function DifficultySelector({
                 fontFamily: FONT_FAMILY,
               }}
             >
-              {d.label}
+              {t(d.labelKey)}
             </div>
           </div>
         );
