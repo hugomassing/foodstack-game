@@ -1,17 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { convex } from '../lib/convex';
 import { gameStore } from '../store/gameStore';
 import type { Difficulty } from '../store/gameStore';
+import { useGameStore } from '../App';
 import { FONT_FAMILY, TITLE_FONT_FAMILY } from '../config';
 import type { PuzzleData, GameMode } from '../types';
-import { Calendar, Skull, Zap, Settings, Play } from 'lucide-react';
+import { Calendar, Skull, Zap, Settings, Play, User, Trophy, Clock } from 'lucide-react';
 import { useTranslation, loadLocale } from '../i18n';
 import { getDailyDishName, getDailyDate, getDailyBestScore } from '../lib/daily';
 import { randomDishName } from '../lib/dishName';
 import { getWordlists } from '../data/wordlists/index';
 import type { TranslationKeys } from '../i18n/types';
-import { useEffect, useRef } from 'react';
 
 const LOCALES = [
   { code: 'en', flag: '\u{1F1EC}\u{1F1E7}' },
@@ -334,6 +335,7 @@ function LanguageSwitcher() {
   const { locale } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const saveLocale = useMutation(api.users.setLocale);
 
   const current = LOCALES.find((l) => l.code === locale) ?? LOCALES[0];
 
@@ -389,6 +391,7 @@ function LanguageSwitcher() {
               key={l.code}
               onClick={() => {
                 loadLocale(l.code);
+                saveLocale({ locale: l.code }).catch(() => {});
                 setOpen(false);
               }}
               style={{
@@ -475,10 +478,12 @@ function ModeCard({ icon, title, description, accent, extra, children }: ModeCar
   );
 }
 
+type MainTab = 'modes' | 'rankings' | 'history';
 type ModeWithDifficulty = 'daily' | 'survival' | 'normal';
 
 export function ModeSelector() {
   const { t, locale } = useTranslation();
+  const [mainTab, setMainTab] = useState<MainTab>('modes');
   const [isLoading, setIsLoading] = useState(false);
   const [loadingDishName, setLoadingDishName] = useState('');
   const [error, setError] = useState('');
@@ -649,16 +654,16 @@ export function ModeSelector() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 32,
               }}
             >
-              {FOOD_ICONS[i % FOOD_ICONS.length]}
+              <img src={FOOD_ICONS[i % FOOD_ICONS.length]} alt="" style={{ width: 32, height: 32 }} />
             </div>
           ))}
         </div>
       </div>
 
       <LanguageSwitcher />
+      <ProfileBadge />
 
       {/* Card */}
       <div
@@ -710,6 +715,9 @@ export function ModeSelector() {
         >
           {t('modes.title')}
         </h1>
+
+        {/* Main tab bar */}
+        <MainTabBar value={mainTab} onChange={setMainTab} />
 
         {/* Difficulty picker overlay */}
         {difficultyFor && (
@@ -768,115 +776,480 @@ export function ModeSelector() {
           </div>
         )}
 
-        {/* 2x2 mode grid */}
+        {/* Modes tab */}
+        {mainTab === 'modes' && (
+          <>
+            {/* 2x2 mode grid */}
+            <div
+              style={{
+                width: '100%',
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: 8,
+              }}
+            >
+              {/* Daily */}
+              <ModeCard
+                icon={<Calendar size={16} strokeWidth={2.5} color="#fff" />}
+                title={t('modes.daily.title')}
+                description={t('modes.daily.description')}
+                accent="#ff9800"
+                extra={
+                  <div
+                    style={{
+                      fontSize: 10,
+                      color: '#8d6e63',
+                      fontWeight: 700,
+                      display: 'flex',
+                      gap: 8,
+                    }}
+                  >
+                    <span>{dailyDate}</span>
+                    {dailyBest !== null && (
+                      <span style={{ color: '#4caf50' }}>
+                        {t('modes.daily.best', { count: dailyBest })}
+                      </span>
+                    )}
+                  </div>
+                }
+              >
+                <PushButton
+                  icon={<Play size={14} fill="currentColor" strokeWidth={0} />}
+                  label={t('modes.play')}
+                  color="#ff9800"
+                  hoverColor="#f57c00"
+                  height={32}
+                  shadowDepth={4}
+                  onClick={() => onModeWithDifficulty('daily')}
+                  disabled={isLoading}
+                  style={{ width: '100%' }}
+                />
+              </ModeCard>
+
+              {/* Survival */}
+              <ModeCard
+                icon={<Skull size={16} strokeWidth={2.5} color="#fff" />}
+                title={t('modes.survival.title')}
+                description={t('modes.survival.description')}
+                accent="#e53935"
+              >
+                <PushButton
+                  icon={<Play size={14} fill="currentColor" strokeWidth={0} />}
+                  label={t('modes.start')}
+                  color="#e53935"
+                  hoverColor="#c62828"
+                  height={32}
+                  shadowDepth={4}
+                  onClick={() => onModeWithDifficulty('survival')}
+                  disabled={isLoading}
+                  style={{ width: '100%' }}
+                />
+              </ModeCard>
+
+              {/* Normal (Quick Play) */}
+              <ModeCard
+                icon={<Zap size={16} strokeWidth={2.5} color="#fff" />}
+                title={t('modes.normal.title')}
+                description={t('modes.normal.description')}
+                accent="#29b6f6"
+              >
+                <PushButton
+                  icon={<Play size={14} fill="currentColor" strokeWidth={0} />}
+                  label={t('modes.play')}
+                  color="#29b6f6"
+                  hoverColor="#03a9f4"
+                  height={32}
+                  shadowDepth={4}
+                  onClick={() => onModeWithDifficulty('normal')}
+                  disabled={isLoading}
+                  style={{ width: '100%' }}
+                />
+              </ModeCard>
+
+              {/* Seeded (Custom) */}
+              <ModeCard
+                icon={<Settings size={16} strokeWidth={2.5} color="#fff" />}
+                title={t('modes.seeded.title')}
+                description={t('modes.seeded.description')}
+                accent="#7e57c2"
+              >
+                <PushButton
+                  icon={<Settings size={14} strokeWidth={2.5} />}
+                  label={t('modes.configure')}
+                  color="#7e57c2"
+                  hoverColor="#5e35b1"
+                  height={32}
+                  shadowDepth={4}
+                  onClick={onSeeded}
+                  disabled={isLoading}
+                  style={{ width: '100%' }}
+                />
+              </ModeCard>
+            </div>
+
+            {/* Error */}
+            {error && (
+              <div style={{ fontSize: 13, color: '#e74c3c', textAlign: 'center', marginTop: 4 }}>
+                {error}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Rankings tab */}
+        {mainTab === 'rankings' && <LeaderboardPanel />}
+
+        {/* History tab */}
+        {mainTab === 'history' && <HistoryPanel />}
+      </div>
+    </div>
+  );
+}
+
+const MAIN_TAB_ITEMS: { value: MainTab; labelKey: TranslationKeys; icon: typeof Trophy }[] = [
+  { value: 'modes', labelKey: 'menu.tabs.cook', icon: Play },
+  { value: 'rankings', labelKey: 'menu.tabs.leaderboard', icon: Trophy },
+  { value: 'history', labelKey: 'menu.tabs.history', icon: Clock },
+];
+
+function MainTabBar({ value, onChange }: { value: MainTab; onChange: (tab: MainTab) => void }) {
+  const { t } = useTranslation();
+  return (
+    <div style={{ width: '100%', display: 'flex', gap: 4, marginBottom: 4 }}>
+      {MAIN_TAB_ITEMS.map((item) => {
+        const active = value === item.value;
+        const Icon = item.icon;
+        return (
+          <div
+            key={item.value}
+            onClick={() => onChange(item.value)}
+            style={{
+              flex: 1,
+              padding: '7px 0',
+              borderRadius: 10,
+              border: `2px solid ${active ? '#3e2723' : '#e0e0e0'}`,
+              background: active ? '#3e2723' : '#ffffff',
+              color: active ? '#ffffff' : '#8d6e63',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 4,
+              cursor: 'pointer',
+              userSelect: 'none',
+              transition: 'all 0.15s',
+              boxShadow: active ? '0 3px 0 #2a1a12' : '0 2px 0 #e0e0e0',
+            }}
+          >
+            <Icon size={13} strokeWidth={3} />
+            <span
+              style={{
+                fontSize: 10,
+                fontWeight: 900,
+                letterSpacing: '0.08em',
+                fontFamily: FONT_FAMILY,
+              }}
+            >
+              {t(item.labelKey)}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function ProfileBadge() {
+  const displayName = useGameStore((s) => s.displayName);
+  const [hover, setHover] = useState(false);
+
+  return (
+    <div
+      onClick={() => gameStore.getState().setShowAuthModal(true)}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        position: 'absolute',
+        top: 12,
+        right: 56,
+        zIndex: 20,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 6,
+        padding: '6px 12px 6px 8px',
+        borderRadius: 12,
+        background: hover ? '#3e2723' : '#fffaf0',
+        border: '2px solid #3e2723',
+        boxShadow: '0 3px 0 #3e2723',
+        cursor: 'pointer',
+        transition: 'all 0.15s',
+        color: hover ? '#ffffff' : '#3e2723',
+      }}
+    >
+      <User size={14} strokeWidth={3} />
+      <span
+        style={{
+          fontSize: 11,
+          fontWeight: 900,
+          letterSpacing: '0.04em',
+          fontFamily: FONT_FAMILY,
+          textTransform: 'uppercase',
+          maxWidth: 120,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {displayName ?? 'Chef'}
+      </span>
+    </div>
+  );
+}
+
+const DIFFICULTY_COLORS: Record<string, string> = {
+  easy: '#4caf50',
+  medium: '#ff9800',
+  hard: '#e53935',
+};
+
+function LeaderboardPanel() {
+  const { t } = useTranslation();
+  const data = useQuery(api.gameResults.leaderboard);
+
+  if (data === undefined) {
+    return (
+      <div
+        style={{
+          padding: '24px 0',
+          textAlign: 'center',
+          color: '#8d6e63',
+          fontSize: 14,
+          fontWeight: 700,
+        }}
+      >
+        {t('menu.leaderboard.loading' as TranslationKeys)}
+      </div>
+    );
+  }
+
+  if (data.length === 0) {
+    return (
+      <div
+        style={{
+          padding: '24px 16px',
+          textAlign: 'center',
+          color: '#8d6e63',
+          fontSize: 13,
+          fontWeight: 700,
+          lineHeight: 1.5,
+        }}
+      >
+        {t('menu.leaderboard.empty' as TranslationKeys)}
+      </div>
+    );
+  }
+
+  const RANK_BADGES = ['#ffd700', '#c0c0c0', '#cd7f32'];
+
+  return (
+    <div
+      style={{
+        width: '100%',
+        maxHeight: 300,
+        overflowY: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 4,
+      }}
+    >
+      {data.map((entry) => (
         <div
+          key={entry.rank}
           style={{
-            width: '100%',
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 8,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '8px 12px',
+            background: entry.rank <= 3 ? `${RANK_BADGES[entry.rank - 1]}18` : '#ffffff',
+            borderRadius: 10,
+            border: `2px solid ${entry.rank <= 3 ? RANK_BADGES[entry.rank - 1] : '#e0e0e0'}`,
           }}
         >
-          {/* Daily */}
-          <ModeCard
-            icon={<Calendar size={16} strokeWidth={2.5} color="#fff" />}
-            title={t('modes.daily.title')}
-            description={t('modes.daily.description')}
-            accent="#ff9800"
-            extra={
-              <div
-                style={{ fontSize: 10, color: '#8d6e63', fontWeight: 700, display: 'flex', gap: 8 }}
-              >
-                <span>{dailyDate}</span>
-                {dailyBest !== null && (
-                  <span style={{ color: '#4caf50' }}>
-                    {t('modes.daily.best', { count: dailyBest })}
-                  </span>
-                )}
-              </div>
-            }
+          <div
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: '50%',
+              background: entry.rank <= 3 ? RANK_BADGES[entry.rank - 1] : '#e0e0e0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 13,
+              fontWeight: 900,
+              color: entry.rank <= 3 ? '#3e2723' : '#8d6e63',
+              flexShrink: 0,
+            }}
           >
-            <PushButton
-              icon={<Play size={14} fill="currentColor" strokeWidth={0} />}
-              label={t('modes.play')}
-              color="#ff9800"
-              hoverColor="#f57c00"
-              height={32}
-              shadowDepth={4}
-              onClick={() => onModeWithDifficulty('daily')}
-              disabled={isLoading}
-              style={{ width: '100%' }}
-            />
-          </ModeCard>
-
-          {/* Survival */}
-          <ModeCard
-            icon={<Skull size={16} strokeWidth={2.5} color="#fff" />}
-            title={t('modes.survival.title')}
-            description={t('modes.survival.description')}
-            accent="#e53935"
-          >
-            <PushButton
-              icon={<Play size={14} fill="currentColor" strokeWidth={0} />}
-              label={t('modes.start')}
-              color="#e53935"
-              hoverColor="#c62828"
-              height={32}
-              shadowDepth={4}
-              onClick={() => onModeWithDifficulty('survival')}
-              disabled={isLoading}
-              style={{ width: '100%' }}
-            />
-          </ModeCard>
-
-          {/* Normal (Quick Play) */}
-          <ModeCard
-            icon={<Zap size={16} strokeWidth={2.5} color="#fff" />}
-            title={t('modes.normal.title')}
-            description={t('modes.normal.description')}
-            accent="#29b6f6"
-          >
-            <PushButton
-              icon={<Play size={14} fill="currentColor" strokeWidth={0} />}
-              label={t('modes.play')}
-              color="#29b6f6"
-              hoverColor="#03a9f4"
-              height={32}
-              shadowDepth={4}
-              onClick={() => onModeWithDifficulty('normal')}
-              disabled={isLoading}
-              style={{ width: '100%' }}
-            />
-          </ModeCard>
-
-          {/* Seeded (Custom) */}
-          <ModeCard
-            icon={<Settings size={16} strokeWidth={2.5} color="#fff" />}
-            title={t('modes.seeded.title')}
-            description={t('modes.seeded.description')}
-            accent="#7e57c2"
-          >
-            <PushButton
-              icon={<Settings size={14} strokeWidth={2.5} />}
-              label={t('modes.configure')}
-              color="#7e57c2"
-              hoverColor="#5e35b1"
-              height={32}
-              shadowDepth={4}
-              onClick={onSeeded}
-              disabled={isLoading}
-              style={{ width: '100%' }}
-            />
-          </ModeCard>
-        </div>
-
-        {/* Error */}
-        {error && (
-          <div style={{ fontSize: 13, color: '#e74c3c', textAlign: 'center', marginTop: 4 }}>
-            {error}
+            {entry.rank}
           </div>
-        )}
+          <div
+            style={{
+              flex: 1,
+              fontSize: 14,
+              fontWeight: 900,
+              color: '#3e2723',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {entry.displayName}
+          </div>
+          <div
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: '#8d6e63',
+              flexShrink: 0,
+            }}
+          >
+            {entry.dishCount} {t('menu.leaderboard.dishes' as TranslationKeys)}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function HistoryPanel() {
+  const { t } = useTranslation();
+  const data = useQuery(api.gameResults.history);
+
+  if (data === undefined) {
+    return (
+      <div
+        style={{
+          padding: '24px 0',
+          textAlign: 'center',
+          color: '#8d6e63',
+          fontSize: 14,
+          fontWeight: 700,
+        }}
+      >
+        {t('menu.history.loading' as TranslationKeys)}
       </div>
+    );
+  }
+
+  if (data.length === 0) {
+    return (
+      <div
+        style={{
+          padding: '24px 16px',
+          textAlign: 'center',
+          color: '#8d6e63',
+          fontSize: 13,
+          fontWeight: 700,
+          lineHeight: 1.5,
+        }}
+      >
+        {t('menu.history.empty' as TranslationKeys)}
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        width: '100%',
+        maxHeight: 300,
+        overflowY: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 4,
+      }}
+    >
+      {data.map((entry) => (
+        <div
+          key={entry._id}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '8px 12px',
+            background: '#ffffff',
+            borderRadius: 10,
+            border: '2px solid #e0e0e0',
+          }}
+        >
+          {entry.victoryCardUrl ? (
+            <img
+              src={entry.victoryCardUrl}
+              alt=""
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 6,
+                objectFit: 'cover',
+                flexShrink: 0,
+                border: '2px solid #e0e0e0',
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 6,
+                background: '#f5f0e8',
+                flexShrink: 0,
+                border: '2px solid #e0e0e0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Trophy size={16} color="#d7ccc8" strokeWidth={2.5} />
+            </div>
+          )}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div
+              style={{
+                fontSize: 13,
+                fontWeight: 900,
+                color: '#3e2723',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                textTransform: 'uppercase',
+              }}
+            >
+              {entry.dishName}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
+              <div
+                style={{
+                  fontSize: 10,
+                  fontWeight: 900,
+                  color: '#ffffff',
+                  background: DIFFICULTY_COLORS[entry.difficulty] ?? '#9e9e9e',
+                  borderRadius: 5,
+                  padding: '1px 5px',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {t(`menu.difficulty.${entry.difficulty}` as TranslationKeys)}
+              </div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: '#8d6e63' }}>
+                {entry.stepCount}/{entry.totalSteps}
+              </div>
+              <div style={{ fontSize: 10, color: '#bdbdbd' }}>
+                {new Date(entry.completedAt).toLocaleDateString()}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

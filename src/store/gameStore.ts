@@ -29,6 +29,12 @@ export interface GameState {
   errorCount: number;
   maxErrors: number;
 
+  // Auth
+  displayName: string | null;
+  isAnonymous: boolean;
+  showAuthModal: boolean;
+  authTransition: boolean;
+
   // Game mode state
   gameMode: GameMode;
   survivalLives: number;
@@ -47,6 +53,12 @@ export interface GameState {
   setVictory: (dishName: string) => void;
   setVictoryImage: (url: string | null, loading: boolean) => void;
   addError: () => void;
+
+  // Auth actions
+  setDisplayName: (name: string | null) => void;
+  setIsAnonymous: (anon: boolean) => void;
+  setShowAuthModal: (show: boolean) => void;
+  setAuthTransition: (t: boolean) => void;
 
   // Mode actions
   selectMode: (mode: GameMode) => void;
@@ -70,6 +82,12 @@ export const gameStore = createStore<GameState>((set, get) => ({
   victoryImageLoading: false,
   errorCount: 0,
   maxErrors: 10,
+
+  // Auth defaults
+  displayName: null,
+  isAnonymous: true,
+  showAuthModal: false,
+  authTransition: false,
 
   // Game mode defaults
   gameMode: 'normal',
@@ -164,6 +182,12 @@ export const gameStore = createStore<GameState>((set, get) => ({
       }
       return { errorCount: newCount };
     }),
+
+  // Auth actions
+  setDisplayName: (name) => set({ displayName: name }),
+  setIsAnonymous: (anon) => set({ isAnonymous: anon }),
+  setShowAuthModal: (show) => set({ showAuthModal: show }),
+  setAuthTransition: (t) => set({ authTransition: t }),
 
   // Mode actions
   selectMode: (mode) => {
