@@ -41,7 +41,8 @@
       "mcp__convex__logs",
       "mcp__convex__runOneoffQuery",
       "mcp__chrome-devtools__get_console_message",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "mcp__plugin_context7_context7__resolve-library-id"
     ]
   }
 }

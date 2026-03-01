@@ -46,8 +46,12 @@ export const TEXT_COLORS = {
 
 // Pile / attachment layout
 export const PILE = {
-  OFFSET_Y: 18,
+  OFFSET_Y: 8,
   BASE_Y: 22,
+  CARD_SCALE: 0.6,
+  MAX_ROTATION: 0.35,
+  JITTER_X: 8,
+  JITTER_Y: 4,
 } as const;
 
 // Scatter padding
@@ -77,14 +81,13 @@ export const ZONE = {
   PLACEHOLDER_ALPHA: 0.35, // alpha for dashed border + faint fill of zone slot
 } as const;
 
-// Hand arc layout
+// Hand row layout
 export const HAND = {
-  ARC_RADIUS: 900,
   CARD_SCALE: 0.75,
-  HOVER_LIFT: 80,
-  HOVER_SCALE: 1.2,
-  MAX_ANGLE_SPREAD: 0.45, // radians total spread
-  HOVER_DEBOUNCE_MS: 200, // ms before hover popup triggers
+  CARD_OVERLAP: 20, // px cards overlap each other
+  NEIGHBOR_SPREAD: 20, // px neighbors shift away on hover
+  Y_POSITION: 468, // fixed Y for hand row
+  HOVER_LIFT: 30,
+  MAX_TILT: 0.06, // max random tilt in radians (~3.5 deg)
   CENTER_X_OFFSET: -80, // shift left from game center
-  CENTER_Y_OFFSET: -110, // from GAME_H bottom
 } as const;

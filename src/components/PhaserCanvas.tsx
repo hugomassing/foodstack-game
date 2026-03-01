@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import Phaser from 'phaser';
 import { PreloadScene } from '../scenes/PreloadScene';
-import { CookingPuzzleScene } from '../scenes/CookingPuzzleScene';
+import { FoodStackGameScene } from '../scenes/FoodStackGameScene';
 import { GAME_W, GAME_H, DPR } from '../config';
 import { gameStore } from '../store/gameStore';
 
@@ -23,7 +23,7 @@ export function PhaserCanvas() {
         mode: Phaser.Scale.NONE,
       },
       dom: { createContainer: true },
-      scene: [PreloadScene, CookingPuzzleScene],
+      scene: [PreloadScene, FoodStackGameScene],
     });
 
     // Render at DPR resolution but display at logical size for CSS transform scaling
@@ -32,17 +32,17 @@ export function PhaserCanvas() {
 
     gameRef.current = game;
 
-    // Listen for phase changes to start/stop the CookingPuzzleScene
+    // Listen for phase changes to start/stop the FoodStackGameScene
     const unsub = gameStore.subscribe((state, prev) => {
       if (state.phase === 'playing' && prev.phase !== 'playing') {
         const puzzleData = state.puzzleData;
-        if (puzzleData && game.scene.isActive('CookingPuzzleScene') === false) {
-          game.scene.start('CookingPuzzleScene', { puzzleData });
+        if (puzzleData && game.scene.isActive('FoodStackGameScene') === false) {
+          game.scene.start('FoodStackGameScene', { puzzleData });
         }
       }
       if (state.phase !== 'playing' && prev.phase === 'playing') {
-        if (game.scene.isActive('CookingPuzzleScene')) {
-          game.scene.stop('CookingPuzzleScene');
+        if (game.scene.isActive('FoodStackGameScene')) {
+          game.scene.stop('FoodStackGameScene');
         }
       }
     });
