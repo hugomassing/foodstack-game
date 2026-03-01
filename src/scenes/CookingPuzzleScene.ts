@@ -15,6 +15,8 @@ import {
 } from '../config';
 import { FoodAssets } from '../data/food-assets';
 import { gameStore } from '../store/gameStore';
+import { convex } from '../lib/convex';
+import { api } from '../../convex/_generated/api';
 import type { PuzzleData, Step, Ingredient, Attachment } from '../types';
 
 const PROCESSOR_ASSET: Record<string, string> = {
@@ -119,6 +121,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
   private boardToHandCard!: Map<PuzzleCard, PuzzleCard>;
   private ingredientMeta!: Map<PuzzleCard, { emoji: string; assetId: string | null }>;
   private removeIndicator!: Phaser.GameObjects.Graphics;
+  private errorCounterText!: Phaser.GameObjects.Text;
 
   constructor() {
     super({ key: 'CookingPuzzleScene' });
@@ -309,13 +312,25 @@ export class CookingPuzzleScene extends Phaser.Scene {
       if (!obj.attachedTo) {
         obj.setDepth(obj.cardDepth || 1);
       }
-      if ((obj.cardType === 'ingredient' || obj.cardType === 'intermediate') && this.hoveredProcessor) {
+      if ((obj.cardType === 'ingredient' || obj.cardType === 'intermediate' || obj.cardType === 'error') && this.hoveredProcessor) {
         if (this.activeProcessor && this.activeProcessor !== this.hoveredProcessor) return;
         this.attachToProcessor(obj, this.hoveredProcessor);
       }
       this.hoveredProcessor = null;
       this.dropHighlight.setVisible(false);
     });
+
+    // -- Error counter (top-right of board) --
+    this.errorCounterText = this.add
+      .text(BD_X + BD_W - 10, BD_Y + 14, '', {
+        fontSize: '13px',
+        fontStyle: 'bold',
+        color: '#e74c3c',
+        fontFamily: FONT_FAMILY,
+      })
+      .setOrigin(1, 0)
+      .setDepth(50);
+    this.updateErrorCounter();
 
     // -- Create cards --
     this.createProcessorCards();
@@ -643,7 +658,6 @@ export class CookingPuzzleScene extends Phaser.Scene {
     console.log(`[Match] Processor: "${procName}", attached: [${[...inputSet].join(', ')}]`);
 
     for (const step of this.allSteps) {
-      if (this.completedSteps.has(step.stepId)) continue;
       if (step.processor !== procName) continue;
 
       const stepInputSet = new Set(step.inputs);
@@ -666,15 +680,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
       }
     }
 
-    for (const step of this.allSteps) {
-      if (this.completedSteps.has(step.stepId)) continue;
-      if (step.processor !== procName) continue;
-
-      if (attachments.length === step.inputs.length) {
-        this.shakeAndReturn(procCard);
-        return;
-      }
-    }
+    // No recipe match — attempt creative craft combination
+    this.attemptCraftCombination(procCard);
   }
 
   private shakeAndReturn(procCard: PuzzleCard): void {
@@ -722,11 +729,251 @@ export class CookingPuzzleScene extends Phaser.Scene {
     this.deactivateProcessor();
   }
 
+  // -- Craft Combination (Infinite Craft mechanic) --
+
+  private async attemptCraftCombination(procCard: PuzzleCard): Promise<void> {
+    const attachments = this.processorAttachments.get(procCard);
+    if (!attachments || attachments.length === 0) return;
+
+    const processorName = procCard.cardLabel;
+    const ingredientNames = attachments.map((att) => att.itemName);
+
+    // Hide cook button and disable interaction
+    this.hideCookButton();
+    procCard.disableInteractive();
+    for (const att of attachments) {
+      att.card.disableInteractive();
+    }
+
+    const loadingAnim = this.showProcessorLoading(procCard);
+
+    try {
+      const result = await convex.action(api.generator.generateCombination, {
+        processor: processorName,
+        ingredients: ingredientNames,
+      });
+
+      if (!this.scene.isActive()) return;
+
+      this.stopProcessorLoading(loadingAnim);
+
+      // Return all input cards to the player (don't consume on failed match)
+      this.shakeAndReturn(procCard);
+
+      this.spawnCraftedCard(result as { name: string; emoji: string; assetId: string }, procCard);
+    } catch (err) {
+      console.error('[Craft] LLM generation failed, falling back to shake:', err);
+      if (!this.scene.isActive()) return;
+
+      this.stopProcessorLoading(loadingAnim);
+
+      // Re-enable interaction
+      procCard.setInteractive();
+      for (const att of attachments) {
+        att.card.setInteractive({ draggable: true });
+      }
+
+      this.showCookButton();
+      this.shakeAndReturn(procCard);
+    }
+  }
+
+  private showProcessorLoading(procCard: PuzzleCard): {
+    dots: Phaser.GameObjects.Arc[];
+    dotsTimeline: Phaser.Tweens.Tween;
+    text: Phaser.GameObjects.Text;
+    textTween: Phaser.Tweens.Tween;
+    pulseTween: Phaser.Tweens.Tween;
+  } {
+    const cx = procCard.x;
+    const cy = procCard.y;
+    const radius = FOOD_CARD_W / 2 + 16;
+    const dotCount = 8;
+    const dots: Phaser.GameObjects.Arc[] = [];
+
+    for (let i = 0; i < dotCount; i++) {
+      const angle = (i / dotCount) * Math.PI * 2;
+      const dot = this.add.circle(
+        cx + Math.cos(angle) * radius,
+        cy + Math.sin(angle) * radius,
+        4,
+        0xf1c40f,
+        1,
+      );
+      dot.setDepth(200);
+      dot.setAlpha(0.3 + (i / dotCount) * 0.7);
+      dots.push(dot);
+    }
+
+    // Rotate dots around processor
+    const dotsTimeline = this.tweens.add({
+      targets: {},
+      duration: 1200,
+      repeat: -1,
+      onUpdate: (_tween: Phaser.Tweens.Tween, _target: unknown, _key: string, current: number) => {
+        const progress = current;
+        for (let i = 0; i < dotCount; i++) {
+          const angle = ((i / dotCount) + progress) * Math.PI * 2;
+          dots[i].x = cx + Math.cos(angle) * radius;
+          dots[i].y = cy + Math.sin(angle) * radius;
+        }
+      },
+    });
+
+    // Pulse the processor card
+    const pulseTween = this.tweens.add({
+      targets: procCard,
+      scaleX: 1.08,
+      scaleY: 1.08,
+      alpha: 0.85,
+      duration: 500,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    });
+
+    // Animated "..." text
+    const text = this.add
+      .text(cx, cy + FOOD_CARD_H / 2 + 20, '...', {
+        fontSize: '18px',
+        fontStyle: 'bold',
+        color: TEXT_COLORS.GOLD,
+        fontFamily: FONT_FAMILY,
+      })
+      .setOrigin(0.5)
+      .setDepth(200);
+
+    let dotPhase = 0;
+    const textTween = this.tweens.add({
+      targets: {},
+      duration: 500,
+      repeat: -1,
+      onRepeat: () => {
+        dotPhase = (dotPhase + 1) % 4;
+        text.setText('.'.repeat(dotPhase || 1));
+      },
+    });
+
+    return { dots, dotsTimeline, text, textTween, pulseTween };
+  }
+
+  private stopProcessorLoading(anim: {
+    dots: Phaser.GameObjects.Arc[];
+    dotsTimeline: Phaser.Tweens.Tween;
+    text: Phaser.GameObjects.Text;
+    textTween: Phaser.Tweens.Tween;
+    pulseTween: Phaser.Tweens.Tween;
+  }): void {
+    anim.dotsTimeline.stop();
+    anim.textTween.stop();
+    anim.pulseTween.stop();
+    for (const dot of anim.dots) dot.destroy();
+    anim.text.destroy();
+  }
+
+  private spawnCraftedCard(
+    result: { name: string; emoji: string; assetId: string },
+    procCard: PuzzleCard,
+  ): void {
+    // Validate assetId
+    let assetId: string | null = result.assetId;
+    if (!FoodAssets.find(assetId)) {
+      assetId = localAssetMatch(result.name);
+    }
+
+    // Spawn below the processor, clamped to board bounds
+    const boardMaxY = BD_Y + BD_H - FOOD_CARD_H / 2 - SCATTER.FOOTER;
+    const spawnX = Phaser.Math.Clamp(
+      procCard.x,
+      BD_X + FOOD_CARD_W / 2 + SCATTER.PAD,
+      BD_X + BD_W - FOOD_CARD_W / 2 - SCATTER.PAD,
+    );
+    const spawnY = Math.min(procCard.y + FOOD_CARD_H + SCATTER.CARD_GAP, boardMaxY);
+
+    let maxDepth = 0;
+    for (const c of this.cards) {
+      if (c.depth > maxDepth) maxDepth = c.depth;
+    }
+
+    const card = new PuzzleCard(this, spawnX, spawnY, result.name, 'error', {
+      itemName: result.name,
+      emoji: result.emoji,
+      assetId,
+    });
+    card.cardDepth = maxDepth + 1;
+    card.setDepth(maxDepth + 1);
+    this.cards.push(card);
+
+    // Pop-in animation
+    card.setScale(0);
+    this.tweens.add({
+      targets: card,
+      scaleX: 1,
+      scaleY: 1,
+      duration: 400,
+      ease: 'Back.easeOut',
+      delay: 200,
+    });
+
+    // Red flash on processor
+    const flash = this.add.graphics();
+    flash.fillStyle(0xe74c3c, 0.5);
+    flash.fillRoundedRect(
+      -FOOD_CARD_W / 2 - 4,
+      -FOOD_CARD_H / 2 - 4,
+      FOOD_CARD_W + 8,
+      FOOD_CARD_H + 8,
+      10,
+    );
+    flash.setPosition(procCard.x, procCard.y);
+    flash.setDepth(99);
+    this.tweens.add({
+      targets: flash,
+      alpha: 0,
+      duration: 500,
+      onComplete: () => flash.destroy(),
+    });
+
+    // Red camera flash
+    this.cameras.main.flash(300, 231, 76, 60, false);
+
+    // Camera shake to emphasize the error
+    this.cameras.main.shake(200, 0.006);
+
+    // Increment error count (addError triggers game_over phase at maxErrors)
+    gameStore.getState().addError();
+
+    // Update error counter display
+    this.updateErrorCounter();
+
+    // Float text
+    const floatText = this.add
+      .text(procCard.x, procCard.y - 12, `⚠️ ${result.name}`, {
+        fontSize: '15px',
+        fontStyle: 'bold',
+        color: '#e74c3c',
+        fontFamily: FONT_FAMILY,
+      })
+      .setOrigin(0.5)
+      .setDepth(101);
+    this.tweens.add({
+      targets: floatText,
+      y: floatText.y - 45,
+      alpha: 0,
+      duration: 1200,
+      ease: 'Quad.easeOut',
+      onComplete: () => floatText.destroy(),
+    });
+  }
+
   // -- Step Success --
 
   private onStepSuccess(step: Step, procCard: PuzzleCard): void {
-    this.completedSteps.add(step.stepId);
-    this.stepCount++;
+    const isRedo = this.completedSteps.has(step.stepId);
+    if (!isRedo) {
+      this.completedSteps.add(step.stepId);
+      this.stepCount++;
+    }
 
     const isFinal = step.stepId === 'final';
 
@@ -800,10 +1047,12 @@ export class CookingPuzzleScene extends Phaser.Scene {
     }
 
     // Update zustand store — triggers React re-renders for QuestBookPanel and GameHUD
-    gameStore.getState().completeStep(
-      step.stepId,
-      isFinal ? undefined : [step.stepId, step.output],
-    );
+    if (!isRedo) {
+      gameStore.getState().completeStep(
+        step.stepId,
+        isFinal ? undefined : [step.stepId, step.output],
+      );
+    }
 
     this.deactivateProcessor();
 
@@ -832,25 +1081,14 @@ export class CookingPuzzleScene extends Phaser.Scene {
       ? logicalAsset
       : inputTextureKeys.length > 0 ? inputTextureKeys[0].slice(5) : null;
 
-    const boardMinX = BD_X + FOOD_CARD_W / 2 + SCATTER.PAD;
-    const boardMaxX = BD_X + BD_W - FOOD_CARD_W / 2 - SCATTER.PAD;
-    const boardMinY = BD_Y + FOOD_CARD_H / 2 + SCATTER.PAD;
+    // Spawn below the processor, clamped to board bounds
     const boardMaxY = BD_Y + BD_H - FOOD_CARD_H / 2 - SCATTER.FOOTER;
-
-    let spawnX: number;
-    let spawnY: number;
-    for (let attempt = 0; attempt < SCATTER.MAX_ATTEMPTS; attempt++) {
-      spawnX = Phaser.Math.Between(boardMinX, boardMaxX);
-      spawnY = Phaser.Math.Between(boardMinY, boardMaxY);
-      if (
-        Math.abs(spawnX - procCard.x) > FOOD_CARD_W + SCATTER.CARD_GAP ||
-        Math.abs(spawnY - procCard.y) > FOOD_CARD_H + SCATTER.CARD_GAP
-      ) {
-        break;
-      }
-    }
-    spawnX ??= Phaser.Math.Between(boardMinX, boardMaxX);
-    spawnY ??= Phaser.Math.Between(boardMinY, boardMaxY);
+    const spawnX = Phaser.Math.Clamp(
+      procCard.x,
+      BD_X + FOOD_CARD_W / 2 + SCATTER.PAD,
+      BD_X + BD_W - FOOD_CARD_W / 2 - SCATTER.PAD,
+    );
+    const spawnY = Math.min(procCard.y + FOOD_CARD_H + SCATTER.CARD_GAP, boardMaxY);
 
     let maxDepth = 0;
     for (const c of this.cards) {
@@ -1127,6 +1365,27 @@ export class CookingPuzzleScene extends Phaser.Scene {
     for (const [, card] of this.processorCards) {
       card.setInteractive();
       card.setAlpha(1);
+    }
+  }
+
+  private updateErrorCounter(): void {
+    const { errorCount, maxErrors } = gameStore.getState();
+    if (errorCount === 0) {
+      this.errorCounterText.setVisible(false);
+    } else {
+      this.errorCounterText.setVisible(true);
+      this.errorCounterText.setText(`⚠️ ${errorCount}/${maxErrors}`);
+
+      // Pulse animation on update
+      this.tweens.killTweensOf(this.errorCounterText);
+      this.errorCounterText.setScale(1.3);
+      this.tweens.add({
+        targets: this.errorCounterText,
+        scaleX: 1,
+        scaleY: 1,
+        duration: 300,
+        ease: 'Back.easeOut',
+      });
     }
   }
 
