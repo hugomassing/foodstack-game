@@ -440,7 +440,7 @@ function ModeCard({ icon, title, description, accent, extra, children }: ModeCar
         gap: 6,
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
         <div
           style={{
             width: 28,
@@ -473,7 +473,7 @@ function ModeCard({ icon, title, description, accent, extra, children }: ModeCar
         </div>
       </div>
       {extra}
-      {children}
+      <div style={{ marginTop: 'auto' }}>{children}</div>
     </div>
   );
 }
