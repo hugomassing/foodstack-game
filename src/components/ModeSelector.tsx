@@ -1106,7 +1106,6 @@ function TrophyDetail({ entry, onBack }: { entry: TrophyEntry; onBack: () => voi
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
         gap: 12,
       }}
     >
@@ -1126,115 +1125,137 @@ function TrophyDetail({ entry, onBack }: { entry: TrophyEntry; onBack: () => voi
         {'\u2190'} {t('modes.back')}
       </div>
 
-      {/* Trophy image */}
-      {entry.victoryCardUrl ? (
-        <img
-          src={entry.victoryCardUrl}
-          alt=""
-          style={{
-            width: 120,
-            height: 120,
-            borderRadius: 14,
-            objectFit: 'cover',
-            border: '3px solid #3e2723',
-            boxShadow: '0 4px 0 #3e2723',
-          }}
-        />
-      ) : (
-        <div
-          style={{
-            width: 120,
-            height: 120,
-            borderRadius: 14,
-            background: '#f5f0e8',
-            border: '3px solid #3e2723',
-            boxShadow: '0 4px 0 #3e2723',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Trophy size={48} color="#d7ccc8" strokeWidth={2} />
-        </div>
-      )}
-
-      {/* Dish name */}
+      {/* Horizontal layout: image left, info right */}
       <div
         style={{
-          fontSize: 18,
-          fontWeight: 900,
-          color: '#3e2723',
-          textTransform: 'uppercase',
-          letterSpacing: '-0.02em',
-          textAlign: 'center',
+          display: 'flex',
+          gap: 16,
+          alignItems: 'flex-start',
         }}
       >
-        {entry.dishName}
-      </div>
+        {/* Trophy image */}
+        {entry.victoryCardUrl ? (
+          <img
+            src={entry.victoryCardUrl}
+            alt=""
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: 14,
+              objectFit: 'cover',
+              border: '3px solid #3e2723',
+              boxShadow: '0 4px 0 #3e2723',
+              flexShrink: 0,
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: 14,
+              background: '#f5f0e8',
+              border: '3px solid #3e2723',
+              boxShadow: '0 4px 0 #3e2723',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <Trophy size={40} color="#d7ccc8" strokeWidth={2} />
+          </div>
+        )}
 
-      {/* Chef count */}
-      <div style={{ fontSize: 12, fontWeight: 700, color: '#8d6e63' }}>
-        {t('menu.trophies.chefs' as TranslationKeys, { count: entry.totalCompletions })}
-      </div>
+        {/* Info column */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 8,
+            minWidth: 0,
+            flex: 1,
+          }}
+        >
+          {/* Dish name */}
+          <div
+            style={{
+              fontSize: 16,
+              fontWeight: 900,
+              color: '#3e2723',
+              textTransform: 'uppercase',
+              letterSpacing: '-0.02em',
+              lineHeight: 1.2,
+            }}
+          >
+            {entry.dishName}
+          </div>
 
-      {/* Mode badges */}
-      {entry.modes.length > 0 && (
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center' }}>
-          {entry.modes.map((mode) => (
-            <div
-              key={mode}
-              style={{
-                fontSize: 10,
-                fontWeight: 900,
-                color: '#ffffff',
-                background: MODE_COLORS[mode] ?? '#9e9e9e',
-                borderRadius: 6,
-                padding: '3px 10px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-              }}
-            >
-              {mode}
+          {/* Mode badges */}
+          {entry.modes.length > 0 && (
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+              {entry.modes.map((mode) => (
+                <div
+                  key={mode}
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 900,
+                    color: '#ffffff',
+                    background: MODE_COLORS[mode] ?? '#9e9e9e',
+                    borderRadius: 6,
+                    padding: '3px 10px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                  }}
+                >
+                  {mode}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
+          )}
 
-      {/* Difficulty badges */}
-      {entry.difficulties.length > 0 && (
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-          {entry.difficulties.map((diff) => (
-            <div
-              key={diff}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 4,
-                background: DIFFICULTY_COLORS[diff] ?? '#9e9e9e',
-                borderRadius: 6,
-                padding: '3px 8px',
-              }}
-            >
-              <div style={{ display: 'flex', gap: 1 }}>
-                {Array.from({ length: DIFFICULTY_CHILIS[diff] ?? 1 }).map((_, i) => (
-                  <img key={i} src={CHILI_SRC} alt="" style={{ width: 12, height: 12 }} />
-                ))}
-              </div>
-              <span
-                style={{
-                  fontSize: 10,
-                  fontWeight: 900,
-                  color: '#ffffff',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
-                }}
-              >
-                {t(`menu.difficulty.${diff}` as TranslationKeys)}
-              </span>
+          {/* Difficulty badges */}
+          {entry.difficulties.length > 0 && (
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {entry.difficulties.map((diff) => (
+                <div
+                  key={diff}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                    background: DIFFICULTY_COLORS[diff] ?? '#9e9e9e',
+                    borderRadius: 6,
+                    padding: '3px 8px',
+                  }}
+                >
+                  <div style={{ display: 'flex', gap: 1 }}>
+                    {Array.from({ length: DIFFICULTY_CHILIS[diff] ?? 1 }).map((_, i) => (
+                      <img key={i} src={CHILI_SRC} alt="" style={{ width: 12, height: 12 }} />
+                    ))}
+                  </div>
+                  <span
+                    style={{
+                      fontSize: 10,
+                      fontWeight: 900,
+                      color: '#ffffff',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.06em',
+                    }}
+                  >
+                    {t(`menu.difficulty.${diff}` as TranslationKeys)}
+                  </span>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
+
+          {/* Chef count */}
+          <div style={{ fontSize: 12, fontWeight: 700, color: '#8d6e63' }}>
+            {t('menu.trophies.chefs' as TranslationKeys, { count: entry.totalCompletions })}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -1304,6 +1325,8 @@ function TrophyDexPanel() {
             display: 'flex',
             alignItems: 'center',
             gap: 8,
+            minWidth: 0,
+            overflow: 'hidden',
             opacity: entry.acquired ? 1 : 0.3,
             filter: entry.acquired ? 'none' : 'grayscale(1)',
             cursor: entry.acquired ? 'pointer' : 'default',
