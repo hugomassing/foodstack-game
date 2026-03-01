@@ -34,7 +34,14 @@
       "WebFetch(domain:ai-sdk.dev)",
       "WebFetch(domain:www.npmjs.com)",
       "WebFetch(domain:docs.convex.dev)",
-      "Bash(jj st:*)"
+      "Bash(jj st:*)",
+      "Bash(npx convex:*)",
+      "mcp__chrome-devtools__list_network_requests",
+      "mcp__convex__status",
+      "mcp__convex__logs",
+      "mcp__convex__runOneoffQuery",
+      "mcp__chrome-devtools__get_console_message",
+      "Bash(curl:*)"
     ]
   }
 }
