@@ -185,12 +185,18 @@ export class FoodStackGameScene extends Phaser.Scene {
     boardShadow.fillStyle(0x3e2723, 1);
     boardShadow.fillRect(BD_X + 8, BD_Y + 10, BD_W, BD_H);
 
-    // ── Board card fill + border ──────────────────────────────
+    // ── Board card fill ──────────────────────────────────────
     const board = this.add.graphics().setDepth(-1);
     board.fillStyle(0xf5e6d3, 1);
     board.fillRoundedRect(BD_X, BD_Y, BD_W, BD_H, BD_R);
-    board.lineStyle(4, 0x3e2723, 1);
-    board.strokeRoundedRect(BD_X, BD_Y, BD_W, BD_H, BD_R);
+
+    // ── Board wave decoration ──────────────────────────────
+    this.drawBoardWaves();
+
+    // ── Board card border ──────────────────────────────────
+    const boardBorder = this.add.graphics().setDepth(0);
+    boardBorder.lineStyle(4, 0x3e2723, 1);
+    boardBorder.strokeRoundedRect(BD_X, BD_Y, BD_W, BD_H, BD_R);
 
 
 
@@ -1802,6 +1808,148 @@ export class FoodStackGameScene extends Phaser.Scene {
         ease: 'Back.easeOut',
       });
     }
+  }
+
+  private drawBoardWaves(): void {
+    const ox = BD_X;
+    const oy = BD_Y;
+    const w = BD_W;
+    const h = BD_H;
+    const r = BD_R;
+
+    const bgColor = 0xf5e6d3;
+    const waveColor = 0xd4b896;
+
+    const blend = (a: number, b: number, t: number) => {
+      const r1 = (a >> 16) & 0xff,
+        g1 = (a >> 8) & 0xff,
+        b1 = a & 0xff;
+      const r2 = (b >> 16) & 0xff,
+        g2 = (b >> 8) & 0xff,
+        b2 = b & 0xff;
+      const ri = Math.round(r1 + (r2 - r1) * t);
+      const gi = Math.round(g1 + (g2 - g1) * t);
+      const bi = Math.round(b1 + (b2 - b1) * t);
+      return (ri << 16) | (gi << 8) | bi;
+    };
+    const lighterWaveColor = blend(waveColor, bgColor, 0.45);
+
+    const segments = 40;
+    const amplitude = 10;
+
+    const rng = () => 0.8 + Math.random() * 0.4;
+    const baseSlope = -6 + Math.random() * 12;
+    const bobAmount = 4 + Math.random() * 3;
+    const tiltAmount = 3 + Math.random() * 3;
+    const phaseOffset = Math.random() * Math.PI * 2;
+    const phaseDuration = 18000 * rng();
+    const bobDuration = 9000 * rng();
+    const tiltDuration = 11000 * rng();
+
+    const backWaveYOffset = -12;
+    const backPhaseShift = Math.PI * 0.7;
+
+    function drawSingleWave(
+      gfx: Phaser.GameObjects.Graphics,
+      fillColor: number,
+      waveBaseY: number,
+      phase: number,
+      bob: number,
+      tilt: number,
+      slope: number,
+    ) {
+      gfx.clear();
+      gfx.fillStyle(fillColor);
+      gfx.beginPath();
+      for (let i = 0; i <= segments; i++) {
+        const t = i / segments;
+        const px = ox + t * w;
+        const sl = slope * (t - 0.5);
+        const diag = tilt * (t - 0.5);
+        const py = waveBaseY + bob + sl + diag + Math.sin(t * Math.PI * 2 + phase) * amplitude;
+        if (i === 0) {
+          gfx.moveTo(px, py);
+        } else {
+          gfx.lineTo(px, py);
+        }
+      }
+      gfx.lineTo(ox + w, oy + h - r);
+      gfx.arc(ox + w - r, oy + h - r, r, 0, Math.PI / 2, false);
+      gfx.lineTo(ox + r, oy + h);
+      gfx.arc(ox + r, oy + h - r, r, Math.PI / 2, Math.PI, false);
+      const leftSl = slope * (0 - 0.5);
+      const leftDiag = tilt * (0 - 0.5);
+      gfx.lineTo(ox, waveBaseY + bob + leftSl + leftDiag + Math.sin(phase) * amplitude);
+      gfx.closePath();
+      gfx.fillPath();
+    }
+
+    const frontWaveY = oy + h * 0.65;
+    const backWaveY = frontWaveY + backWaveYOffset;
+
+    const waveLightGfx = this.add.graphics().setDepth(-0.5);
+    const waveDarkGfx = this.add.graphics().setDepth(-0.5);
+
+    drawSingleWave(waveLightGfx, lighterWaveColor, backWaveY, phaseOffset + backPhaseShift, 0, 0, baseSlope);
+    drawSingleWave(waveDarkGfx, waveColor, frontWaveY, phaseOffset, 0, 0, baseSlope);
+
+    // Animate front wave
+    const frontAnim = { phase: phaseOffset, bob: 0, tilt: 0 };
+    this.tweens.add({
+      targets: frontAnim,
+      phase: phaseOffset + Math.PI * 2,
+      duration: phaseDuration,
+      repeat: -1,
+      ease: 'Linear',
+      onUpdate: () => {
+        drawSingleWave(waveDarkGfx, waveColor, frontWaveY, frontAnim.phase, frontAnim.bob, frontAnim.tilt, baseSlope);
+      },
+    });
+    this.tweens.add({
+      targets: frontAnim,
+      bob: bobAmount,
+      duration: bobDuration,
+      repeat: -1,
+      yoyo: true,
+      ease: 'Sine.easeInOut',
+    });
+    this.tweens.add({
+      targets: frontAnim,
+      tilt: tiltAmount,
+      duration: tiltDuration,
+      repeat: -1,
+      yoyo: true,
+      ease: 'Sine.easeInOut',
+    });
+
+    // Animate back wave
+    const backAnim = { phase: phaseOffset + backPhaseShift, bob: 0, tilt: 0 };
+    this.tweens.add({
+      targets: backAnim,
+      phase: phaseOffset + backPhaseShift + Math.PI * 2,
+      duration: phaseDuration * 1.6,
+      repeat: -1,
+      ease: 'Linear',
+      onUpdate: () => {
+        drawSingleWave(waveLightGfx, lighterWaveColor, backWaveY, backAnim.phase, backAnim.bob, backAnim.tilt, baseSlope);
+      },
+    });
+    this.tweens.add({
+      targets: backAnim,
+      bob: bobAmount * 0.8,
+      duration: bobDuration * 1.7,
+      repeat: -1,
+      yoyo: true,
+      ease: 'Sine.easeInOut',
+    });
+    this.tweens.add({
+      targets: backAnim,
+      tilt: tiltAmount * 0.7,
+      duration: tiltDuration * 1.8,
+      repeat: -1,
+      yoyo: true,
+      ease: 'Sine.easeInOut',
+    });
   }
 
   private drawBgIcons(): void {
