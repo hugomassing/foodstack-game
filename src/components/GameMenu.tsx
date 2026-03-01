@@ -6,8 +6,20 @@ import { FONT_FAMILY } from "../config";
 import type { PuzzleData } from "../types";
 import { ChevronLeft, ChevronRight, Play, Upload } from "lucide-react";
 import wordlists from "../data/wordlists.json";
-import { useTranslation } from "../i18n";
+import { useTranslation, loadLocale } from "../i18n";
 import type { TranslationKeys } from "../i18n/types";
+
+const LOCALES = [
+  { code: "en", flag: "\u{1F1EC}\u{1F1E7}" },
+  { code: "de", flag: "\u{1F1E9}\u{1F1EA}" },
+  { code: "es", flag: "\u{1F1EA}\u{1F1F8}" },
+  { code: "fr", flag: "\u{1F1EB}\u{1F1F7}" },
+  { code: "it", flag: "\u{1F1EE}\u{1F1F9}" },
+  { code: "ja", flag: "\u{1F1EF}\u{1F1F5}" },
+  { code: "ko", flag: "\u{1F1F0}\u{1F1F7}" },
+  { code: "pt", flag: "\u{1F1E7}\u{1F1F7}" },
+  { code: "zh", flag: "\u{1F1E8}\u{1F1F3}" },
+];
 
 const LOADING_MESSAGES = [
   { emoji: "🥕", text: "Preparing ingredients" },
@@ -396,6 +408,9 @@ export function GameMenu() {
         </div>
       </div>
 
+      {/* Language switcher */}
+      <LanguageSwitcher />
+
       {/* Card */}
       <div
         style={{
@@ -599,6 +614,103 @@ export function GameMenu() {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function LanguageSwitcher() {
+  const { locale } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const current = LOCALES.find((l) => l.code === locale) ?? LOCALES[0];
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        position: "absolute",
+        top: 16,
+        right: 16,
+        zIndex: 20,
+      }}
+    >
+      <div
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          borderRadius: 12,
+          background: "#fffaf0",
+          border: "3px solid #3e2723",
+          boxShadow: "0 4px 0 #3e2723",
+          cursor: "pointer",
+          fontSize: 26,
+          lineHeight: 1,
+          padding: "0 4px",
+          userSelect: "none",
+          transition: "transform 0.1s",
+          transform: open ? "translateY(2px)" : "none",
+        }}
+      >
+        {current.flag}
+      </div>
+
+      {open && (
+        <div
+          style={{
+            position: "absolute",
+            top: 52,
+            right: 0,
+            background: "#fffaf0",
+            border: "3px solid #3e2723",
+            borderRadius: 14,
+            boxShadow: "0 6px 0 #3e2723",
+            padding: 6,
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: 4,
+          }}
+        >
+          {LOCALES.map((l) => (
+            <div
+              key={l.code}
+              onClick={() => {
+                loadLocale(l.code);
+                setOpen(false);
+              }}
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 10,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 22,
+                cursor: "pointer",
+                background:
+                  l.code === locale ? "#ffca28" : "transparent",
+                border:
+                  l.code === locale
+                    ? "2px solid #3e2723"
+                    : "2px solid transparent",
+                transition: "background 0.15s",
+              }}
+            >
+              {l.flag}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
