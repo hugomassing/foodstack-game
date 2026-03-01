@@ -12,6 +12,7 @@ import {
   SCATTER,
   PROCESSOR_RING_PAD,
   HAND,
+  DPR,
 } from '../config';
 import { FoodAssets } from '../data/food-assets';
 import { gameStore } from '../store/gameStore';
@@ -132,6 +133,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
   }
 
   create(data: { puzzleData: PuzzleData }): void {
+    this.cameras.main.setZoom(DPR);
+    this.cameras.main.centerOn(GAME_W / 2, GAME_H / 2);
     this.cameras.main.setBackgroundColor('#d32f2f');
 
     // ── Background food icons ─────────────────────────────────
@@ -329,7 +332,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
         fontFamily: FONT_FAMILY,
       })
       .setOrigin(1, 0)
-      .setDepth(50);
+      .setDepth(50)
+      .setResolution(DPR);
     this.updateErrorCounter();
 
     // -- Create cards --
@@ -841,7 +845,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
         fontFamily: FONT_FAMILY,
       })
       .setOrigin(0.5)
-      .setDepth(200);
+      .setDepth(200)
+      .setResolution(DPR);
 
     let dotPhase = 0;
     const textTween = this.tweens.add({
@@ -955,7 +960,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
         fontFamily: FONT_FAMILY,
       })
       .setOrigin(0.5)
-      .setDepth(101);
+      .setDepth(101)
+      .setResolution(DPR);
     this.tweens.add({
       targets: floatText,
       y: floatText.y - 45,
@@ -1160,7 +1166,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
         fontFamily: FONT_FAMILY,
       })
       .setOrigin(0.5)
-      .setDepth(101);
+      .setDepth(101)
+      .setResolution(DPR);
     this.tweens.add({
       targets: floatText,
       y: floatText.y - 45,
@@ -1261,7 +1268,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
         fontSize: '24px',
         fontFamily: FONT_FAMILY,
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setResolution(DPR);
     container.add(icon);
 
     // Label
@@ -1272,7 +1280,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
         color: TEXT_COLORS.WHITE,
         fontFamily: FONT_FAMILY,
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setResolution(DPR);
     container.add(label);
 
     const hitPadX = 24;
