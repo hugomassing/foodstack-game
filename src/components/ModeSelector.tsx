@@ -351,18 +351,18 @@ function LanguageSwitcher() {
   }, [open]);
 
   return (
-    <div ref={ref} style={{ position: 'absolute', top: 16, right: 16, zIndex: 20 }}>
+    <div ref={ref} style={{ position: 'absolute', top: 12, right: 12, zIndex: 20 }}>
       <div
         onClick={() => setOpen((v) => !v)}
         style={{
           borderRadius: 12,
           background: '#fffaf0',
-          border: '3px solid #3e2723',
-          boxShadow: '0 4px 0 #3e2723',
+          border: '2px solid #3e2723',
+          boxShadow: '0 3px 0 #3e2723',
           cursor: 'pointer',
-          fontSize: 26,
+          fontSize: 22,
           lineHeight: 1,
-          padding: '0 4px',
+          padding: '4px 6px',
           userSelect: 'none',
           transition: 'transform 0.1s',
           transform: open ? 'translateY(2px)' : 'none',
