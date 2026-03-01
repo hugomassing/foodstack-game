@@ -13,7 +13,13 @@ const MAIN_TAB_ITEMS: { value: MainTab; labelKey: TranslationKeys; icon: typeof 
   { value: 'history', labelKey: 'menu.tabs.history', icon: Clock },
 ];
 
-export function MainTabBar({ value, onChange }: { value: MainTab; onChange: (tab: MainTab) => void }) {
+export function MainTabBar({
+  value,
+  onChange,
+}: {
+  value: MainTab;
+  onChange: (tab: MainTab) => void;
+}) {
   const { t } = useTranslation();
   return (
     <div style={{ width: '100%', display: 'flex', gap: 4, marginBottom: 4 }}>
@@ -23,7 +29,10 @@ export function MainTabBar({ value, onChange }: { value: MainTab; onChange: (tab
         return (
           <div
             key={item.value}
-            onClick={() => { playTapSound(); onChange(item.value); }}
+            onClick={() => {
+              playTapSound();
+              onChange(item.value);
+            }}
             style={{
               flex: 1,
               padding: '7px 0',

@@ -18,7 +18,14 @@ export function DifficultySelector({
         return (
           <div
             key={d.value}
-            onClick={disabled ? undefined : () => { playTapSound(); onChange(d.value); }}
+            onClick={
+              disabled
+                ? undefined
+                : () => {
+                    playTapSound();
+                    onChange(d.value);
+                  }
+            }
             style={{
               flex: 1,
               padding: '8px 6px',

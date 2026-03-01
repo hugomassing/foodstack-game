@@ -119,6 +119,19 @@
     "errors": "エラー",
     "errorsShort": "エラー"
   },
+  "realRecipe": {
+    "generate": "\u30ec\u30b7\u30d4",
+    "loading": "\u30ec\u30b7\u30d4\u3092\u751f\u6210\u4e2d...",
+    "close": "\u9589\u3058\u308b",
+    "servings": "\u4eba\u5206",
+    "prepTime": "\u6e96\u5099",
+    "cookTime": "\u8abf\u7406",
+    "ingredients": "\u6750\u6599",
+    "steps": "\u624b\u9806",
+    "tip": "\u30b7\u30a7\u30d5\u306e\u30b3\u30c4",
+    "error": "\u30ec\u30b7\u30d4\u306e\u751f\u6210\u306b\u5931\u6557\u3002\u30bf\u30c3\u30d7\u3067\u518d\u8a66\u884c\u3002",
+    "download": "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9"
+  },
   "gameOver": {
     "title": "キッチン大惨事！",
     "tooManyErrors": "ミスが多すぎます ({count}/{max})",

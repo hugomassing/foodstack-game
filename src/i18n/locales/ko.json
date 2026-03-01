@@ -119,6 +119,19 @@
     "errors": "오류",
     "errorsShort": "오류"
   },
+  "realRecipe": {
+    "generate": "\ub808\uc2dc\ud53c",
+    "loading": "\ub808\uc2dc\ud53c \uc0dd\uc131 \uc911...",
+    "close": "\ub2eb\uae30",
+    "servings": "\uc778\ubd84",
+    "prepTime": "\uc900\ube44",
+    "cookTime": "\uc870\ub9ac",
+    "ingredients": "\uc7ac\ub8cc",
+    "steps": "\ub2e8\uacc4",
+    "tip": "\uc170\ud504\uc758 \ud301",
+    "error": "\ub808\uc2dc\ud53c \uc0dd\uc131 \uc2e4\ud328. \ud0ed\ud558\uc5ec \uc7ac\uc2dc\ub3c4.",
+    "download": "\ub2e4\uc6b4\ub85c\ub4dc"
+  },
   "gameOver": {
     "title": "주방 대참사!",
     "tooManyErrors": "실패가 너무 많습니다 ({count}/{max})",

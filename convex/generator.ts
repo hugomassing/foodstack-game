@@ -14,6 +14,8 @@ import {
   buildVictoryCardUserPrompt,
 } from "./victoryCardPrompt";
 import { z } from "zod";
+import { realRecipeSchema } from "./realRecipeSchema";
+import { REAL_RECIPE_SYSTEM_PROMPT } from "./realRecipePrompt";
 
 const LOCALE_NAMES: Record<string, string> = {
   de: "German",
@@ -471,3 +473,155 @@ export const generateVictoryCard = action({
     }
   },
 });
+
+type RealRecipeOutput = z.infer<typeof realRecipeSchema>;
+
+function extractRealRecipeStrings(recipe: RealRecipeOutput): Record<string, string> {
+  const strings: Record<string, string> = {};
+  strings["title"] = recipe.title;
+  strings["disclaimer"] = recipe.disclaimer;
+  strings["servings"] = recipe.servings;
+  strings["prepTime"] = recipe.prepTime;
+  strings["cookTime"] = recipe.cookTime;
+  strings["description"] = recipe.description;
+  for (let i = 0; i < recipe.ingredients.length; i++) {
+    strings[`ingredient_${i}_item`] = recipe.ingredients[i].item;
+    strings[`ingredient_${i}_amount`] = recipe.ingredients[i].amount;
+  }
+  for (let i = 0; i < recipe.steps.length; i++) {
+    strings[`step_${i}_instruction`] = recipe.steps[i].instruction;
+    if (recipe.steps[i].duration) strings[`step_${i}_duration`] = recipe.steps[i].duration!;
+  }
+  if (recipe.tips) strings["tips"] = recipe.tips;
+  return strings;
+}
+
+function mergeRealRecipeTranslations(
+  recipe: RealRecipeOutput,
+  translations: Record<string, Record<string, string>>,
+  locale: string,
+): RealRecipeOutput {
+  const get = (key: string, fallback: string) => translations[key]?.[locale] ?? fallback;
+  return {
+    title: get("title", recipe.title),
+    disclaimer: get("disclaimer", recipe.disclaimer),
+    servings: get("servings", recipe.servings),
+    prepTime: get("prepTime", recipe.prepTime),
+    cookTime: get("cookTime", recipe.cookTime),
+    description: get("description", recipe.description),
+    ingredients: recipe.ingredients.map((ing, i) => ({
+      item: get(`ingredient_${i}_item`, ing.item),
+      amount: get(`ingredient_${i}_amount`, ing.amount),
+    })),
+    steps: recipe.steps.map((step, i) => ({
+      instruction: get(`step_${i}_instruction`, step.instruction),
+      duration: step.duration ? get(`step_${i}_duration`, step.duration) : step.duration,
+    })),
+    tips: recipe.tips ? get("tips", recipe.tips) : recipe.tips,
+  };
+}
+
+async function rewriteRealRecipe(recipe: RealRecipeOutput, locale: string): Promise<RealRecipeOutput> {
+  const strings = extractRealRecipeStrings(recipe);
+  const translationSchema = z.record(z.string(), z.record(z.string(), z.string()));
+
+  const { output } = await generateText({
+    model: mistral("mistral-small-latest"),
+    maxRetries: 2,
+    output: Output.object({ schema: translationSchema }),
+    system: buildRewriteRecipePrompt(locale),
+    prompt: JSON.stringify(strings),
+  });
+
+  if (!output) {
+    console.warn(`[Convex] Real recipe rewrite to ${locale} failed, returning English-only`);
+    return recipe;
+  }
+
+  return mergeRealRecipeTranslations(recipe, output as Record<string, Record<string, string>>, locale);
+}
+
+export const generateRealRecipe = action({
+  args: {
+    dishName: v.string(),
+    locale: v.string(),
+  },
+  handler: async (ctx, args): Promise<unknown> => {
+    const normalizedName = args.dishName.toLowerCase().trim();
+    const locale = args.locale || "en";
+
+    // Cache check for requested locale
+    const cached: { recipe: unknown } | null = await ctx.runQuery(
+      internal.realRecipes.getRealRecipe,
+      { dishName: normalizedName, locale },
+    );
+    if (cached) {
+      console.log(`[Convex] Real recipe cache hit: "${normalizedName}" (${locale})`);
+      return cached.recipe;
+    }
+
+    // Check English cache or generate
+    let englishRecipe: RealRecipeOutput;
+    if (locale !== "en") {
+      const cachedEn: { recipe: RealRecipeOutput } | null = await ctx.runQuery(
+        internal.realRecipes.getRealRecipe,
+        { dishName: normalizedName, locale: "en" },
+      );
+      if (cachedEn) {
+        englishRecipe = cachedEn.recipe;
+      } else {
+        englishRecipe = await generateEnglishRealRecipe(ctx, args.dishName, normalizedName);
+      }
+
+      // Translate to target locale
+      console.log(`[Convex] Rewriting real recipe to ${locale}`);
+      const translated = await rewriteRealRecipe(englishRecipe, locale);
+
+      await ctx.runMutation(internal.realRecipes.saveRealRecipe, {
+        dishName: normalizedName,
+        locale,
+        recipe: translated,
+      });
+
+      return translated;
+    }
+
+    // English generation
+    englishRecipe = await generateEnglishRealRecipe(ctx, args.dishName, normalizedName);
+    return englishRecipe;
+  },
+});
+
+async function generateEnglishRealRecipe(
+  ctx: { runQuery: (...args: any[]) => Promise<any>; runMutation: (...args: any[]) => Promise<any> },
+  dishName: string,
+  normalizedName: string,
+): Promise<RealRecipeOutput> {
+  const cached: { recipe: RealRecipeOutput } | null = await ctx.runQuery(
+    internal.realRecipes.getRealRecipe,
+    { dishName: normalizedName, locale: "en" },
+  );
+  if (cached) {
+    console.log(`[Convex] English real recipe cache hit: "${normalizedName}"`);
+    return cached.recipe;
+  }
+
+  console.log(`[Convex] Generating English real recipe: "${dishName}"`);
+  const result = await generateText({
+    model: mistral("mistral-small-latest"),
+    maxRetries: 2,
+    output: Output.object({ schema: realRecipeSchema }),
+    system: REAL_RECIPE_SYSTEM_PROMPT,
+    prompt: `Generate a real cooking recipe for the game dish: "${dishName}"`,
+  });
+
+  if (!result.output) throw new Error("Model returned no valid output");
+
+  await ctx.runMutation(internal.realRecipes.saveRealRecipe, {
+    dishName: normalizedName,
+    locale: "en",
+    recipe: result.output,
+  });
+
+  return result.output;
+}

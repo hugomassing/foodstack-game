@@ -119,6 +119,19 @@
     "errors": "errori",
     "errorsShort": "err"
   },
+  "realRecipe": {
+    "generate": "RICETTA",
+    "loading": "Generazione ricetta...",
+    "close": "CHIUDI",
+    "servings": "Porzioni",
+    "prepTime": "Prep.",
+    "cookTime": "Cottura",
+    "ingredients": "Ingredienti",
+    "steps": "Passaggi",
+    "tip": "Consiglio dello chef",
+    "error": "Generazione fallita. Tocca per riprovare.",
+    "download": "SCARICA"
+  },
   "gameOver": {
     "title": "Disastro in cucina!",
     "tooManyErrors": "Troppi errori ({count}/{max})",

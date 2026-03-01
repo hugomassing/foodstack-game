@@ -24,8 +24,10 @@ export function LoadingScreen({ dishName }: { dishName: string }) {
     <div
       style={{
         position: 'absolute',
-        top: 0, left: 0,
-        width: '100%', height: '100%',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
         background: '#2d1b14',
         display: 'flex',
         flexDirection: 'column',
@@ -60,17 +62,36 @@ export function LoadingScreen({ dishName }: { dishName: string }) {
       `}</style>
 
       {/* Drifting background pattern */}
-      <div style={{ position: 'absolute', inset: 0, opacity: 0.07, overflow: 'hidden', pointerEvents: 'none' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(8, 1fr)',
-          gap: 40, padding: 24,
-          height: '150%', width: '150%',
-          animation: 'bgDrift 10s ease-in-out infinite alternate',
-        }}>
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          opacity: 0.07,
+          overflow: 'hidden',
+          pointerEvents: 'none',
+        }}
+      >
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(8, 1fr)',
+            gap: 40,
+            padding: 24,
+            height: '150%',
+            width: '150%',
+            animation: 'bgDrift 10s ease-in-out infinite alternate',
+          }}
+        >
           {Array.from({ length: 64 }).map((_, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img src={FOOD_ICONS[i % FOOD_ICONS.length]} alt="" style={{ width: 32, height: 32 }} />
+            <div
+              key={i}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              <img
+                src={FOOD_ICONS[i % FOOD_ICONS.length]}
+                alt=""
+                style={{ width: 32, height: 32 }}
+              />
             </div>
           ))}
         </div>
@@ -102,7 +123,8 @@ export function LoadingScreen({ dishName }: { dishName: string }) {
             src={src}
             alt=""
             style={{
-              width: 36, height: 36,
+              width: 36,
+              height: 36,
               animation: `waveFloat 1.5s ease-in-out ${(i * 0.15).toFixed(2)}s infinite`,
             }}
           />
@@ -110,55 +132,64 @@ export function LoadingScreen({ dishName }: { dishName: string }) {
       </div>
 
       {/* Divider */}
-      <div style={{
-        width: 180, height: 2,
-        background: 'linear-gradient(90deg, transparent, #ffca2855, transparent)',
-        borderRadius: 1,
-        marginBottom: 24,
-      }} />
+      <div
+        style={{
+          width: 180,
+          height: 2,
+          background: 'linear-gradient(90deg, transparent, #ffca2855, transparent)',
+          borderRadius: 1,
+          marginBottom: 24,
+        }}
+      />
 
       {/* "Cooking up" label */}
-      <div style={{
-        fontSize: 11,
-        fontWeight: 900,
-        color: '#ff9800',
-        textTransform: 'uppercase',
-        letterSpacing: '0.22em',
-        marginBottom: 10,
-        animation: 'fadeInUp 0.5s ease-out',
-      }}>
+      <div
+        style={{
+          fontSize: 11,
+          fontWeight: 900,
+          color: '#ff9800',
+          textTransform: 'uppercase',
+          letterSpacing: '0.22em',
+          marginBottom: 10,
+          animation: 'fadeInUp 0.5s ease-out',
+        }}
+      >
         {t('menu.cookingUp')}
       </div>
 
       {/* Dish name */}
-      <div style={{
-        fontSize: 26,
-        fontWeight: 900,
-        color: '#ffffff',
-        fontFamily: FONT_FAMILY,
-        textTransform: 'uppercase',
-        letterSpacing: '-0.01em',
-        textAlign: 'center',
-        maxWidth: 340,
-        lineHeight: 1.2,
-        animation: 'fadeInUp 0.65s ease-out',
-        marginBottom: 20,
-      }}>
+      <div
+        style={{
+          fontSize: 26,
+          fontWeight: 900,
+          color: '#ffffff',
+          fontFamily: FONT_FAMILY,
+          textTransform: 'uppercase',
+          letterSpacing: '-0.01em',
+          textAlign: 'center',
+          maxWidth: 340,
+          lineHeight: 1.2,
+          animation: 'fadeInUp 0.65s ease-out',
+          marginBottom: 20,
+        }}
+      >
         {dishName}
       </div>
 
       {/* Cycling tip */}
-      <div style={{
-        fontSize: 13,
-        fontWeight: 700,
-        color: '#a1887f',
-        textAlign: 'center',
-        maxWidth: 300,
-        lineHeight: 1.4,
-        minHeight: 20,
-        transition: 'opacity 0.3s',
-        opacity: fading ? 0 : 0.85,
-      }}>
+      <div
+        style={{
+          fontSize: 13,
+          fontWeight: 700,
+          color: '#a1887f',
+          textAlign: 'center',
+          maxWidth: 300,
+          lineHeight: 1.4,
+          minHeight: 20,
+          transition: 'opacity 0.3s',
+          opacity: fading ? 0 : 0.85,
+        }}
+      >
         {t(`menu.loadingMessages.${msgIndex}` as TranslationKeys)}
       </div>
 
@@ -168,7 +199,8 @@ export function LoadingScreen({ dishName }: { dishName: string }) {
           <div
             key={i}
             style={{
-              width: 8, height: 8,
+              width: 8,
+              height: 8,
               borderRadius: '50%',
               background: '#ffca28',
               animation: `loadingDot 1.2s ease-in-out ${i * 0.2}s infinite`,

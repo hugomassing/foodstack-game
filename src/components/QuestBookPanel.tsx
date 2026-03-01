@@ -4,12 +4,7 @@ import { useGameStore } from '../App';
 import type { Step } from '../types';
 import { useTranslation } from '../i18n';
 import { localize } from '../i18n/localize';
-import {
-  Check,
-  Download,
-  ArrowLeft,
-  Heart,
-} from 'lucide-react';
+import { Check, Download, ArrowLeft, Heart } from 'lucide-react';
 
 const M = 8;
 const SB_W = QUEST_PANEL_W - M * 2;
@@ -172,10 +167,27 @@ export function QuestBookPanel() {
               border: '2px solid #3e2723',
             }}
           />
-          <div style={{ fontSize: 9, fontWeight: 900, color: '#3e2723', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+          <div
+            style={{
+              fontSize: 9,
+              fontWeight: 900,
+              color: '#3e2723',
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+            }}
+          >
             {t('quest.recipe')}
           </div>
-          <div style={{ fontSize: 12, color: '#d84315', marginTop: 1, fontWeight: 900, lineHeight: 1.2, paddingRight: 18 }}>
+          <div
+            style={{
+              fontSize: 12,
+              color: '#d84315',
+              marginTop: 1,
+              fontWeight: 900,
+              lineHeight: 1.2,
+              paddingRight: 18,
+            }}
+          >
             {localizedDishName}
           </div>
           {gameMode === 'survival' && (
@@ -208,8 +220,23 @@ export function QuestBookPanel() {
         >
           {/* Progress bar */}
           <div style={{ marginBottom: 8 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
-              <span style={{ fontSize: 9, color: '#a1887f', fontWeight: 900, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: 3,
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 9,
+                  color: '#a1887f',
+                  fontWeight: 900,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                }}
+              >
                 {t('quest.progress')}
               </span>
               <span style={{ fontSize: 9, fontWeight: 900, color: '#8d6e63' }}>

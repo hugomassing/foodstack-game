@@ -119,6 +119,19 @@
     "errors": "Fehler",
     "errorsShort": "Fehl."
   },
+  "realRecipe": {
+    "generate": "REZEPT",
+    "loading": "Rezept wird erstellt...",
+    "close": "SCHLIESSEN",
+    "servings": "Portionen",
+    "prepTime": "Vorbereitung",
+    "cookTime": "Kochzeit",
+    "ingredients": "Zutaten",
+    "steps": "Schritte",
+    "tip": "Tipp vom Koch",
+    "error": "Rezept konnte nicht erstellt werden. Tippen zum Wiederholen.",
+    "download": "HERUNTERLADEN"
+  },
   "gameOver": {
     "title": "Küchenkatastrophe!",
     "tooManyErrors": "Zu viele Fehlversuche ({count}/{max})",

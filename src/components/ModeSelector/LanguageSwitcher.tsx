@@ -27,7 +27,10 @@ export function LanguageSwitcher() {
   return (
     <div ref={ref} style={{ position: 'absolute', top: 12, right: 12, zIndex: 20 }}>
       <div
-        onClick={() => { playTapSound(); setOpen((v) => !v); }}
+        onClick={() => {
+          playTapSound();
+          setOpen((v) => !v);
+        }}
         style={{
           borderRadius: 12,
           background: '#fffaf0',
@@ -71,7 +74,7 @@ export function LanguageSwitcher() {
               onClick={() => {
                 playTapSound();
                 loadLocale(l.code);
-                saveLocale({ locale: l.code }).catch(() => { });
+                saveLocale({ locale: l.code }).catch(() => {});
                 setOpen(false);
               }}
               style={{

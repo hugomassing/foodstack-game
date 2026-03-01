@@ -119,6 +119,19 @@
     "errors": "errors",
     "errorsShort": "err"
   },
+  "realRecipe": {
+    "generate": "RECIPE",
+    "loading": "Generating recipe...",
+    "close": "CLOSE",
+    "servings": "Servings",
+    "prepTime": "Prep",
+    "cookTime": "Cook",
+    "ingredients": "Ingredients",
+    "steps": "Steps",
+    "tip": "Chef's Tip",
+    "error": "Failed to generate recipe. Tap to retry.",
+    "download": "DOWNLOAD"
+  },
   "gameOver": {
     "title": "Kitchen Disaster!",
     "tooManyErrors": "Too many failed combinations ({count}/{max})",

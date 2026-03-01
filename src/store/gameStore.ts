@@ -43,6 +43,7 @@ export interface GameState {
   survivalHistory: SurvivalRoundResult[];
   survivalRecipeOptions: string[] | null;
   dailyDate: string | null;
+  loadingDishName: string;
 
   // Actions
   setAssetsReady: (ready: boolean) => void;
@@ -97,6 +98,7 @@ export const gameStore = createStore<GameState>((set, get) => ({
   survivalHistory: [],
   survivalRecipeOptions: null,
   dailyDate: null,
+  loadingDishName: '',
 
   setAssetsReady: (ready) => set({ assetsReady: ready }),
 
@@ -104,9 +106,7 @@ export const gameStore = createStore<GameState>((set, get) => ({
 
   startGame: (data, difficulty) => {
     const state = get();
-    const maxErrors = state.gameMode === 'survival'
-      ? state.survivalLives
-      : state.maxErrors;
+    const maxErrors = state.gameMode === 'survival' ? state.survivalLives : state.maxErrors;
     set({
       puzzleData: data,
       phase: 'playing',

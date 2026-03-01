@@ -119,6 +119,19 @@
     "errors": "erreurs",
     "errorsShort": "err"
   },
+  "realRecipe": {
+    "generate": "RECETTE",
+    "loading": "G\u00e9n\u00e9ration de la recette...",
+    "close": "FERMER",
+    "servings": "Portions",
+    "prepTime": "Pr\u00e9p.",
+    "cookTime": "Cuisson",
+    "ingredients": "Ingr\u00e9dients",
+    "steps": "\u00c9tapes",
+    "tip": "Conseil du chef",
+    "error": "\u00c9chec de la g\u00e9n\u00e9ration. Appuyez pour r\u00e9essayer.",
+    "download": "T\u00c9L\u00c9CHARGER"
+  },
   "gameOver": {
     "title": "Catastrophe en cuisine !",
     "tooManyErrors": "Trop d'erreurs ({count}/{max})",

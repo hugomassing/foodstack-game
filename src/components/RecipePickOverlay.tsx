@@ -38,6 +38,7 @@ export function RecipePickOverlay() {
     const dishName = options[index];
 
     // Transition to loading screen while the API call runs
+    gameStore.setState({ loadingDishName: dishName });
     gameStore.getState().setPhase('loading_round');
 
     try {

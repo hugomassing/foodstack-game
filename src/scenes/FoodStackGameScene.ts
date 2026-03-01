@@ -132,8 +132,8 @@ interface ProcessorZone {
   bg: Phaser.GameObjects.Graphics;
   icon: Phaser.GameObjects.Image | Phaser.GameObjects.Text;
   label: Phaser.GameObjects.Text;
-  rect: Phaser.Geom.Rectangle;       // full-column hit area
-  cardRect: Phaser.Geom.Rectangle;   // card-sized visual slot
+  rect: Phaser.Geom.Rectangle; // full-column hit area
+  cardRect: Phaser.Geom.Rectangle; // card-sized visual slot
 }
 
 export class FoodStackGameScene extends Phaser.Scene {
@@ -194,8 +194,6 @@ export class FoodStackGameScene extends Phaser.Scene {
     const boardBorder = this.add.graphics().setDepth(0);
     boardBorder.lineStyle(4, 0x3e2723, 1);
     boardBorder.strokeRoundedRect(BD_X, BD_Y, BD_W, BD_H, BD_R);
-
-
 
     this.puzzleData = data.puzzleData;
 
@@ -440,7 +438,16 @@ export class FoodStackGameScene extends Phaser.Scene {
 
       // Dashed border around the card slot
       bg.lineStyle(1.5, ZONE.SEPARATOR_COLOR, ZONE.PLACEHOLDER_ALPHA);
-      this.drawDashedRoundedRect(bg, cardBoxX, cardBoxY, FOOD_CARD_W, FOOD_CARD_H, FOOD_CARD_RADIUS, 6, 4);
+      this.drawDashedRoundedRect(
+        bg,
+        cardBoxX,
+        cardBoxY,
+        FOOD_CARD_W,
+        FOOD_CARD_H,
+        FOOD_CARD_RADIUS,
+        6,
+        4,
+      );
 
       bg.setMask(boardMask);
       container.add(bg);
@@ -470,12 +477,17 @@ export class FoodStackGameScene extends Phaser.Scene {
 
       // Label text below icon
       const label = this.add
-        .text(iconCx, iconCy + ZONE.LABEL_Y_OFFSET, (procDisplayMap.get(procName) ?? procName).toUpperCase(), {
-          fontSize: '11px',
-          fontStyle: 'bold',
-          color: TEXT_COLORS.DARK,
-          fontFamily: FONT_FAMILY,
-        })
+        .text(
+          iconCx,
+          iconCy + ZONE.LABEL_Y_OFFSET,
+          (procDisplayMap.get(procName) ?? procName).toUpperCase(),
+          {
+            fontSize: '11px',
+            fontStyle: 'bold',
+            color: TEXT_COLORS.DARK,
+            fontFamily: FONT_FAMILY,
+          },
+        )
         .setOrigin(0.5)
         .setAlpha(0.6)
         .setResolution(DPR);
@@ -484,7 +496,16 @@ export class FoodStackGameScene extends Phaser.Scene {
       const rect = new Phaser.Geom.Rectangle(zoneX, zoneY, zoneW, zoneH);
       const cardRect = new Phaser.Geom.Rectangle(cardBoxX, cardBoxY, FOOD_CARD_W, FOOD_CARD_H);
 
-      this.processorZones.set(procName, { name: procName, emoji, container, bg, icon, label, rect, cardRect });
+      this.processorZones.set(procName, {
+        name: procName,
+        emoji,
+        container,
+        bg,
+        icon,
+        label,
+        rect,
+        cardRect,
+      });
       this.processorAttachments.set(procName, []);
     }
   }
@@ -1850,7 +1871,15 @@ export class FoodStackGameScene extends Phaser.Scene {
     const waveLightGfx = this.add.graphics().setDepth(-0.5);
     const waveDarkGfx = this.add.graphics().setDepth(-0.5);
 
-    drawSingleWave(waveLightGfx, lighterWaveColor, backWaveY, phaseOffset + backPhaseShift, 0, 0, baseSlope);
+    drawSingleWave(
+      waveLightGfx,
+      lighterWaveColor,
+      backWaveY,
+      phaseOffset + backPhaseShift,
+      0,
+      0,
+      baseSlope,
+    );
     drawSingleWave(waveDarkGfx, waveColor, frontWaveY, phaseOffset, 0, 0, baseSlope);
 
     // Animate front wave
@@ -1862,7 +1891,15 @@ export class FoodStackGameScene extends Phaser.Scene {
       repeat: -1,
       ease: 'Linear',
       onUpdate: () => {
-        drawSingleWave(waveDarkGfx, waveColor, frontWaveY, frontAnim.phase, frontAnim.bob, frontAnim.tilt, baseSlope);
+        drawSingleWave(
+          waveDarkGfx,
+          waveColor,
+          frontWaveY,
+          frontAnim.phase,
+          frontAnim.bob,
+          frontAnim.tilt,
+          baseSlope,
+        );
       },
     });
     this.tweens.add({
@@ -1891,7 +1928,15 @@ export class FoodStackGameScene extends Phaser.Scene {
       repeat: -1,
       ease: 'Linear',
       onUpdate: () => {
-        drawSingleWave(waveLightGfx, lighterWaveColor, backWaveY, backAnim.phase, backAnim.bob, backAnim.tilt, baseSlope);
+        drawSingleWave(
+          waveLightGfx,
+          lighterWaveColor,
+          backWaveY,
+          backAnim.phase,
+          backAnim.bob,
+          backAnim.tilt,
+          baseSlope,
+        );
       },
     });
     this.tweens.add({

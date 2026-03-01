@@ -585,10 +585,11 @@ export function GameMenu() {
               boxShadow: livesEnabled ? '0 3px 0 #b71c1c' : '0 3px 0 #e0e0e0',
             }}
           >
-            {livesEnabled
-              ? <Heart size={18} strokeWidth={2.5} fill="#ffffff" color="#ffffff" />
-              : <HeartOff size={18} strokeWidth={2.5} color="#bdbdbd" />
-            }
+            {livesEnabled ? (
+              <Heart size={18} strokeWidth={2.5} fill="#ffffff" color="#ffffff" />
+            ) : (
+              <HeartOff size={18} strokeWidth={2.5} color="#bdbdbd" />
+            )}
           </div>
         </div>
 
@@ -812,7 +813,6 @@ function DifficultySelector({
     </div>
   );
 }
-
 
 function PushButton({
   icon,

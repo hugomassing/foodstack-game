@@ -119,6 +119,19 @@
     "errors": "错误",
     "errorsShort": "错误"
   },
+  "realRecipe": {
+    "generate": "\u98df\u8c31",
+    "loading": "\u751f\u6210\u98df\u8c31\u4e2d...",
+    "close": "\u5173\u95ed",
+    "servings": "\u4efd\u91cf",
+    "prepTime": "\u51c6\u5907",
+    "cookTime": "\u70f9\u996a",
+    "ingredients": "\u98df\u6750",
+    "steps": "\u6b65\u9aa4",
+    "tip": "\u5927\u53a8\u5c0f\u8d34\u58eb",
+    "error": "\u98df\u8c31\u751f\u6210\u5931\u8d25\u3002\u70b9\u51fb\u91cd\u8bd5\u3002",
+    "download": "\u4e0b\u8f7d"
+  },
   "gameOver": {
     "title": "厨房灾难！",
     "tooManyErrors": "失败太多 ({count}/{max})",

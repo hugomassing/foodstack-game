@@ -11,7 +11,10 @@ export function ProfileBadge() {
 
   return (
     <div
-      onClick={() => { playTapSound(); gameStore.getState().setShowAuthModal(true); }}
+      onClick={() => {
+        playTapSound();
+        gameStore.getState().setShowAuthModal(true);
+      }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{

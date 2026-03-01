@@ -72,7 +72,14 @@ export function TrophyDexPanel({ onSelectEntry }: { onSelectEntry: (entry: Troph
       {data.map((entry) => (
         <div
           key={entry.dishName}
-          onClick={entry.acquired ? () => { playTapSound(); onSelectEntry(entry); } : undefined}
+          onClick={
+            entry.acquired
+              ? () => {
+                  playTapSound();
+                  onSelectEntry(entry);
+                }
+              : undefined
+          }
           style={{
             background: '#ffffff',
             borderRadius: 10,

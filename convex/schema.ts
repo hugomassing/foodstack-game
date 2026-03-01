@@ -54,6 +54,13 @@ export default defineSchema({
     completedAt: v.number(),
   }).index("by_user", ["userId"]),
 
+  realRecipes: defineTable({
+    dishName: v.string(),
+    locale: v.string(),
+    recipe: v.any(),
+    createdAt: v.number(),
+  }).index("by_dish_locale", ["dishName", "locale"]),
+
   combinations: defineTable({
     processor: v.string(),
     inputKey: v.string(),

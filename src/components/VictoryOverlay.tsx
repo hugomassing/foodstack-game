@@ -6,14 +6,30 @@ import { useGameStore } from '../App';
 import { gameStore } from '../store/gameStore';
 import { api } from '../../convex/_generated/api';
 import { convex } from '../lib/convex';
-import { Trophy, RotateCcw, Download, ArrowRight, Heart, Home, ClipboardList, X } from 'lucide-react';
+import {
+  Trophy,
+  RotateCcw,
+  Download,
+  ArrowRight,
+  Heart,
+  Home,
+  ClipboardList,
+  X,
+} from 'lucide-react';
 import { useTranslation } from '../i18n';
 import type { TranslationKeys } from '../i18n/types';
 import { setDailyBestScore, incrementDailyAttempts } from '../lib/daily';
 import type { Difficulty } from '../store/gameStore';
 import type { GameMode } from '../types';
 
-const TROPHY_EMOJIS = ['\u{1F3C6}', '\u{1F3A8}', '\u2728', '\u{1F37D}\uFE0F', '\u{1F4F8}', '\u{1F947}'];
+const TROPHY_ASSETS = [
+  '/assets/sprites/food/utensil/cooking_pot.png',
+  '/assets/sprites/food/utensil/frying_pan.png',
+  '/assets/sprites/food/utensil/salt_shaker.png',
+  '/assets/sprites/food/utensil/plate.png',
+  '/assets/sprites/food/sweet/cake.png',
+  '/assets/sprites/food/ingredient/honeycomb.png',
+];
 
 export const DIFFICULTY_LABELS = {
   easy: {
@@ -125,7 +141,7 @@ export function VictoryCard({
   const showFallback = !loading && !hasImage;
   const diffConfig = DIFFICULTY_LABELS[data.difficulty];
   const trophyText = t(`victory.trophyMessages.${msgIndex}` as TranslationKeys);
-  const trophyEmoji = TROPHY_EMOJIS[msgIndex];
+  const trophyAsset = TROPHY_ASSETS[msgIndex];
 
   // Rotate loading messages
   useEffect(() => {
@@ -133,7 +149,7 @@ export function VictoryCard({
     const interval = setInterval(() => {
       setFading(true);
       setTimeout(() => {
-        setMsgIndex((i) => (i + 1) % TROPHY_EMOJIS.length);
+        setMsgIndex((i) => (i + 1) % TROPHY_ASSETS.length);
         setFading(false);
       }, 300);
     }, 2200);
@@ -213,22 +229,23 @@ export function VictoryCard({
               alignItems: 'center',
               justifyContent: 'center',
               gap: 12,
-              background:
-                'linear-gradient(90deg, #f5edd8 25%, #fdf5e4 50%, #f5edd8 75%)',
+              background: 'linear-gradient(90deg, #f5edd8 25%, #fdf5e4 50%, #f5edd8 75%)',
               backgroundSize: '200% 100%',
               animation: 'shimmer 1.8s ease-in-out infinite',
             }}
           >
-            <div
+            <img
+              src={trophyAsset}
+              alt=""
               style={{
-                fontSize: 48,
+                width: 64,
+                height: 64,
+                imageRendering: 'pixelated',
                 animation: 'trophySpin 1.6s ease-in-out infinite',
                 transition: 'opacity 0.3s',
                 opacity: fading ? 0 : 1,
               }}
-            >
-              {trophyEmoji}
-            </div>
+            />
             <div
               style={{
                 fontSize: 13,
@@ -385,10 +402,7 @@ export function VictoryCard({
         </StatRow>
 
         {/* Difficulty */}
-        <StatRow
-          icon={<span style={{ fontSize: 18, lineHeight: 1 }}>🌶️</span>}
-          label="DIFFICULTY"
-        >
+        <StatRow icon={<span style={{ fontSize: 18, lineHeight: 1 }}>🌶️</span>} label="DIFFICULTY">
           <span
             style={{
               display: 'inline-block',
@@ -407,10 +421,7 @@ export function VictoryCard({
         </StatRow>
 
         {/* Errors */}
-        <StatRow
-          icon={<X size={20} strokeWidth={3} color="#5d3a1a" />}
-          label="ERRORS"
-        >
+        <StatRow icon={<X size={20} strokeWidth={3} color="#5d3a1a" />} label="ERRORS">
           {t('victory.errors', { count: data.errorCount }).toUpperCase()}
         </StatRow>
 
@@ -537,10 +548,7 @@ export function VictoryOverlay() {
     }
   };
 
-  const playAgainLabel =
-    gameMode === 'survival'
-      ? t('survival.continue')
-      : t('victory.playAgain');
+  const playAgainLabel = gameMode === 'survival' ? t('survival.continue') : t('victory.playAgain');
 
   const PlayAgainIcon = gameMode === 'survival' ? ArrowRight : RotateCcw;
 

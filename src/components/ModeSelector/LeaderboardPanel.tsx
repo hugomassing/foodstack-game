@@ -127,7 +127,10 @@ export function LeaderboardPanel() {
         {(['trophies', 'survival'] as const).map((key) => (
           <button
             key={key}
-            onClick={() => { playTapSound(); setTab(key); }}
+            onClick={() => {
+              playTapSound();
+              setTab(key);
+            }}
             style={{
               flex: 1,
               padding: '6px 0',
@@ -150,7 +153,10 @@ export function LeaderboardPanel() {
       {tab === 'trophies'
         ? renderList(
             trophyData,
-            (e) => t('menu.leaderboard.trophyCount' as TranslationKeys, { count: e.trophyCount as number }),
+            (e) =>
+              t('menu.leaderboard.trophyCount' as TranslationKeys, {
+                count: e.trophyCount as number,
+              }),
             'menu.leaderboard.empty',
           )
         : renderList(

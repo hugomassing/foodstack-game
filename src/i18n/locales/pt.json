@@ -119,6 +119,19 @@
     "errors": "erros",
     "errorsShort": "erros"
   },
+  "realRecipe": {
+    "generate": "RECEITA",
+    "loading": "Gerando receita...",
+    "close": "FECHAR",
+    "servings": "Por\u00e7\u00f5es",
+    "prepTime": "Preparo",
+    "cookTime": "Cozimento",
+    "ingredients": "Ingredientes",
+    "steps": "Passos",
+    "tip": "Dica do chef",
+    "error": "Falha ao gerar receita. Toque para tentar novamente.",
+    "download": "BAIXAR"
+  },
   "gameOver": {
     "title": "Desastre na cozinha!",
     "tooManyErrors": "Muitos erros ({count}/{max})",

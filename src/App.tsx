@@ -7,6 +7,7 @@ import { loadLocale } from './i18n';
 import { GameShell } from './components/GameShell';
 import { PhaserCanvas } from './components/PhaserCanvas';
 import { LoadingScreen } from './components/LoadingScreen';
+import { LoadingScreen as FancyLoadingScreen } from './components/ModeSelector/LoadingScreen';
 import { ModeSelector } from './components/ModeSelector';
 import { GameMenu } from './components/GameMenu';
 import { QuestBookPanel } from './components/QuestBookPanel';
@@ -59,13 +60,15 @@ export default function App() {
   useAutoAuth();
   const phase = useGameStore((s) => s.phase);
   const showAuthModal = useGameStore((s) => s.showAuthModal);
+  const loadingDishName = useGameStore((s) => s.loadingDishName);
 
   return (
     <>
       <GameShell>
         <PhaserCanvas />
 
-        {(phase === 'loading' || phase === 'loading_round') && <LoadingScreen />}
+        {phase === 'loading' && <LoadingScreen />}
+        {phase === 'loading_round' && <FancyLoadingScreen dishName={loadingDishName} />}
         {phase === 'menu' && <ModeSelector />}
         {phase === 'mode_config' && <GameMenu />}
         {phase === 'playing' && (
