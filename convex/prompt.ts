@@ -81,23 +81,31 @@ Examples of BAD hints:
 - The final node's output is the dish name.
 
 ### Difficulty
-Adapt to the requested difficulty (total actions = distinct processors INCLUDING assemble).
-This is a HARD CONSTRAINT — the recipe will be rejected if the processor count is outside these ranges:
-- easy: 4-6 ingredients, 1-2 decoys, 2 branches, **exactly 4 total actions** (3 + assemble)
-- medium: 6-9 ingredients, 2-3 decoys, 2-3 branches, **5-6 total actions** (4-5 + assemble). NEVER more than 6.
-- hard: 9-12 ingredients, 3-4 decoys, 3 branches, **6-7 total actions** (5-6 + assemble). NEVER more than 7.
+Adapt to the requested difficulty. "Total actions" means the number of DISTINCT processor names INCLUDING "assemble".
 
-CRITICAL: Reuse processors across steps instead of introducing new ones. For example, if you "chop" garlic in branch 1 and also "chop" lettuce in branch 2, that's still just ONE processor ("chop"). Count DISTINCT processor names only.
+| Difficulty | Ingredients | Decoys | Branches | Distinct processors (STRICT) |
+|------------|-------------|--------|----------|------------------------------|
+| easy       | 4-6         | 1-2    | 2        | exactly 4                    |
+| medium     | 6-9         | 2-3    | 2-3      | exactly 5 or 6               |
+| hard       | 9-12        | 3-4    | 3        | exactly 6 or 7               |
+
+⚠️ HARD CONSTRAINT — the "processors" array length MUST be within these exact bounds. The output is programmatically validated and will be REJECTED otherwise.
+
+STRATEGY TO STAY WITHIN BOUNDS:
+- Plan your distinct processors FIRST, before writing steps.
+- Reuse the same processor across multiple steps. Example: "chop" garlic in branch 1 AND "chop" lettuce in branch 2 = still ONE distinct processor.
+- "assemble" is ALWAYS the final processor and counts toward the total. So for easy (4 total), you only get 3 other distinct processors.
+- If you find yourself wanting a new processor, check if an existing one can do the job instead.
 
 Default to medium if unspecified.
 
 ## GENERATION PROCESS (follow this order internally)
-1. Decide the branches and what each one represents.
-2. Choose the most fitting cooking actions for this specific dish.
-3. Write every step with its processor, inputs, and output.
-4. THEN collect the distinct processors you actually used (including assemble).
-5. Verify the total count STRICTLY matches the difficulty (easy: 4, medium: 5-6, hard: 6-7). If you have too many, revise steps to reuse existing processors instead of introducing new ones.
-6. Put that collected set into the "processors" field with name, emoji, and assetId.
+1. Look up the EXACT processor count allowed for the requested difficulty.
+2. Plan your processor palette FIRST: pick that exact number of distinct processors (including "assemble"). Write them down before anything else.
+3. Decide the branches and what each one represents.
+4. Write every step using ONLY processors from your pre-planned palette. Reuse them freely.
+5. Verify: collect distinct processor names from all steps + finalStep. The count MUST match step 2. If not, revise steps — do NOT add new processors.
+6. Put that collected set into the "processors" array with name, emoji, and assetId.
 7. Assign an emoji to every ingredient.
 
 ### Asset IDs
