@@ -228,7 +228,7 @@ export function GameMenu() {
         { dishName, difficulty },
       );
       setIsLoading(false);
-      gameStore.getState().startGame(puzzleData as PuzzleData);
+      gameStore.getState().startGame(puzzleData as PuzzleData, difficulty);
     } catch (err) {
       setIsLoading(false);
       setError((err as Error).message);
@@ -238,7 +238,7 @@ export function GameMenu() {
   const onDemo = async () => {
     if (isLoading) return;
     const module = await import('../data/mockPuzzle.json');
-    gameStore.getState().startGame(module.default as PuzzleData);
+    gameStore.getState().startGame(module.default as PuzzleData, 'medium');
   };
 
   const onLoadJSON = () => {
@@ -253,7 +253,7 @@ export function GameMenu() {
       reader.onload = (ev) => {
         try {
           const puzzleData = JSON.parse(ev.target!.result as string);
-          gameStore.getState().startGame(puzzleData);
+          gameStore.getState().startGame(puzzleData, 'medium');
         } catch {
           setError('Invalid JSON file');
         }

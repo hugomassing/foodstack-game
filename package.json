@@ -13,6 +13,7 @@
     "format:check": "oxfmt --check 'src/**/*.{ts,tsx}'"
   },
   "devDependencies": {
+    "@types/node": "^25.3.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
@@ -24,8 +25,10 @@
   },
   "dependencies": {
     "@ai-sdk/mistral": "^3.0.21",
+    "@mistralai/mistralai": "^1.14.1",
     "ai": "^6.0.105",
     "convex": "^1.32.0",
+    "html-to-image": "^1.11.13",
     "lucide-react": "^0.575.0",
     "phaser": "^3.80.1",
     "react": "^19",

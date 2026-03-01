@@ -11,12 +11,18 @@ importers:
       '@ai-sdk/mistral':
         specifier: ^3.0.21
         version: 3.0.21(zod@4.3.6)
+      '@mistralai/mistralai':
+        specifier: ^1.14.1
+        version: 1.14.1
       ai:
         specifier: ^6.0.105
         version: 6.0.105(zod@4.3.6)
       convex:
         specifier: ^1.32.0
         version: 1.32.0(react@19.2.4)
+      html-to-image:
+        specifier: ^1.11.13
+        version: 1.11.13
       lucide-react:
         specifier: ^0.575.0
         version: 0.575.0(react@19.2.4)
@@ -36,6 +42,9 @@ importers:
         specifier: ^5
         version: 5.0.11(@types/react@19.2.14)(react@19.2.4)
     devDependencies:
+      '@types/node':
+        specifier: ^25.3.3
+        version: 25.3.3
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
@@ -44,7 +53,7 @@ importers:
         version: 19.2.3(@types/react@19.2.14)
       '@vitejs/plugin-react':
         specifier: ^5.1.4
-        version: 5.1.4(vite@5.4.21(@types/node@20.11.0))
+        version: 5.1.4(vite@5.4.21(@types/node@25.3.3))
       oxfmt:
         specifier: ^0.35.0
         version: 0.35.0
@@ -59,7 +68,7 @@ importers:
         version: 50.25.4(rollup@4.59.0)(typescript@5.9.3)
       vite:
         specifier: ^5.2.0
-        version: 5.4.21(@types/node@20.11.0)
+        version: 5.4.21(@types/node@25.3.3)
 
 packages:
 
@@ -533,6 +542,9 @@ packages:
     resolution: {integrity: sha512-uwPAhccfFJlsfCxMYTwOdVfOz3xqyj8xYL3zJj8f0pb30tLohnnFPhLuqp4/qoEz8sNxe4SESZedcBojRefIzg==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@mistralai/mistralai@1.14.1':
+    resolution: {integrity: sha512-IiLmmZFCCTReQgPAT33r7KQ1nYo5JPdvGkrkZqA8qQ2qB1GHgs5LoP5K2ICyrjnpw2n8oSxMM/VP+liiKcGNlQ==}
 
   '@napi-rs/wasm-runtime@1.1.1':
     resolution: {integrity: sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A==}
@@ -1164,6 +1176,9 @@ packages:
   '@types/node@20.11.0':
     resolution: {integrity: sha512-o9bjXmDNcF7GbM4CNQpmi+TutCgap/K3w1JyKgxAjqx41zp9qlIAVFi0IhCNsJcXolEqLWhbFbEeL0PvYm4pcQ==}
 
+  '@types/node@25.3.3':
+    resolution: {integrity: sha512-DpzbrH7wIcBaJibpKo9nnSQL0MTRdnWttGyE5haGwK86xgMOkFLp7vEyfQPGLOJh5wNYiJ3V9PmUMDhV9u8kkQ==}
+
   '@types/react-dom@19.2.3':
     resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
     peerDependencies:
@@ -1684,6 +1699,9 @@ packages:
   hasown@2.0.2:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
+
+  html-to-image@1.11.13:
+    resolution: {integrity: sha512-cuOPoI7WApyhBElTTb9oqsawRvZ0rHhaHwghRLlTuffoD1B2aDemlCruLeZrUIIdvG7gs9xeELEPm6PhuASqrg==}
 
   http-errors@1.7.3:
     resolution: {integrity: sha512-ZTTX0MWrsQ2ZAhA1cejAwDLycFsd7I7nVtnkT3Ol0aqodaKW+0CTZDQ1uBv5whptCnc8e8HeRRJxRs0kmm/Qfw==}
@@ -2257,6 +2275,9 @@ packages:
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
+  undici-types@7.18.2:
+    resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
+
   undici@5.28.4:
     resolution: {integrity: sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==}
     engines: {node: '>=14.0'}
@@ -2375,6 +2396,11 @@ packages:
 
   yauzl@2.10.0:
     resolution: {integrity: sha512-p4a9I6X6nu6IhoGmBqAcbJy1mlC4j27vEPZX9F4L4/vZT3Lyq1VkFHw/V/PUcB9Buo+DG3iHkT0x3Qya58zc3g==}
+
+  zod-to-json-schema@3.25.1:
+    resolution: {integrity: sha512-pM/SU9d3YAggzi6MtR4h7ruuQlqKtad8e9S0fmxcMi+ueAK5Korys/aWcV9LIIHTVbj01NdzxcnXSN+O74ZIVA==}
+    peerDependencies:
+      zod: ^3.25 || ^4
 
   zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
@@ -2761,6 +2787,15 @@ snapshots:
       - encoding
       - supports-color
 
+  '@mistralai/mistralai@1.14.1':
+    dependencies:
+      ws: 8.18.0
+      zod: 4.3.6
+      zod-to-json-schema: 3.25.1(zod@4.3.6)
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   '@napi-rs/wasm-runtime@1.1.1':
     dependencies:
       '@emnapi/core': 1.8.1
@@ -3139,6 +3174,10 @@ snapshots:
     dependencies:
       undici-types: 5.26.5
 
+  '@types/node@25.3.3':
+    dependencies:
+      undici-types: 7.18.2
+
   '@types/react-dom@19.2.3(@types/react@19.2.14)':
     dependencies:
       '@types/react': 19.2.14
@@ -3445,7 +3484,7 @@ snapshots:
       json-schema-to-ts: 1.6.4
       ts-morph: 12.0.0
 
-  '@vitejs/plugin-react@5.1.4(vite@5.4.21(@types/node@20.11.0))':
+  '@vitejs/plugin-react@5.1.4(vite@5.4.21(@types/node@25.3.3))':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.29.0)
@@ -3453,7 +3492,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-rc.3
       '@types/babel__core': 7.20.5
       react-refresh: 0.18.0
-      vite: 5.4.21(@types/node@20.11.0)
+      vite: 5.4.21(@types/node@25.3.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -3880,6 +3919,8 @@ snapshots:
   hasown@2.0.2:
     dependencies:
       function-bind: 1.1.2
+
+  html-to-image@1.11.13: {}
 
   http-errors@1.7.3:
     dependencies:
@@ -4445,6 +4486,8 @@ snapshots:
 
   undici-types@5.26.5: {}
 
+  undici-types@7.18.2: {}
+
   undici@5.28.4:
     dependencies:
       '@fastify/busboy': 2.1.1
@@ -4501,13 +4544,13 @@ snapshots:
       - supports-color
       - typescript
 
-  vite@5.4.21(@types/node@20.11.0):
+  vite@5.4.21(@types/node@25.3.3):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.5.6
       rollup: 4.59.0
     optionalDependencies:
-      '@types/node': 20.11.0
+      '@types/node': 25.3.3
       fsevents: 2.3.3
 
   web-vitals@0.2.4: {}
@@ -4554,6 +4597,10 @@ snapshots:
     dependencies:
       buffer-crc32: 0.2.13
       fd-slicer: 1.1.0
+
+  zod-to-json-schema@3.25.1(zod@4.3.6):
+    dependencies:
+      zod: 4.3.6
 
   zod@3.22.4: {}
 
