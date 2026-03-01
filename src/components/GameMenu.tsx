@@ -4,7 +4,7 @@ import { convex } from '../lib/convex';
 import { gameStore } from '../store/gameStore';
 import { FONT_FAMILY } from '../config';
 import type { PuzzleData } from '../types';
-import { ChevronLeft, ChevronRight, Play, ArrowLeft } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Play, ArrowLeft, Shuffle } from 'lucide-react';
 import { getWordlists } from '../data/wordlists/index';
 import { useTranslation } from '../i18n';
 import type { TranslationKeys } from '../i18n/types';
@@ -573,18 +573,36 @@ export function GameMenu() {
           ))}
         </div>
 
-        {/* START RECIPE button */}
-        <PushButton
-          icon={<Play size={18} fill="currentColor" strokeWidth={0} />}
-          label={t('menu.startRecipe')}
-          color="#4caf50"
-          hoverColor="#43a047"
-          height={44}
-          shadowDepth={6}
-          onClick={onCook}
-          disabled={isLoading}
-          style={{ width: '100%' }}
-        />
+        {/* START RECIPE + Randomize */}
+        <div style={{ width: '100%', display: 'flex', gap: 6 }}>
+          <PushButton
+            icon={<Play size={18} fill="currentColor" strokeWidth={0} />}
+            label={t('menu.startRecipe')}
+            color="#4caf50"
+            hoverColor="#43a047"
+            height={44}
+            shadowDepth={6}
+            onClick={onCook}
+            disabled={isLoading}
+            style={{ flex: 1 }}
+          />
+          <PushButton
+            icon={<Shuffle size={18} strokeWidth={2.5} />}
+            label=""
+            color="#ff9800"
+            hoverColor="#f57c00"
+            height={44}
+            shadowDepth={6}
+            onClick={() => {
+              if (!isLoading) {
+                setIndices(randomSelections(wordLists));
+                setCustomName('');
+              }
+            }}
+            disabled={isLoading}
+            style={{ width: 50 }}
+          />
+        </div>
 
         {/* Error */}
         {error && (
