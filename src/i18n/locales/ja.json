@@ -32,6 +32,20 @@
       "filling": "具材",
       "method": "調理法",
       "base": "ベース"
+    },
+    "tabs": {
+      "cook": "調理",
+      "leaderboard": "ランキング",
+      "history": "履歴"
+    },
+    "leaderboard": {
+      "loading": "読み込み中...",
+      "empty": "まだ完成した料理がありません。最初の一人になろう！",
+      "dishes": "品"
+    },
+    "history": {
+      "loading": "読み込み中...",
+      "empty": "まだ料理を完成させていません。さあ、調理を始めよう！"
     }
   },
   "game": {

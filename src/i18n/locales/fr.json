@@ -32,6 +32,20 @@
       "filling": "Garniture",
       "method": "Méthode",
       "base": "Base"
+    },
+    "tabs": {
+      "cook": "CUISINER",
+      "leaderboard": "CLASSEMENT",
+      "history": "HISTORIQUE"
+    },
+    "leaderboard": {
+      "loading": "Chargement...",
+      "empty": "Aucun plat terminé. Soyez le premier !",
+      "dishes": "plats"
+    },
+    "history": {
+      "loading": "Chargement...",
+      "empty": "Vous n'avez terminé aucun plat. Commencez à cuisiner !"
     }
   },
   "game": {

@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { toPng } from 'html-to-image';
+import { useMutation } from 'convex/react';
 import { GAME_W, GAME_H, FONT_FAMILY } from '../config';
 import { useGameStore } from '../App';
 import { gameStore } from '../store/gameStore';
@@ -66,6 +67,23 @@ export function VictoryOverlay() {
       setDailyBestScore(dailyDate, errorCount);
     }
   }, [gameMode, dailyDate, errorCount]);
+  const savedRef = useRef(false);
+  const saveResult = useMutation(api.gameResults.saveResult);
+
+  // Save game result on mount (once)
+  useEffect(() => {
+    if (savedRef.current || !victoryDish) return;
+    savedRef.current = true;
+    saveResult({
+      dishName: victoryDish,
+      difficulty,
+      stepCount,
+      totalSteps,
+      errorCount,
+    }).catch(() => {
+      // Silent — don't block the victory experience
+    });
+  }, [victoryDish, difficulty, stepCount, totalSteps, errorCount, saveResult]);
 
   // Animate in
   useEffect(() => {
@@ -137,7 +155,6 @@ export function VictoryOverlay() {
       gameStore.getState().resetGameplay();
     }
   };
-
   const diffConfig = DIFFICULTY_LABELS[difficulty];
   const msg = TROPHY_MESSAGES[msgIndex];
   const hasImage = !!victoryImageUrl;
@@ -151,7 +168,6 @@ export function VictoryOverlay() {
         : t('victory.playAgain');
 
   const PlayAgainIcon = gameMode === 'survival' ? ArrowRight : RotateCcw;
-
   return (
     <div
       style={{
@@ -388,7 +404,6 @@ export function VictoryOverlay() {
                 {t('victory.steps', { current: stepCount, total: totalSteps })}
               </div>
             </div>
-
             {/* Error count */}
             <div
               style={{

@@ -32,6 +32,20 @@
       "filling": "馅料",
       "method": "做法",
       "base": "主食"
+    },
+    "tabs": {
+      "cook": "烹饪",
+      "leaderboard": "排行榜",
+      "history": "历史"
+    },
+    "leaderboard": {
+      "loading": "加载中...",
+      "empty": "还没有完成的菜品。成为第一个吧！",
+      "dishes": "道菜"
+    },
+    "history": {
+      "loading": "加载中...",
+      "empty": "你还没有完成任何菜品。开始烹饪吧！"
     }
   },
   "game": {

@@ -32,6 +32,20 @@
       "filling": "속재료",
       "method": "조리법",
       "base": "베이스"
+    },
+    "tabs": {
+      "cook": "요리",
+      "leaderboard": "랭킹",
+      "history": "기록"
+    },
+    "leaderboard": {
+      "loading": "로딩 중...",
+      "empty": "아직 완성된 요리가 없습니다. 첫 번째가 되어보세요!",
+      "dishes": "요리"
+    },
+    "history": {
+      "loading": "로딩 중...",
+      "empty": "아직 완성한 요리가 없습니다. 요리를 시작하세요!"
     }
   },
   "game": {

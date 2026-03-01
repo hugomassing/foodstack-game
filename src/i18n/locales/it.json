@@ -32,6 +32,20 @@
       "filling": "Farcitura",
       "method": "Metodo",
       "base": "Base"
+    },
+    "tabs": {
+      "cook": "CUCINARE",
+      "leaderboard": "CLASSIFICA",
+      "history": "CRONOLOGIA"
+    },
+    "leaderboard": {
+      "loading": "Caricamento...",
+      "empty": "Nessun piatto completato. Sii il primo!",
+      "dishes": "piatti"
+    },
+    "history": {
+      "loading": "Caricamento...",
+      "empty": "Non hai ancora completato nessun piatto. Inizia a cucinare!"
     }
   },
   "game": {
