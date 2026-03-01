@@ -9,7 +9,7 @@ import {
   hexToCardColor,
 } from './FoodCard';
 import { FoodAssets } from '../data/food-assets';
-import { COLORS, PROCESSOR_RING_PAD, FONT_FAMILY, DPR } from '../config';
+import { FONT_FAMILY, DPR } from '../config';
 import type { CardType } from '../types';
 
 export class PuzzleCard extends FoodCard {
@@ -17,7 +17,7 @@ export class PuzzleCard extends FoodCard {
   cardLabel: string;
   itemName: string;
   stepId: string | null;
-  attachedTo: PuzzleCard | null = null;
+  attachedTo: string | null = null;
   cardDepth: number;
 
   constructor(
@@ -55,22 +55,7 @@ export class PuzzleCard extends FoodCard {
     this.cardDepth = type === 'processor' ? 2 : 1;
     this.setDepth(this.cardDepth);
 
-    if (type === 'processor') {
-      this.setInteractive();
-      const ring = scene.add.graphics();
-      const pad = PROCESSOR_RING_PAD;
-      ring.lineStyle(2, COLORS.PROCESSOR_RING, 0.8);
-      ring.strokeRoundedRect(
-        -FOOD_CARD_W / 2 - pad,
-        -FOOD_CARD_H / 2 - pad,
-        FOOD_CARD_W + pad * 2,
-        FOOD_CARD_H + pad * 2,
-        FOOD_CARD_RADIUS + pad,
-      );
-      this.add(ring);
-    } else {
-      this.setInteractive({ draggable: true });
-    }
+    this.setInteractive({ draggable: true });
 
     // Error card decorations
     if (type === 'error') {
