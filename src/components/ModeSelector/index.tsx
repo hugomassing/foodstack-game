@@ -31,6 +31,7 @@ import {
   Wheat,
   CupSoda,
   Drumstick,
+  Info,
 } from 'lucide-react';
 import { api } from '../../../convex/_generated/api';
 import { convex } from '../../lib/convex';
@@ -120,6 +121,7 @@ export function ModeSelector() {
   const [difficultyFor, setDifficultyFor] = useState<ModeWithDifficulty | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
   const [trophyEntry, setTrophyEntry] = useState<TrophyEntry | null>(null);
+  const [showAbout, setShowAbout] = useState(false);
   const trophyCardRef = useRef<HTMLDivElement>(null);
   const [realRecipe, setRealRecipe] = useState<RealRecipe | null>(null);
   const [realRecipeLoading, setRealRecipeLoading] = useState(false);
@@ -795,6 +797,134 @@ export function ModeSelector() {
 
       <LanguageSwitcher />
       <ProfileBadge />
+
+      {/* About button */}
+      <button
+        onClick={() => setShowAbout(true)}
+        style={{
+          position: 'absolute',
+          bottom: 12,
+          right: 12,
+          zIndex: 20,
+          width: 36,
+          height: 36,
+          borderRadius: 12,
+          border: '2px solid #3e2723',
+          background: '#fffaf0',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 0,
+        }}
+      >
+        <Info size={18} strokeWidth={2.5} color="#3e2723" />
+      </button>
+
+      {/* About overlay */}
+      {showAbout && (
+        <div
+          onClick={() => setShowAbout(false)}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(0,0,0,0.72)',
+            zIndex: 50,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: 420,
+              background: '#fffaf0',
+              borderRadius: 28,
+              border: '4px solid #3e2723',
+              boxShadow: '0 10px 0 #3e2723',
+              padding: '28px 32px',
+              fontFamily: FONT_FAMILY,
+              color: '#3e2723',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 16,
+            }}
+          >
+            <h2
+              style={{
+                margin: 0,
+                fontSize: 28,
+                fontWeight: 900,
+                fontFamily: TITLE_FONT_FAMILY,
+                textAlign: 'center',
+                textTransform: 'uppercase',
+              }}
+            >
+              About
+            </h2>
+
+            <div style={{ fontSize: 14, lineHeight: 1.6, display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <p style={{ margin: 0, textAlign: 'center', fontSize: 13, color: '#5d4037', lineHeight: 1.5 }}>
+                Cooked up in 48h by Hugo, a front-end engineer,<br />
+                for the Mistral AI Hackathon.
+              </p>
+
+              <div>
+                <div style={{ fontWeight: 800, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8d6e63', marginBottom: 4 }}>
+                  Powered by Mistral
+                </div>
+                <ul style={{ margin: 0, paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <li><strong>Mistral Large</strong> — recipes</li>
+                  <li><strong>Mistral Small</strong> — decoy ingredients</li>
+                  <li><strong>Pixtral</strong> — victory card art</li>
+                </ul>
+              </div>
+
+              <div>
+                <div style={{ fontWeight: 800, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8d6e63', marginBottom: 4 }}>
+                  Built with
+                </div>
+                <p style={{ margin: 0 }}>Phaser, React, Convex, TypeScript</p>
+              </div>
+
+              <div>
+                <div style={{ fontWeight: 800, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8d6e63', marginBottom: 4 }}>
+                  Links
+                </div>
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <a href="https://github.com/hugomassing" target="_blank" rel="noopener noreferrer" style={{ color: '#29b6f6', fontWeight: 700, textDecoration: 'none' }}>GitHub</a>
+                  <a href="https://www.linkedin.com/in/hugomassing" target="_blank" rel="noopener noreferrer" style={{ color: '#29b6f6', fontWeight: 700, textDecoration: 'none' }}>LinkedIn</a>
+                  <a href="https://radaar.app" target="_blank" rel="noopener noreferrer" style={{ color: '#29b6f6', fontWeight: 700, textDecoration: 'none' }}>radaar.app</a>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowAbout(false)}
+              style={{
+                alignSelf: 'center',
+                fontSize: 14,
+                fontWeight: 900,
+                color: '#ffffff',
+                background: '#8d6e63',
+                border: '3px solid #3e2723',
+                borderRadius: 12,
+                padding: '10px 28px',
+                cursor: 'pointer',
+                fontFamily: FONT_FAMILY,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                letterSpacing: '0.04em',
+              }}
+            >
+              <X size={16} strokeWidth={3} />
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Logo */}
       <div
