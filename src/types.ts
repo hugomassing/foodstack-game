@@ -1,5 +1,15 @@
 export type CardType = 'ingredient' | 'intermediate' | 'error' | 'processor';
 
+export type GameMode = 'daily' | 'survival' | 'normal' | 'seeded';
+
+export interface SurvivalRoundResult {
+  dishName: string;
+  difficulty: import('./store/gameStore').Difficulty;
+  errorsUsed: number;
+  stepsCompleted: number;
+  totalSteps: number;
+}
+
 export interface Step {
   stepId: string;
   processor: string;

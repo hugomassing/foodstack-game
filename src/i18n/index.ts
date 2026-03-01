@@ -36,10 +36,7 @@ export function t(key: TranslationKeys, params?: Record<string, string | number>
 }
 
 export function useTranslation() {
-  const dict = useSyncExternalStore(
-    localeStore.subscribe,
-    () => localeStore.getState().dict,
-  );
+  const dict = useSyncExternalStore(localeStore.subscribe, () => localeStore.getState().dict);
   // Return a bound t that uses the current dict (triggers re-render on change)
   const translate = (key: TranslationKeys, params?: Record<string, string | number>): string => {
     let value = resolve(dict, key) ?? resolve(en, key) ?? key;

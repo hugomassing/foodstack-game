@@ -20,6 +20,7 @@ import {
   Wheat,
   UtensilsCrossed,
   CircleDot,
+  Heart,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -87,6 +88,9 @@ export function QuestBookPanel() {
   const availableIntermediates = useGameStore((s) => s.availableIntermediates);
   const stepCount = useGameStore((s) => s.stepCount);
   const totalSteps = useGameStore((s) => s.totalSteps);
+  const gameMode = useGameStore((s) => s.gameMode);
+  const survivalLives = useGameStore((s) => s.survivalLives);
+  const survivalRound = useGameStore((s) => s.survivalRound);
   const { t } = useTranslation();
 
   const isStepActionable = useCallback(
@@ -174,7 +178,23 @@ export function QuestBookPanel() {
           <div style={{ fontSize: 16, fontWeight: 900, color: '#3e2723', letterSpacing: '0.04em' }}>
             {t('quest.recipe')}
           </div>
-          <div style={{ fontSize: 11, color: '#d84315', marginTop: 2, fontWeight: 900 }}>{dishLabel}</div>
+          <div style={{ fontSize: 11, color: '#d84315', marginTop: 2, fontWeight: 900 }}>
+            {dishLabel}
+          </div>
+          {gameMode === 'survival' && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
+              <span
+                style={{ fontSize: 9, fontWeight: 900, color: '#3e2723', letterSpacing: '0.06em' }}
+              >
+                {t('survival.round', { round: survivalRound })}
+              </span>
+              <div style={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                {Array.from({ length: Math.min(survivalLives, 10) }).map((_, i) => (
+                  <Heart key={i} size={10} strokeWidth={2} fill="#e53935" color="#e53935" />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Body */}
@@ -190,8 +210,19 @@ export function QuestBookPanel() {
           }}
         >
           {/* Progress row */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-            <span style={{ fontSize: 10, color: '#a1887f', fontWeight: 900, letterSpacing: '0.08em' }}>{t('quest.progress')}</span>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 8,
+            }}
+          >
+            <span
+              style={{ fontSize: 10, color: '#a1887f', fontWeight: 900, letterSpacing: '0.08em' }}
+            >
+              {t('quest.progress')}
+            </span>
             <span
               style={{
                 fontSize: 9,
@@ -341,7 +372,11 @@ function StepRow({
           ...(completed
             ? { background: '#4caf50' }
             : actionable
-              ? { border: '2px solid #ffca28', background: '#fff8e1', position: 'relative' as const }
+              ? {
+                  border: '2px solid #ffca28',
+                  background: '#fff8e1',
+                  position: 'relative' as const,
+                }
               : { border: '2px solid #d0d0d0', background: 'transparent' }),
         }}
       >

@@ -49,6 +49,46 @@
     "youWin": "你赢了！",
     "playAgain": "再来一局",
     "saveCard": "保存卡片",
-    "steps": "{current}/{total} 步骤"
+    "steps": "{current}/{total} 步骤",
+    "errors": "{count} 个错误"
+  },
+  "modes": {
+    "title": "FOODSTACK",
+    "play": "开始",
+    "start": "开始",
+    "configure": "设置",
+    "back": "返回",
+    "chooseDifficulty": "选择难度",
+    "daily": {
+      "title": "每日挑战",
+      "description": "今天的食谱挑战。10次错误限制。",
+      "best": "最佳: {count}"
+    },
+    "survival": {
+      "title": "生存模式",
+      "description": "尽可能生存更多食谱。10条生命。"
+    },
+    "normal": {
+      "title": "快速游戏",
+      "description": "随机食谱，无限错误。"
+    },
+    "seeded": {
+      "title": "自定义",
+      "description": "选择类别，创建菜名。"
+    }
+  },
+  "survival": {
+    "round": "第 {round} 轮",
+    "lives": "{count} 条命",
+    "continue": "继续",
+    "chooseNext": "选择下一个食谱",
+    "errors": "错误"
+  },
+  "gameOver": {
+    "title": "厨房灾难！",
+    "tooManyErrors": "失败太多 ({count}/{max})",
+    "survivalEnd": "生存了 {rounds} 轮！",
+    "tryAgain": "重试",
+    "backToMenu": "返回菜单"
   }
 }

@@ -49,6 +49,46 @@
     "youWin": "승리!",
     "playAgain": "다시 하기",
     "saveCard": "카드 저장",
-    "steps": "{current}/{total} 단계"
+    "steps": "{current}/{total} 단계",
+    "errors": "{count} 오류"
+  },
+  "modes": {
+    "title": "FOODSTACK",
+    "play": "플레이",
+    "start": "시작",
+    "configure": "설정",
+    "back": "뒤로",
+    "chooseDifficulty": "난이도 선택",
+    "daily": {
+      "title": "일일",
+      "description": "오늘의 레시피 도전. 오류 10회 제한.",
+      "best": "최고: {count}"
+    },
+    "survival": {
+      "title": "서바이벌",
+      "description": "최대한 많은 레시피를 생존하세요. 생명 10개."
+    },
+    "normal": {
+      "title": "빠른 플레이",
+      "description": "랜덤 레시피, 오류 무제한."
+    },
+    "seeded": {
+      "title": "커스텀",
+      "description": "카테고리를 선택하고 요리 이름을 만드세요."
+    }
+  },
+  "survival": {
+    "round": "라운드 {round}",
+    "lives": "생명 {count}",
+    "continue": "계속",
+    "chooseNext": "다음 레시피 선택",
+    "errors": "오류"
+  },
+  "gameOver": {
+    "title": "주방 대참사!",
+    "tooManyErrors": "실패가 너무 많습니다 ({count}/{max})",
+    "survivalEnd": "{rounds} 라운드 생존!",
+    "tryAgain": "다시 시도",
+    "backToMenu": "메뉴로"
   }
 }
