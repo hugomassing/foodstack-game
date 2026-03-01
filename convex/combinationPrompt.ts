@@ -28,16 +28,16 @@ Given a cooking action (processor) and a list of ingredients, generate a funny, 
 ## ASSET_CATALOG (use these exact IDs)
 fruit: apple, avocado, banana, blueberry, cherry, coconut, dragonfruit, grapes, green_apple, kiwi, lemon, lime, mango, melon, orange, peach, pear, pineapple, raspberry, strawberry, tangerine, watermelon
 vegetable: beans, beet, bok_choy, broccoli, cabbage, carrot, chili, corn, cucumber, eggplant, garlic, leek, lettuce, mushroom, olive, onion, pea_pod, peas, pepper, pickle, potato, pumpkin, radish, sweet_potato, tomato, tomato_slice, turnip, zucchini
-protein: bacon, drumstick, egg, fried_egg, ham, ham_slice, meat_bone, patty, pepperoni, raw_meat, sausage, sausage_chain, steak
-seafood: crab, fish, lobster, oyster, salmon, shrimp, squid
-dairy: butter, cheese, cheese_slice, cream, milk, shredded_cheese, yogurt
-grain: bagel, baguette, bread_loaf, bread_slice, bun_bottom, bun_top, cereal, flatbread, noodles, oatmeal, pasta, pretzel, rice, wheat
-ingredient: acorn, canned_food, chestnut, dough, flour, ginger, ginger_root, herb, honeycomb, ice_cube, peanuts, salt, sugar
-condiment: chocolate_spread, guacamole, honey, hot_sauce, hummus, jam, ketchup, mayo, mustard, olive_oil, peanut_butter, soy_sauce, tomato_sauce
-prepared: burger, burrito, cheeseburger, curry, dumpling, falafel, fish_cake, fondue, fries, hotdog, lasagna, onigiri, paella, pancakes, pie, pita, pizza, ramen, salad, sandwich, skewer, soup, spaghetti, stew, sushi, taco, takeout_box, tamale, tempura, waffle
-sweet: cake, cake_slice, candy, cheesecake, chocolate, cinnamon_roll, cookie, cotton_candy, creme_brulee, cupcake, donut, eclair, flan, fortune_cookie, ice_cream, jelly, lollipop, macaron, moon_cake, muffin, pain_au_chocolat, popsicle, shaved_ice
+protein: bacon, drumstick, egg, fried_egg, ham, ham_slice, meat_bone, patty, pepperoni, poultry_leg, raw_meat, sausage, sausage_chain, steak
+seafood: blowfish, crab, fish, lobster, oyster, salmon, shrimp, squid
+dairy: butter, cheese, cheese_slice, cheese_wedge, cream, milk, shredded_cheese, yogurt
+grain: bagel, baguette, bread_loaf, bread_slice, bun_bottom, bun_top, cereal, cereal_box, cooked_rice, croissant, ear_of_rice, flatbread, noodles, oatmeal, pasta, pretzel, rice, wheat
+ingredient: acorn, canned_food, chestnut, dough, flour, ginger, ginger_root, herb, honeycomb, ice_cube, jar, peanuts, salt, sugar
+condiment: chocolate_spread, guacamole, honey, honey_pot, hot_sauce, hummus, jam, ketchup, mayo, mustard, olive_oil, peanut_butter, soy_sauce, tomato_sauce
+prepared: bento, burger, burrito, cheeseburger, curry, dumpling, falafel, fish_cake, fondue, french_fries, fries, hamburger, hot_dog, hotdog, lasagna, onigiri, paella, pancakes, pie, pita, pizza, pizza_slice, ramen, rice_ball, salad, sandwich, skewer, soup, spaghetti, steaming_bowl, stew, sushi, taco, takeout_box, tamale, tempura, waffle
+sweet: birthday_cake, cake, cake_slice, candy, candy_cane, cheesecake, chocolate, cinnamon_roll, cookie, cotton_candy, creme_brulee, cupcake, dango, donut, eclair, flan, fortune_cookie, gummy_bear, ice_cream, jelly, lollipop, macaron, moon_cake, muffin, pain_au_chocolat, popsicle, shaved_ice, shortcake, soft_serve
 snack: chips, popcorn, rice_cracker
-drink: beer, bubble_tea, champagne, cocktail, coffee, hot_beverage, juice_box, milkshake, sake, soda, tea, tropical_drink, water, wine_bottle
+drink: beer, beer_mug, bubble_tea, champagne, cocktail, coffee, glass_of_milk, hot_beverage, juice_box, juice_cup, milkshake, sake, soda, tea, teapot, tropical_drink, water, whiskey, wine_bottle, wine_glass
 
 ## LANGUAGE
 Always return the "name" field in English. The game handles translations separately.

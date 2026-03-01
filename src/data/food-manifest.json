@@ -153,6 +153,23 @@
     ]
   },
   {
+    "id": "basket",
+    "label": "Basket",
+    "category": "utensil",
+    "filename": "food/utensil/basket.png",
+    "color": "#d89880",
+    "description": "A woven basket used for carrying produce, bread, or picnic supplies",
+    "tags": [
+      "basket",
+      "woven",
+      "produce",
+      "bread",
+      "picnic",
+      "carrying",
+      "market"
+    ]
+  },
+  {
     "id": "beans",
     "label": "Beans",
     "category": "vegetable",
@@ -184,6 +201,23 @@
       "cold",
       "grain-based",
       "refreshing"
+    ]
+  },
+  {
+    "id": "beer_mug",
+    "label": "Beer Mug",
+    "category": "drink",
+    "filename": "food/drink/beer_mug.png",
+    "color": "#f8c848",
+    "description": "A frothy beer mug with golden ale and a foamy head",
+    "tags": [
+      "beer",
+      "mug",
+      "ale",
+      "frothy",
+      "golden",
+      "pub",
+      "draft"
     ]
   },
   {
@@ -235,6 +269,40 @@
       "balanced",
       "portable",
       "colorful"
+    ]
+  },
+  {
+    "id": "birthday_cake",
+    "label": "Birthday Cake",
+    "category": "sweet",
+    "filename": "food/sweet/birthday_cake.png",
+    "color": "#e85868",
+    "description": "A layered cake with frosting and lit candles, for celebrations and birthdays",
+    "tags": [
+      "cake",
+      "birthday",
+      "candles",
+      "celebration",
+      "frosting",
+      "layered",
+      "party"
+    ]
+  },
+  {
+    "id": "blowfish",
+    "label": "Blowfish",
+    "category": "seafood",
+    "filename": "food/seafood/blowfish.png",
+    "color": "#d89880",
+    "description": "A pufferfish, known in Japanese cuisine as fugu — a delicacy requiring expert preparation",
+    "tags": [
+      "fish",
+      "fugu",
+      "japanese",
+      "pufferfish",
+      "seafood",
+      "delicacy",
+      "exotic"
     ]
   },
   {
@@ -646,6 +714,23 @@
     ]
   },
   {
+    "id": "cheese_wedge",
+    "label": "Cheese Wedge",
+    "category": "dairy",
+    "filename": "food/dairy/cheese_wedge.png",
+    "color": "#f8a830",
+    "description": "A wedge of yellow cheese with characteristic holes, like Swiss or Emmental",
+    "tags": [
+      "cheese",
+      "wedge",
+      "swiss",
+      "emmental",
+      "holes",
+      "dairy",
+      "yellow"
+    ]
+  },
+  {
     "id": "cheeseburger",
     "label": "Cheeseburger",
     "category": "prepared",
@@ -881,6 +966,23 @@
       "aromatic",
       "morning",
       "energizing"
+    ]
+  },
+  {
+    "id": "cooked_rice",
+    "label": "Cooked Rice",
+    "category": "grain",
+    "filename": "food/grain/cooked_rice.png",
+    "color": "#d82840",
+    "description": "A bowl of freshly steamed white rice, a staple food in many Asian cuisines",
+    "tags": [
+      "rice",
+      "grain",
+      "steamed",
+      "asian",
+      "staple",
+      "bowl",
+      "carb"
     ]
   },
   {
@@ -1190,6 +1292,23 @@
     ]
   },
   {
+    "id": "ear_of_rice",
+    "label": "Ear of Rice",
+    "category": "grain",
+    "filename": "food/grain/ear_of_rice.png",
+    "color": "#70b050",
+    "description": "A stalk of ripe rice or wheat, representing grain harvest and agriculture",
+    "tags": [
+      "rice",
+      "wheat",
+      "grain",
+      "stalk",
+      "harvest",
+      "agriculture",
+      "cereal"
+    ]
+  },
+  {
     "id": "eclair",
     "label": "Éclair",
     "category": "sweet",
@@ -1411,6 +1530,23 @@
     ]
   },
   {
+    "id": "french_fries",
+    "label": "French Fries",
+    "category": "prepared",
+    "filename": "food/prepared/french_fries.png",
+    "color": "#d82840",
+    "description": "Golden crispy fried potato sticks, a popular fast-food side dish",
+    "tags": [
+      "fries",
+      "potato",
+      "fried",
+      "fast-food",
+      "crispy",
+      "side",
+      "snack"
+    ]
+  },
+  {
     "id": "fried_egg",
     "label": "Fried Egg",
     "category": "protein",
@@ -1510,6 +1646,23 @@
       "asian",
       "fibrous",
       "medicinal"
+    ]
+  },
+  {
+    "id": "glass_of_milk",
+    "label": "Glass of Milk",
+    "category": "drink",
+    "filename": "food/drink/glass_of_milk.png",
+    "color": "#8898a0",
+    "description": "A tall glass filled with fresh white milk",
+    "tags": [
+      "milk",
+      "glass",
+      "dairy",
+      "white",
+      "calcium",
+      "fresh",
+      "beverage"
     ]
   },
   {
@@ -1615,6 +1768,23 @@
     ]
   },
   {
+    "id": "hamburger",
+    "label": "Hamburger",
+    "category": "prepared",
+    "filename": "food/prepared/hamburger.png",
+    "color": "#d89880",
+    "description": "A classic hamburger with bun, patty, lettuce, tomato, and cheese",
+    "tags": [
+      "burger",
+      "beef",
+      "fast-food",
+      "american",
+      "bun",
+      "grilled",
+      "sandwich"
+    ]
+  },
+  {
     "id": "herb",
     "label": "Herb",
     "category": "ingredient",
@@ -1649,6 +1819,23 @@
     ]
   },
   {
+    "id": "honey_pot",
+    "label": "Honey Pot",
+    "category": "condiment",
+    "filename": "food/condiment/honey_pot.png",
+    "color": "#f09008",
+    "description": "A ceramic pot of golden honey with a wooden dipper",
+    "tags": [
+      "honey",
+      "pot",
+      "golden",
+      "sweet",
+      "dipper",
+      "natural",
+      "bee"
+    ]
+  },
+  {
     "id": "honeycomb",
     "label": "Honeycomb",
     "category": "ingredient",
@@ -1680,6 +1867,23 @@
       "morning",
       "classic",
       "comforting"
+    ]
+  },
+  {
+    "id": "hot_dog",
+    "label": "Hot Dog",
+    "category": "prepared",
+    "filename": "food/prepared/hot_dog.png",
+    "color": "#d89880",
+    "description": "A grilled sausage served in a sliced bun, a classic street food",
+    "tags": [
+      "sausage",
+      "bun",
+      "grilled",
+      "american",
+      "street-food",
+      "fast-food",
+      "mustard"
     ]
   },
   {
@@ -1867,6 +2071,23 @@
       "classic",
       "thick",
       "american"
+    ]
+  },
+  {
+    "id": "kitchen_scale",
+    "label": "Kitchen Scale",
+    "category": "utensil",
+    "filename": "food/utensil/kitchen_scale.png",
+    "color": "#f8a830",
+    "description": "A balance scale used for weighing ingredients precisely in cooking and baking",
+    "tags": [
+      "scale",
+      "balance",
+      "weighing",
+      "measuring",
+      "precision",
+      "baking",
+      "kitchen"
     ]
   },
   {
@@ -2703,6 +2924,23 @@
     ]
   },
   {
+    "id": "pizza_slice",
+    "label": "Pizza Slice",
+    "category": "prepared",
+    "filename": "food/prepared/pizza_slice.png",
+    "color": "#f8c848",
+    "description": "A triangular slice of pizza with melted cheese and toppings",
+    "tags": [
+      "pizza",
+      "cheese",
+      "italian",
+      "slice",
+      "fast-food",
+      "baked",
+      "dough"
+    ]
+  },
+  {
     "id": "plate",
     "label": "Plate Setting",
     "category": "utensil",
@@ -2785,6 +3023,23 @@
       "filling",
       "carb",
       "staple"
+    ]
+  },
+  {
+    "id": "poultry_leg",
+    "label": "Poultry Leg",
+    "category": "protein",
+    "filename": "food/protein/poultry_leg.png",
+    "color": "#c06848",
+    "description": "A roasted chicken or turkey leg, a hearty piece of poultry",
+    "tags": [
+      "chicken",
+      "turkey",
+      "leg",
+      "roasted",
+      "poultry",
+      "meat",
+      "protein"
     ]
   },
   {
@@ -2921,6 +3176,23 @@
       "boiled",
       "fluffy",
       "universal"
+    ]
+  },
+  {
+    "id": "rice_ball",
+    "label": "Rice Ball",
+    "category": "prepared",
+    "filename": "food/prepared/rice_ball.png",
+    "color": "#282830",
+    "description": "A Japanese onigiri rice ball wrapped in nori seaweed",
+    "tags": [
+      "rice",
+      "onigiri",
+      "japanese",
+      "nori",
+      "seaweed",
+      "snack",
+      "portable"
     ]
   },
   {
@@ -3128,6 +3400,40 @@
     ]
   },
   {
+    "id": "shopping_cart",
+    "label": "Shopping Cart",
+    "category": "utensil",
+    "filename": "food/utensil/shopping_cart.png",
+    "color": "#607078",
+    "description": "A supermarket shopping cart used for grocery shopping and gathering ingredients",
+    "tags": [
+      "cart",
+      "shopping",
+      "grocery",
+      "supermarket",
+      "ingredients",
+      "trolley",
+      "store"
+    ]
+  },
+  {
+    "id": "shortcake",
+    "label": "Shortcake",
+    "category": "sweet",
+    "filename": "food/sweet/shortcake.png",
+    "color": "#f8d880",
+    "description": "A slice of strawberry shortcake with cream and a fresh strawberry on top",
+    "tags": [
+      "cake",
+      "strawberry",
+      "cream",
+      "slice",
+      "dessert",
+      "pastry",
+      "light"
+    ]
+  },
+  {
     "id": "shredded_cheese",
     "label": "Shredded Cheese",
     "category": "dairy",
@@ -3193,6 +3499,23 @@
       "sugary",
       "refreshing",
       "canned"
+    ]
+  },
+  {
+    "id": "soft_serve",
+    "label": "Soft Serve Ice Cream",
+    "category": "sweet",
+    "filename": "food/sweet/soft_serve.png",
+    "color": "#f8e8b0",
+    "description": "A swirl of soft-serve ice cream in a cone, a classic summer treat",
+    "tags": [
+      "ice-cream",
+      "cone",
+      "soft-serve",
+      "swirl",
+      "frozen",
+      "summer",
+      "dessert"
     ]
   },
   {
@@ -3329,6 +3652,23 @@
       "juicy",
       "premium",
       "savory"
+    ]
+  },
+  {
+    "id": "steaming_bowl",
+    "label": "Steaming Bowl",
+    "category": "prepared",
+    "filename": "food/prepared/steaming_bowl.png",
+    "color": "#f8a830",
+    "description": "A bowl of hot noodle soup with steam rising, like ramen or pho",
+    "tags": [
+      "noodles",
+      "soup",
+      "hot",
+      "steaming",
+      "ramen",
+      "pho",
+      "asian"
     ]
   },
   {
@@ -3553,6 +3893,40 @@
     ]
   },
   {
+    "id": "thermometer",
+    "label": "Thermometer",
+    "category": "utensil",
+    "filename": "food/utensil/thermometer.png",
+    "color": "#d82840",
+    "description": "A temperature gauge used to check cooking temps, food safety, and oven heat",
+    "tags": [
+      "thermometer",
+      "temperature",
+      "cooking",
+      "food-safety",
+      "heat",
+      "measuring",
+      "kitchen"
+    ]
+  },
+  {
+    "id": "timer",
+    "label": "Kitchen Timer",
+    "category": "utensil",
+    "filename": "food/utensil/timer.png",
+    "color": "#607078",
+    "description": "A countdown timer used in the kitchen to track cooking and baking times",
+    "tags": [
+      "timer",
+      "countdown",
+      "cooking",
+      "baking",
+      "time",
+      "kitchen",
+      "clock"
+    ]
+  },
+  {
     "id": "tomato",
     "label": "Tomato",
     "category": "vegetable",
@@ -3669,6 +4043,23 @@
       "breakfast",
       "golden",
       "topped"
+    ]
+  },
+  {
+    "id": "wastebasket",
+    "label": "Wastebasket",
+    "category": "utensil",
+    "filename": "food/utensil/wastebasket.png",
+    "color": "#607078",
+    "description": "A trash bin used in the kitchen for disposing of food scraps and waste",
+    "tags": [
+      "trash",
+      "bin",
+      "waste",
+      "disposal",
+      "kitchen",
+      "scraps",
+      "cleaning"
     ]
   },
   {

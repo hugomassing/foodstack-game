@@ -61,6 +61,13 @@ export class PreloadScene extends Phaser.Scene {
 
     FoodAssets.preload(this);
 
+    // Audio
+    this.load.audio('sfx_step_complete', 'assets/audio/step-complete.mp3');
+    this.load.audio('sfx_step_fail', 'assets/audio/step-fail.wav');
+    this.load.audio('sfx_card_hover', 'assets/audio/card-hover.wav');
+    this.load.audio('sfx_card_drop', 'assets/audio/card-drop.wav');
+
+    // Background food icons
     this.load.image('bg_burrito', 'assets/bg/burrito.png');
     this.load.image('bg_pizza', 'assets/bg/pizza.png');
     this.load.image('bg_ramen', 'assets/bg/ramen.png');

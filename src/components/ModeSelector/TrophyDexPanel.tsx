@@ -5,6 +5,7 @@ import { api } from '../../../convex/_generated/api';
 import { useTranslation } from '../../i18n';
 import type { TranslationKeys } from '../../i18n/types';
 import { CHILI_SRC, DIFFICULTY_COLORS, DIFFICULTY_CHILIS, MODE_COLORS } from './constants';
+import { playTapSound } from './sounds';
 
 export type TrophyEntry = {
   dishName: string;
@@ -29,7 +30,7 @@ function TrophyDetail({ entry, onBack }: { entry: TrophyEntry; onBack: () => voi
     >
       {/* Back button */}
       <div
-        onClick={onBack}
+        onClick={() => { playTapSound(); onBack(); }}
         style={{
           alignSelf: 'flex-start',
           fontSize: 11,
@@ -234,7 +235,7 @@ export function TrophyDexPanel() {
       {data.map((entry) => (
         <div
           key={entry.dishName}
-          onClick={entry.acquired ? () => setSelected(entry) : undefined}
+          onClick={entry.acquired ? () => { playTapSound(); setSelected(entry); } : undefined}
           style={{
             background: '#ffffff',
             borderRadius: 10,

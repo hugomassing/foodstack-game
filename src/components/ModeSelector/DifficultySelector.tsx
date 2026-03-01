@@ -1,5 +1,6 @@
 import type { Difficulty } from '../../store/gameStore';
 import { CHILI_SRC, DIFFICULTIES } from './constants';
+import { playTapSound } from './sounds';
 
 export function DifficultySelector({
   value,
@@ -17,7 +18,7 @@ export function DifficultySelector({
         return (
           <div
             key={d.value}
-            onClick={disabled ? undefined : () => onChange(d.value)}
+            onClick={disabled ? undefined : () => { playTapSound(); onChange(d.value); }}
             style={{
               flex: 1,
               padding: '8px 6px',

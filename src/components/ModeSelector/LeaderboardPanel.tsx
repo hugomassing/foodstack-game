@@ -3,6 +3,7 @@ import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { useTranslation } from '../../i18n';
 import type { TranslationKeys } from '../../i18n/types';
+import { playTapSound } from './sounds';
 
 const RANK_BADGES = ['#ffd700', '#c0c0c0', '#cd7f32'];
 
@@ -126,7 +127,7 @@ export function LeaderboardPanel() {
         {(['trophies', 'survival'] as const).map((key) => (
           <button
             key={key}
-            onClick={() => setTab(key)}
+            onClick={() => { playTapSound(); setTab(key); }}
             style={{
               flex: 1,
               padding: '6px 0',

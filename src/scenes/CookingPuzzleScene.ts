@@ -646,6 +646,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
       this.hoverTimer = null;
       this.pendingHoverCard = null;
 
+      this.sound.play('sfx_card_hover', { volume: 0.7 });
       this.tweens.killTweensOf(card);
       this.tweens.add({
         targets: card,
@@ -780,6 +781,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     if (!attachments) return;
     if (attachments.some((a) => a.card === ingredientCard)) return;
 
+    this.sound.play('sfx_card_drop');
     ingredientCard.attachedTo = procName;
     attachments.push({
       card: ingredientCard,
@@ -1155,6 +1157,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     // Camera shake to emphasize the error
     this.cameras.main.shake(200, 0.006);
+    this.sound.play('sfx_step_fail');
 
     // Increment error count (addError triggers game_over phase at maxErrors)
     gameStore.getState().addError();
@@ -1210,6 +1213,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     }
 
     this.cameras.main.flash(300, 46, 204, 113, false);
+    if (!isRedo) this.sound.play('sfx_step_complete');
 
     const attachments = this.processorAttachments.get(procName);
     const attachedCards = attachments ? attachments.map((a) => a.card) : [];

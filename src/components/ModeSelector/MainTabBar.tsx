@@ -2,6 +2,7 @@ import { Clock, Play, Trophy } from 'lucide-react';
 import { FONT_FAMILY } from '../../config';
 import { useTranslation } from '../../i18n';
 import type { TranslationKeys } from '../../i18n/types';
+import { playTapSound } from './sounds';
 
 export type MainTab = 'modes' | 'rankings' | 'history' | 'trophies';
 
@@ -22,7 +23,7 @@ export function MainTabBar({ value, onChange }: { value: MainTab; onChange: (tab
         return (
           <div
             key={item.value}
-            onClick={() => onChange(item.value)}
+            onClick={() => { playTapSound(); onChange(item.value); }}
             style={{
               flex: 1,
               padding: '7px 0',

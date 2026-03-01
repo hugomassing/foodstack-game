@@ -3,6 +3,7 @@ import { User } from 'lucide-react';
 import { gameStore } from '../../store/gameStore';
 import { useGameStore } from '../../App';
 import { FONT_FAMILY } from '../../config';
+import { playTapSound } from './sounds';
 
 export function ProfileBadge() {
   const displayName = useGameStore((s) => s.displayName);
@@ -10,7 +11,7 @@ export function ProfileBadge() {
 
   return (
     <div
-      onClick={() => gameStore.getState().setShowAuthModal(true)}
+      onClick={() => { playTapSound(); gameStore.getState().setShowAuthModal(true); }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{

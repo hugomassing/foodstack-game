@@ -3,6 +3,7 @@ import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { useTranslation, loadLocale } from '../../i18n';
 import { LOCALES } from './constants';
+import { playTapSound } from './sounds';
 
 export function LanguageSwitcher() {
   const { locale } = useTranslation();
@@ -26,7 +27,7 @@ export function LanguageSwitcher() {
   return (
     <div ref={ref} style={{ position: 'absolute', top: 12, right: 12, zIndex: 20 }}>
       <div
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => { playTapSound(); setOpen((v) => !v); }}
         style={{
           borderRadius: 12,
           background: '#fffaf0',
@@ -68,6 +69,7 @@ export function LanguageSwitcher() {
             <div
               key={l.code}
               onClick={() => {
+                playTapSound();
                 loadLocale(l.code);
                 saveLocale({ locale: l.code }).catch(() => { });
                 setOpen(false);

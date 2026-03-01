@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FONT_FAMILY } from '../../config';
+import { playClickSound } from './sounds';
 
 export function PushButton({
   icon,
@@ -50,6 +51,7 @@ export function PushButton({
       onMouseUp={() => {
         if (pressed) {
           setPressed(false);
+          playClickSound();
           onClick();
         }
       }}
