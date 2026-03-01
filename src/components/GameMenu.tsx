@@ -429,6 +429,9 @@ export function GameMenu() {
           Create Recipe
         </h1>
 
+        {/* Difficulty selector */}
+        <DifficultySelector value={difficulty} onChange={setDifficulty} disabled={isLoading} />
+
         {/* Selector rows */}
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 4 }}>
           {CATEGORIES.map((cat) => (
@@ -511,9 +514,6 @@ export function GameMenu() {
             </div>
           )}
         </div>
-
-        {/* Difficulty selector */}
-        <DifficultySelector value={difficulty} onChange={setDifficulty} disabled={isLoading} />
 
         {/* START RECIPE button */}
         <PushButton

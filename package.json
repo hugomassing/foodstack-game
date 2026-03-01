@@ -4,7 +4,7 @@
   "type": "module",
   "packageManager": "pnpm@9.6.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "convex dev & vite",
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
