@@ -11,7 +11,7 @@ import { getWordlists } from '../data/wordlists/index';
 import { Heart } from 'lucide-react';
 
 export function RecipePickOverlay() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const survivalLives = useGameStore((s) => s.survivalLives);
   const survivalRound = useGameStore((s) => s.survivalRound);
   const survivalHistory = useGameStore((s) => s.survivalHistory);
@@ -40,6 +40,7 @@ export function RecipePickOverlay() {
       const puzzleData = await convex.action(api.generator.generateOrGetRecipe, {
         dishName,
         difficulty,
+        locale,
       });
       gameStore.getState().startSurvivalRound(puzzleData as PuzzleData, difficulty);
     } catch (err) {

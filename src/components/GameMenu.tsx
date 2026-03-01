@@ -279,6 +279,7 @@ export function GameMenu() {
       const puzzleData = await convex.action(api.generator.generateOrGetRecipe, {
         dishName: cacheKey,
         difficulty,
+        locale,
       });
       setIsLoading(false);
       gameStore.setState({ maxErrors: livesEnabled ? 10 : Infinity });

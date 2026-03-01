@@ -15,25 +15,41 @@ import {
 } from "./victoryCardPrompt";
 import { z } from "zod";
 
-const TRANSLATION_LOCALES = ["de", "es", "fr", "it", "ja", "ko", "pt", "zh"];
+const LOCALE_NAMES: Record<string, string> = {
+  de: "German",
+  es: "Spanish",
+  fr: "French",
+  it: "Italian",
+  ja: "Japanese",
+  ko: "Korean",
+  pt: "Portuguese",
+  zh: "Chinese",
+};
 
-const TRANSLATE_RECIPE_PROMPT = `You are a professional translator for a cooking puzzle game.
+function buildRewriteRecipePrompt(locale: string): string {
+  const localeName = LOCALE_NAMES[locale] ?? locale;
+  return `You are a professional translator for a cooking puzzle game.
 
-Given a JSON object mapping string keys to English text values, translate ALL values into these 8 locales: ${TRANSLATION_LOCALES.join(", ")}.
+Given a JSON object mapping string keys to English text values, translate ALL values into ${localeName} (locale code: ${locale}).
 
-Return a JSON object where each key from the input maps to an object of { locale: translatedText }.
+Return a JSON object where each key from the input maps to an object with a single key "${locale}" containing the translated text.
+For example, if the input is {"dishName": "Pasta"}, return {"dishName": {"${locale}": "translated text"}}.
 
 Rules:
-- Translate naturally for each language — adapt culinary terms appropriately
+- Translate naturally for ${localeName} — adapt culinary terms appropriately
 - Keep translations concise (similar length to English)
 - Do NOT translate the keys, only the values
-- Every key in the input MUST appear in the output with all 8 locale translations`;
+- Every key in the input MUST appear in the output`;
+}
 
-const TRANSLATE_TEXT_PROMPT = `You are a professional translator for a cooking game.
+function buildRewriteTextPrompt(locale: string): string {
+  const localeName = LOCALE_NAMES[locale] ?? locale;
+  return `You are a professional translator for a cooking game.
 
-Given a short English text, translate it into these 8 locales: ${TRANSLATION_LOCALES.join(", ")}.
+Given a short English text, translate it into ${localeName} (locale code: ${locale}).
 
-Return a JSON object mapping each locale code to the translated text. Keep translations concise and natural.`;
+Return a JSON object with a single key "${locale}" containing the translated text. Keep the translation concise and natural.`;
+}
 
 type RecipeOutput = z.infer<typeof recipeSchema>;
 
@@ -119,7 +135,7 @@ function mergeTranslations(
   return result;
 }
 
-async function translateRecipe(recipe: RecipeOutput): Promise<RecipeOutput> {
+async function rewriteRecipe(recipe: RecipeOutput, locale: string): Promise<RecipeOutput> {
   const strings = extractTranslatableStrings(recipe);
   const translationSchema = z.record(z.string(), z.record(z.string(), z.string()));
 
@@ -127,51 +143,81 @@ async function translateRecipe(recipe: RecipeOutput): Promise<RecipeOutput> {
     model: mistral("mistral-small-latest"),
     maxRetries: 2,
     output: Output.object({ schema: translationSchema }),
-    system: TRANSLATE_RECIPE_PROMPT,
+    system: buildRewriteRecipePrompt(locale),
     prompt: JSON.stringify(strings),
   });
 
   if (!output) {
-    console.warn("[Convex] Translation failed, returning English-only recipe");
+    console.warn(`[Convex] Rewrite to ${locale} failed, returning English-only recipe`);
     return recipe;
   }
 
   return mergeTranslations(recipe, output as Record<string, Record<string, string>>);
 }
 
-async function translateText(text: string): Promise<Record<string, string>> {
+async function rewriteText(text: string, locale: string): Promise<Record<string, string>> {
   const translationSchema = z.record(z.string(), z.string());
 
   const { output } = await generateText({
     model: mistral("mistral-small-latest"),
     maxRetries: 2,
     output: Output.object({ schema: translationSchema }),
-    system: TRANSLATE_TEXT_PROMPT,
+    system: buildRewriteTextPrompt(locale),
     prompt: text,
   });
 
   if (!output) {
-    console.warn("[Convex] Single text translation failed, returning empty map");
+    console.warn(`[Convex] Text rewrite to ${locale} failed, returning empty map`);
     return {};
   }
 
   return output as Record<string, string>;
 }
 
-const PROCESSOR_LIMITS: Record<string, { min: number; max: number }> = {
-  easy: { min: 4, max: 4 },
-  medium: { min: 5, max: 6 },
-  hard: { min: 6, max: 7 },
+const DIFFICULTY_CONSTRAINTS: Record<string, string> = {
+  easy: "Exactly 4 distinct processors (3 + assemble). 4-6 ingredients, 1-2 decoys, 2 branches.",
+  medium: "Exactly 5 or 6 distinct processors (4-5 + assemble). 6-9 ingredients, 2-3 decoys, 2-3 branches.",
+  hard: "Exactly 6 or 7 distinct processors (5-6 + assemble). 9-12 ingredients, 3-4 decoys, 3 branches.",
 };
 
-function validateProcessorCount(recipe: RecipeOutput, difficulty: string): string | null {
-  const limits = PROCESSOR_LIMITS[difficulty];
-  if (!limits) return null;
-  const count = recipe.processors.length;
-  if (count < limits.min || count > limits.max) {
-    return `Expected ${limits.min}-${limits.max} processors for ${difficulty}, got ${count}`;
+async function generateEnglishRecipe(
+  ctx: { runQuery: (...args: any[]) => Promise<any>; runMutation: (...args: any[]) => Promise<any> },
+  dishName: string,
+  normalizedName: string,
+  difficulty: "easy" | "medium" | "hard",
+): Promise<RecipeOutput> {
+  // Check English cache first
+  const cached: { recipe: RecipeOutput } | null = await ctx.runQuery(
+    internal.recipes.getRecipe,
+    { dishName: normalizedName, difficulty, locale: "en" },
+  );
+  if (cached) {
+    console.log(`[Convex] English cache hit: "${normalizedName}" (${difficulty})`);
+    return cached.recipe;
   }
-  return null;
+
+  const constraints = DIFFICULTY_CONSTRAINTS[difficulty];
+  console.log(`[Convex] Generating English recipe: "${dishName}" (${difficulty})`);
+
+  const result = await generateText({
+    model: mistral("mistral-large-latest"),
+    maxRetries: 2,
+    output: Output.object({ schema: recipeSchema }),
+    system: SYSTEM_PROMPT,
+    prompt: `Generate a ${difficulty} recipe puzzle for: ${dishName}\n\nDifficulty constraints: ${constraints}\nPlan your processor palette FIRST, then build steps using only those processors.`,
+  });
+
+  if (!result.output) throw new Error("Model returned no valid output");
+
+  // Persist English recipe
+  await ctx.runMutation(internal.recipes.saveRecipe, {
+    dishName: normalizedName,
+    difficulty,
+    locale: "en",
+    recipe: result.output,
+  });
+
+  return result.output;
 }
 
 export const generateOrGetRecipe = action({
@@ -182,80 +228,91 @@ export const generateOrGetRecipe = action({
       v.literal("medium"),
       v.literal("hard"),
     ),
+    locale: v.string(),
   },
   handler: async (ctx, args): Promise<unknown> => {
     const normalizedName = args.dishName.toLowerCase().trim();
+    const locale = args.locale || "en";
 
-    // Cache check
+    // Cache check for requested locale
     const cached: { recipe: unknown } | null = await ctx.runQuery(
       internal.recipes.getRecipe,
-      {
-        dishName: normalizedName,
-        difficulty: args.difficulty,
-      },
+      { dishName: normalizedName, difficulty: args.difficulty, locale },
     );
     if (cached) {
-      console.log(
-        `[Convex] Cache hit: "${normalizedName}" (${args.difficulty})`,
-      );
+      console.log(`[Convex] Cache hit: "${normalizedName}" (${args.difficulty}, ${locale})`);
       return cached.recipe;
     }
 
-    // Phase 1: Generate English-only recipe via Mistral Large (with retry on processor count violation)
-    const limits = PROCESSOR_LIMITS[args.difficulty];
-    let output: RecipeOutput | undefined;
-
-    for (let attempt = 0; attempt < 2; attempt++) {
-      const retryHint = attempt > 0
-        ? ` IMPORTANT: Your previous attempt had too many processors. You MUST use exactly ${limits.min}-${limits.max} DISTINCT processors (including assemble). Reuse processors across steps.`
-        : "";
-
-      console.log(`[Convex] Phase 1 — Generating English recipe: "${args.dishName}" (${args.difficulty})${attempt > 0 ? " [retry]" : ""}`);
-      const result = await generateText({
-        model: mistral("mistral-large-latest"),
-        maxRetries: 2,
-        output: Output.object({ schema: recipeSchema }),
-        system: SYSTEM_PROMPT,
-        prompt: `Generate a ${args.difficulty} recipe puzzle for: ${args.dishName}${retryHint}`,
-      });
-
-      if (!result.output) throw new Error("Model returned no valid output");
-
-      const violation = validateProcessorCount(result.output, args.difficulty);
-      if (!violation) {
-        output = result.output;
-        break;
-      }
-
-      console.warn(`[Convex] Processor count violation (attempt ${attempt + 1}): ${violation}`);
-      if (attempt === 0) continue;
-
-      // On final attempt, accept what we got but log the warning
-      console.warn(`[Convex] Accepting recipe despite processor count mismatch after ${attempt + 1} attempts`);
-      output = result.output;
+    if (locale === "en") {
+      // Generate and cache English recipe
+      return await generateEnglishRecipe(ctx, args.dishName, normalizedName, args.difficulty);
     }
 
-    if (!output) throw new Error("Model returned no valid output");
+    // Non-English: get English base, then rewrite to target locale
+    const englishRecipe = await generateEnglishRecipe(ctx, args.dishName, normalizedName, args.difficulty);
 
-    // Phase 2: Translate all user-facing strings to 8 locales via Mistral Small
-    console.log(`[Convex] Phase 2 — Translating recipe to ${TRANSLATION_LOCALES.length} locales`);
-    const translated = await translateRecipe(output);
+    console.log(`[Convex] Rewriting recipe to ${locale}`);
+    const rewritten = await rewriteRecipe(englishRecipe, locale);
 
-    // Persist the fully translated recipe
+    // Persist the locale-specific recipe
     await ctx.runMutation(internal.recipes.saveRecipe, {
       dishName: normalizedName,
       difficulty: args.difficulty,
-      recipe: translated,
+      locale,
+      recipe: rewritten,
     });
 
-    return translated;
+    return rewritten;
   },
 });
+
+async function generateEnglishCombination(
+  ctx: { runQuery: (...args: any[]) => Promise<any>; runMutation: (...args: any[]) => Promise<any> },
+  processor: string,
+  inputKey: string,
+  ingredientNames: string[],
+): Promise<{ name: string; emoji: string; assetId: string }> {
+  // Check English cache
+  const cached: { resultName: string; resultEmoji: string; resultAssetId: string } | null = await ctx.runQuery(
+    internal.combinations.getCombination,
+    { processor, inputKey, locale: "en" },
+  );
+  if (cached) {
+    console.log(`[Convex] English combination cache hit: ${processor} + ${inputKey}`);
+    return { name: cached.resultName, emoji: cached.resultEmoji, assetId: cached.resultAssetId };
+  }
+
+  // Generate English-only combination via Mistral Small
+  console.log(`[Convex] Generating combination: ${processor} + ${inputKey}`);
+  const { output } = await generateText({
+    model: mistral("mistral-small-latest"),
+    maxRetries: 2,
+    output: Output.object({ schema: combinationSchema }),
+    system: COMBINATION_PROMPT,
+    prompt: `${processor} + ${ingredientNames.join(" + ")}`,
+  });
+
+  if (!output) throw new Error("Model returned no valid output");
+
+  // Persist English combination
+  await ctx.runMutation(internal.combinations.saveCombination, {
+    processor,
+    inputKey,
+    locale: "en",
+    resultName: output.name,
+    resultEmoji: output.emoji,
+    resultAssetId: output.assetId,
+  });
+
+  return { name: output.name, emoji: output.emoji, assetId: output.assetId };
+}
 
 export const generateCombination = action({
   args: {
     processor: v.string(),
     ingredients: v.array(v.string()),
+    locale: v.string(),
   },
   handler: async (ctx, args): Promise<{ name: string; nameI18n: Record<string, string>; emoji: string; assetId: string }> => {
     const inputKey = args.ingredients
@@ -263,14 +320,15 @@ export const generateCombination = action({
       .sort()
       .join("+");
     const processor = args.processor.toLowerCase().trim();
+    const locale = args.locale || "en";
 
-    // Cache check
+    // Cache check for requested locale
     const cached: { resultName: string; resultEmoji: string; resultAssetId: string; resultNameI18n?: Record<string, string> } | null = await ctx.runQuery(
       internal.combinations.getCombination,
-      { processor, inputKey },
+      { processor, inputKey, locale },
     );
     if (cached) {
-      console.log(`[Convex] Combination cache hit: ${processor} + ${inputKey}`);
+      console.log(`[Convex] Combination cache hit: ${processor} + ${inputKey} (${locale})`);
       return {
         name: cached.resultName,
         nameI18n: cached.resultNameI18n ?? {},
@@ -279,32 +337,29 @@ export const generateCombination = action({
       };
     }
 
-    // Generate English-only combination via Mistral Small
-    console.log(`[Convex] Generating combination: ${processor} + ${inputKey}`);
-    const { output } = await generateText({
-      model: mistral("mistral-small-latest"),
-      maxRetries: 2,
-      output: Output.object({ schema: combinationSchema }),
-      system: COMBINATION_PROMPT,
-      prompt: `${processor} + ${args.ingredients.join(" + ")}`,
-    });
+    if (locale === "en") {
+      const result = await generateEnglishCombination(ctx, processor, inputKey, args.ingredients);
+      return { ...result, nameI18n: {} };
+    }
 
-    if (!output) throw new Error("Model returned no valid output");
+    // Non-English: get English base, then rewrite name
+    const english = await generateEnglishCombination(ctx, processor, inputKey, args.ingredients);
 
-    // Translate the combination name
-    const nameI18n = await translateText(output.name);
+    console.log(`[Convex] Rewriting combination name to ${locale}`);
+    const nameI18n = await rewriteText(english.name, locale);
 
-    // Persist
+    // Persist locale-specific combination
     await ctx.runMutation(internal.combinations.saveCombination, {
       processor,
       inputKey,
-      resultName: output.name,
-      resultEmoji: output.emoji,
-      resultAssetId: output.assetId,
+      locale,
+      resultName: english.name,
+      resultEmoji: english.emoji,
+      resultAssetId: english.assetId,
       resultNameI18n: nameI18n,
     });
 
-    return { name: output.name, nameI18n, emoji: output.emoji, assetId: output.assetId };
+    return { name: english.name, nameI18n, emoji: english.emoji, assetId: english.assetId };
   },
 });
 

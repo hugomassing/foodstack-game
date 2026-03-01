@@ -19,7 +19,7 @@ import { gameStore } from '../store/gameStore';
 import { convex } from '../lib/convex';
 import { api } from '../../convex/_generated/api';
 import type { PuzzleData, Step, Ingredient, Attachment } from '../types';
-import { t } from '../i18n';
+import { t, getLocale } from '../i18n';
 import { localize } from '../i18n/localize';
 
 const PROCESSOR_ASSET: Record<string, string> = {
@@ -916,6 +916,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
       const result = await convex.action(api.generator.generateCombination, {
         processor: procName,
         ingredients: ingredientNames,
+        locale: getLocale(),
       });
 
       if (!this.scene.isActive()) return;

@@ -22,9 +22,10 @@ export default defineSchema({
   recipes: defineTable({
     dishName: v.string(),
     difficulty: v.union(v.literal("easy"), v.literal("medium"), v.literal("hard")),
+    locale: v.optional(v.string()),
     recipe: v.any(),
     createdAt: v.number(),
-  }).index("by_dish_and_difficulty", ["dishName", "difficulty"]),
+  }).index("by_dish_difficulty_locale", ["dishName", "difficulty", "locale"]),
 
   victoryCards: defineTable({
     dishName: v.string(),
@@ -49,10 +50,11 @@ export default defineSchema({
   combinations: defineTable({
     processor: v.string(),
     inputKey: v.string(),
+    locale: v.optional(v.string()),
     resultName: v.string(),
     resultEmoji: v.string(),
     resultAssetId: v.string(),
     resultNameI18n: v.optional(v.any()),
     createdAt: v.number(),
-  }).index("by_processor_and_inputs", ["processor", "inputKey"]),
+  }).index("by_processor_inputs_locale", ["processor", "inputKey", "locale"]),
 });

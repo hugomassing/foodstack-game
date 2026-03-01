@@ -483,7 +483,7 @@ type ModeWithDifficulty = 'daily' | 'survival' | 'normal';
 
 export function ModeSelector() {
   const [mainTab, setMainTab] = useState<MainTab>('modes');
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [loadingDishName, setLoadingDishName] = useState('');
   const [error, setError] = useState('');
@@ -501,6 +501,7 @@ export function ModeSelector() {
       const puzzleData = await convex.action(api.generator.generateOrGetRecipe, {
         dishName,
         difficulty: diff,
+        locale,
       });
       setIsLoading(false);
       gameStore.getState().selectMode(mode);
