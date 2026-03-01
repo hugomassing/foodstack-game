@@ -20,6 +20,9 @@
     "Haggis", "Uovo Centenario", "Baco da Seta", "Carambola", "Taro",
     "Pesce Palla", "Sanguinaccio", "Trippa"
   ],
+  "FillingGender": [
+    "m","m","m","m","m","f","m","f","f","m","m","m","m","m","f","m","m","m","m","m","m","m","f","m","m","f","f","m","f","f","m","m","m","f","f","f","m","m","m","m","m","m","m","m","m","f","m","m","m","f"
+  ],
   "Method": [
     "Farcito", "Glassato", "Grigliato", "Brasato", "Arrosto", "Caramellato",
     "Fritto", "Affumicato", "In Camicia", "Fiammeggiato", "Al Vapore", "Scottato",

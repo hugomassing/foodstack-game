@@ -47,6 +47,58 @@ const CATEGORY_KEYS: Record<Category, TranslationKeys> = {
   Base: "menu.category.base",
 };
 
+const DISH_NAME_TEMPLATES: Record<string, string> = {
+  en: "{Style} {Filling} {Method} {Base}",
+  fr: "{Base} {Method} {au}{Filling} {Style}",
+  de: "{Style} {Method} {Filling}-{Base}",
+  es: "{Base} {Method} de {Filling} {Style}",
+  it: "{Base} {Method} {al}{Filling} {Style}",
+  ja: "{Style}{Filling}{Method}{Base}",
+  ko: "{Style} {Filling} {Method} {Base}",
+  pt: "{Base} {Method} de {Filling} {Style}",
+  zh: "{Style}{Method}{Filling}{Base}",
+};
+
+function startsWithVowelOrH(word: string): boolean {
+  return /^[aeiouhàâéèêëïîôùûüœæ]/i.test(word);
+}
+
+function resolvePreposition(
+  token: string,
+  filling: string,
+  gender: "m" | "f",
+): string {
+  const vowel = startsWithVowelOrH(filling);
+  switch (token) {
+    case "au":
+      if (vowel) return "à l'";
+      return gender === "f" ? "à la " : "au ";
+    case "al":
+      if (vowel) return "all'";
+      return gender === "f" ? "alla " : "al ";
+    default:
+      return token;
+  }
+}
+
+function formatDishName(
+  template: string,
+  words: Record<Category, string>,
+  fillingGender?: "m" | "f",
+): string {
+  let result = template
+    .replace("{Style}", words.Style)
+    .replace("{Filling}", words.Filling)
+    .replace("{Method}", words.Method)
+    .replace("{Base}", words.Base);
+
+  result = result.replace(/\{(au|al)\}/g, (_, token: string) =>
+    resolvePreposition(token, words.Filling, fillingGender ?? "m"),
+  );
+
+  return result;
+}
+
 const FOOD_ICONS = ["🍖", "🥩", "🍕", "🥪", "🥕", "🍴", "🔥", "💧", "☕"];
 
 function randomSelections(wl: WordLists): Record<Category, number> {
@@ -218,7 +270,7 @@ function LoadingCard({
 
 export function GameMenu() {
   const { t, locale } = useTranslation();
-  const wordLists: WordLists = getWordlists(locale);
+  const wordLists = getWordlists(locale);
 
   const [indices, setIndices] = useState(() => randomSelections(wordLists));
   const [customName, setCustomName] = useState("");
@@ -240,14 +292,24 @@ export function GameMenu() {
     });
   }, [locale]);
 
+  const template = DISH_NAME_TEMPLATES[locale] ?? DISH_NAME_TEMPLATES.en;
+  const words = Object.fromEntries(
+    CATEGORIES.map((c) => [c, wordLists[c][indices[c]]]),
+  ) as Record<Category, string>;
+  const fillingGender = (
+    wordLists as { FillingGender?: ("m" | "f")[] }
+  ).FillingGender?.[indices.Filling];
+
   const getDishName = useCallback(() => {
     const raw = customName.trim();
-    return raw || CATEGORIES.map((c) => wordLists[c][indices[c]]).join(" ");
-  }, [customName, indices, wordLists]);
+    return raw || formatDishName(template, words, fillingGender);
+  }, [customName, template, words, fillingGender]);
 
-  const generatedName = CATEGORIES.map((c) => wordLists[c][indices[c]])
-    .join(" ")
-    .toUpperCase();
+  const generatedName = formatDishName(
+    template,
+    words,
+    fillingGender,
+  ).toUpperCase();
 
   const cycleWord = (cat: Category, dir: 1 | -1) => {
     if (isLoading) return;

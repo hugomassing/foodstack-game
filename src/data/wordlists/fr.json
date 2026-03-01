@@ -20,6 +20,9 @@
     "Haggis", "Œuf de Cent Ans", "Ver à Soie", "Carambole", "Taro",
     "Fugu", "Boudin Noir", "Tripes"
   ],
+  "FillingGender": [
+    "m","m","m","f","m","f","m","f","m","m","m","m","m","m","f","m","m","m","m","m","m","f","f","m","m","f","m","m","f","m","m","f","f","f","f","m","m","m","m","m","m","m","m","m","m","f","m","m","m","f"
+  ],
   "Method": [
     "Farci", "Glacé", "Grillé", "Braisé", "Rôti", "Caramélisé",
     "Frit", "Fumé", "Poché", "Torché", "À la Vapeur", "Saisi",
