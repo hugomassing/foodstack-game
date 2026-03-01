@@ -15,6 +15,18 @@
       "medium": "MEDIUM",
       "hard": "HARD"
     },
+    "loadingMessages": [
+      "Preparing ingredients",
+      "Chopping vegetables",
+      "Heating up the pan",
+      "Gathering spices",
+      "Grabbing utensils",
+      "Reading the cookbook",
+      "Calling the chef",
+      "Preheating the oven",
+      "Melting the butter",
+      "Mixing the batter"
+    ],
     "category": {
       "style": "Style",
       "filling": "Filling",

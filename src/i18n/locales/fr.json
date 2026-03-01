@@ -15,6 +15,18 @@
       "medium": "MOYEN",
       "hard": "DIFFICILE"
     },
+    "loadingMessages": [
+      "Préparation des ingrédients",
+      "Découpe des légumes",
+      "La poêle chauffe",
+      "Rassemblement des épices",
+      "Récupération des ustensiles",
+      "Lecture du livre de recettes",
+      "Appel du chef",
+      "Préchauffage du four",
+      "Le beurre fond",
+      "Mélange de la pâte"
+    ],
     "category": {
       "style": "Style",
       "filling": "Garniture",

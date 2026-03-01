@@ -15,6 +15,18 @@
       "medium": "MÉDIO",
       "hard": "DIFÍCIL"
     },
+    "loadingMessages": [
+      "Preparando ingredientes",
+      "Cortando legumes",
+      "Aquecendo a frigideira",
+      "Reunindo temperos",
+      "Pegando os talheres",
+      "Lendo o livro de receitas",
+      "Chamando o chef",
+      "Pré-aquecendo o forno",
+      "Derretendo a manteiga",
+      "Misturando a massa"
+    ],
     "category": {
       "style": "Estilo",
       "filling": "Recheio",

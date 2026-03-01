@@ -15,6 +15,18 @@
       "medium": "MITTEL",
       "hard": "SCHWER"
     },
+    "loadingMessages": [
+      "Zutaten vorbereiten",
+      "Gemüse schneiden",
+      "Pfanne erhitzen",
+      "Gewürze sammeln",
+      "Besteck holen",
+      "Kochbuch lesen",
+      "Den Koch rufen",
+      "Ofen vorheizen",
+      "Butter schmelzen",
+      "Teig anrühren"
+    ],
     "category": {
       "style": "Stil",
       "filling": "Füllung",

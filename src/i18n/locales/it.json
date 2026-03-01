@@ -15,6 +15,18 @@
       "medium": "MEDIO",
       "hard": "DIFFICILE"
     },
+    "loadingMessages": [
+      "Preparazione degli ingredienti",
+      "Taglio delle verdure",
+      "Riscaldamento della padella",
+      "Raccolta delle spezie",
+      "Presa delle posate",
+      "Lettura del ricettario",
+      "Chiamata dello chef",
+      "Preriscaldamento del forno",
+      "Scioglimento del burro",
+      "Preparazione dell'impasto"
+    ],
     "category": {
       "style": "Stile",
       "filling": "Farcitura",
