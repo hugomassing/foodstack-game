@@ -5,7 +5,7 @@ import { gameStore } from "../store/gameStore";
 import { FONT_FAMILY } from "../config";
 import type { PuzzleData } from "../types";
 import { ChevronLeft, ChevronRight, Play, Upload } from "lucide-react";
-import wordlists from "../data/wordlists.json";
+import { getWordlists } from "../data/wordlists/index";
 import { useTranslation, loadLocale } from "../i18n";
 import type { TranslationKeys } from "../i18n/types";
 
@@ -36,7 +36,7 @@ const LOADING_MESSAGES = [
 
 type Category = "Style" | "Filling" | "Method" | "Base";
 
-const WORD_LISTS: Record<Category, string[]> = wordlists;
+type WordLists = Record<Category, string[]>;
 
 const CATEGORIES: Category[] = ["Style", "Filling", "Method", "Base"];
 
@@ -49,10 +49,10 @@ const CATEGORY_KEYS: Record<Category, TranslationKeys> = {
 
 const FOOD_ICONS = ["🍖", "🥩", "🍕", "🥪", "🥕", "🍴", "🔥", "💧", "☕"];
 
-function randomSelections(): Record<Category, number> {
+function randomSelections(wl: WordLists): Record<Category, number> {
   const result = {} as Record<Category, number>;
   for (const cat of CATEGORIES) {
-    result[cat] = Math.floor(Math.random() * WORD_LISTS[cat].length);
+    result[cat] = Math.floor(Math.random() * wl[cat].length);
   }
   return result;
 }
@@ -217,7 +217,10 @@ function LoadingCard({
 }
 
 export function GameMenu() {
-  const [indices, setIndices] = useState(randomSelections);
+  const { t, locale } = useTranslation();
+  const wordLists: WordLists = getWordlists(locale);
+
+  const [indices, setIndices] = useState(() => randomSelections(wordLists));
   const [customName, setCustomName] = useState("");
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
     "medium",
@@ -225,14 +228,24 @@ export function GameMenu() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const { t } = useTranslation();
+
+  // Clamp indices when locale changes (different list lengths)
+  useEffect(() => {
+    setIndices((prev) => {
+      const clamped = {} as Record<Category, number>;
+      for (const cat of CATEGORIES) {
+        clamped[cat] = prev[cat] % wordLists[cat].length;
+      }
+      return clamped;
+    });
+  }, [locale]);
 
   const getDishName = useCallback(() => {
     const raw = customName.trim();
-    return raw || CATEGORIES.map((c) => WORD_LISTS[c][indices[c]]).join(" ");
-  }, [customName, indices]);
+    return raw || CATEGORIES.map((c) => wordLists[c][indices[c]]).join(" ");
+  }, [customName, indices, wordLists]);
 
-  const generatedName = CATEGORIES.map((c) => WORD_LISTS[c][indices[c]])
+  const generatedName = CATEGORIES.map((c) => wordLists[c][indices[c]])
     .join(" ")
     .toUpperCase();
 
@@ -241,7 +254,7 @@ export function GameMenu() {
     setIndices((prev) => ({
       ...prev,
       [cat]:
-        (prev[cat] + dir + WORD_LISTS[cat].length) % WORD_LISTS[cat].length,
+        (prev[cat] + dir + wordLists[cat].length) % wordLists[cat].length,
     }));
   };
 
@@ -554,7 +567,7 @@ export function GameMenu() {
             <SelectorRow
               key={cat}
               category={cat}
-              value={WORD_LISTS[cat][indices[cat]]}
+              value={wordLists[cat][indices[cat]]}
               onPrev={() => cycleWord(cat, -1)}
               onNext={() => cycleWord(cat, 1)}
               disabled={isLoading}

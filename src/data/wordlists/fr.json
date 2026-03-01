@@ -1,0 +1,46 @@
+{
+  "Style": [
+    "Croustillant", "Fumé", "Épicé", "Fromager", "Acidulé", "Herbal", "Zesté",
+    "Beurré", "Croquant", "Fondant", "Umami", "Ardent", "Parfumé", "Velouté",
+    "Carbonisé", "Mariné", "Fermenté", "Occulte", "Maudit", "Interdit",
+    "Volcanique", "Givré", "Doré", "Collant", "Torché", "Funky", "Hanté",
+    "Atomique", "Fondu", "Céleste", "Diabolique", "Enivré", "Confit",
+    "Infernal", "Décadent", "Mystique", "Saumuré", "Nappé", "Noirci",
+    "Szechuan", "Tandoori", "Cajun", "Truffé", "Safrané", "Wasabi",
+    "Gochujang", "Miso", "Chimichurri", "Abyssal", "Primitif"
+  ],
+  "Filling": [
+    "Jambon", "Poulet", "Tofu", "Crevette", "Champignon", "Boulette",
+    "Poulpe", "Cuisse de Grenouille", "Escargot", "Wagyu", "Jacquier", "Tempeh",
+    "Grillon", "Durian", "Anguille", "Calmar", "Bison", "Kangourou",
+    "Cactus", "Paneer", "Crabe", "Moelle", "Méduse", "Oursin",
+    "Lapin", "Chèvre", "Canard", "Agneau", "Caille", "Anchois",
+    "Pigeon", "Écrevisse", "Venaison", "Algue", "Racine de Lotus", "Ris de Veau",
+    "Yak", "Alligator", "Scorpion", "Kimchi", "Fruit du Dragon", "Plantain",
+    "Haggis", "Œuf de Cent Ans", "Ver à Soie", "Carambole", "Taro",
+    "Fugu", "Boudin Noir", "Tripes"
+  ],
+  "Method": [
+    "Farci", "Glacé", "Grillé", "Braisé", "Rôti", "Caramélisé",
+    "Frit", "Fumé", "Poché", "Torché", "À la Vapeur", "Saisi",
+    "Séché", "Flambé", "Sous-Vide", "Déshydraté", "Pané", "Infusé",
+    "Fouetté", "Confit", "Blanchi", "Sauté", "Tartare", "Tempura",
+    "Tataki", "Au Wok", "Cuit au Four", "Cuit en Fosse", "En Croûte de Sel",
+    "Au Miel", "Glacé au Miso", "À la Bière", "Au Rhum", "Mijoté",
+    "Saisi Vif", "Cuit Deux Fois", "Cuit aux Braises", "Au Chalumeau", "Sur Pierre",
+    "Congelé à l'Azote", "Séché au Soleil", "Vapeur de Saké", "En Feuille de Bananier",
+    "Cendré", "En Croûte d'Herbes", "Arrosé au Beurre", "Fumé au Charbon",
+    "Laqué à l'Érable", "En Feuille de Pandan", "Cuit au Volcan"
+  ],
+  "Base": [
+    "Brioche", "Bowl", "Wrap", "Taco", "Pâtes", "Salade",
+    "Ramen", "Gyoza", "Pizza", "Risotto", "Curry", "Ragoût",
+    "Tourte", "Sushi", "Crêpe", "Ravioli", "Galette", "Burrito",
+    "Pho", "Gnocchi", "Paella", "Kebab", "Empanada", "Pierogi",
+    "Bao", "Bibimbap", "Goulash", "Tajine", "Ceviche", "Poutine",
+    "Arepa", "Roti", "Udon", "Pain Brioché", "Croissant", "Gaufre",
+    "Shakshuka", "Congee", "Dosa", "Baklava", "Calzone", "Pot-au-Feu",
+    "Rouleau", "Samosa", "Croquette", "Pita", "Naan", "Soufflé",
+    "Cobbler", "Crumble"
+  ]
+}
