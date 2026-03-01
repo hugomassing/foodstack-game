@@ -37,4 +37,9 @@ condiment: chocolate_spread, guacamole, honey, hot_sauce, hummus, jam, ketchup, 
 prepared: burger, burrito, cheeseburger, curry, dumpling, falafel, fish_cake, fondue, fries, hotdog, lasagna, onigiri, paella, pancakes, pie, pita, pizza, ramen, salad, sandwich, skewer, soup, spaghetti, stew, sushi, taco, takeout_box, tamale, tempura, waffle
 sweet: cake, cake_slice, candy, cheesecake, chocolate, cinnamon_roll, cookie, cotton_candy, creme_brulee, cupcake, donut, eclair, flan, fortune_cookie, ice_cream, jelly, lollipop, macaron, moon_cake, muffin, pain_au_chocolat, popsicle, shaved_ice
 snack: chips, popcorn, rice_cracker
-drink: beer, bubble_tea, champagne, cocktail, coffee, hot_beverage, juice_box, milkshake, sake, soda, tea, tropical_drink, water, wine_bottle`;
+drink: beer, bubble_tea, champagne, cocktail, coffee, hot_beverage, juice_box, milkshake, sake, soda, tea, tropical_drink, water, wine_bottle
+
+## LANGUAGE / LOCALE
+When the prompt specifies a locale (e.g. "locale: fr"), the "name" field MUST be written in that language.
+Asset IDs are English-only catalog keys — never translate those.
+If no locale is specified or the locale is "en", write everything in English.`;

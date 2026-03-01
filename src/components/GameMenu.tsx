@@ -329,7 +329,7 @@ export function GameMenu() {
     try {
       const puzzleData = await convex.action(
         api.generator.generateOrGetRecipe,
-        { dishName, difficulty },
+        { dishName, difficulty, locale },
       );
       setIsLoading(false);
       gameStore.getState().startGame(puzzleData as PuzzleData, difficulty);

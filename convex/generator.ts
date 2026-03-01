@@ -22,6 +22,7 @@ export const generateOrGetRecipe = action({
       v.literal("medium"),
       v.literal("hard"),
     ),
+    locale: v.optional(v.string()),
   },
   handler: async (ctx, args): Promise<unknown> => {
     const normalizedName = args.dishName.toLowerCase().trim();
@@ -42,13 +43,15 @@ export const generateOrGetRecipe = action({
     }
 
     // Generate via Mistral
-    console.log(`[Convex] Generating: "${args.dishName}" (${args.difficulty})`);
+    const locale = args.locale ?? "en";
+    const localeSuffix = locale !== "en" ? `\nlocale: ${locale}` : "";
+    console.log(`[Convex] Generating: "${args.dishName}" (${args.difficulty}, ${locale})`);
     const { output } = await generateText({
       model: mistral("mistral-large-latest"),
       maxRetries: 2,
       output: Output.object({ schema: recipeSchema }),
       system: SYSTEM_PROMPT,
-      prompt: `Generate a ${args.difficulty} recipe puzzle for: ${args.dishName}`,
+      prompt: `Generate a ${args.difficulty} recipe puzzle for: ${args.dishName}${localeSuffix}`,
     });
 
     if (!output) throw new Error("Model returned no valid output");
@@ -68,6 +71,7 @@ export const generateCombination = action({
   args: {
     processor: v.string(),
     ingredients: v.array(v.string()),
+    locale: v.optional(v.string()),
   },
   handler: async (ctx, args): Promise<{ name: string; emoji: string; assetId: string }> => {
     const inputKey = args.ingredients
@@ -75,6 +79,7 @@ export const generateCombination = action({
       .sort()
       .join("+");
     const processor = args.processor.toLowerCase().trim();
+    const locale = args.locale ?? "en";
 
     // Cache check
     const cached: { resultName: string; resultEmoji: string; resultAssetId: string } | null = await ctx.runQuery(
@@ -91,13 +96,14 @@ export const generateCombination = action({
     }
 
     // Generate via Mistral Small
-    console.log(`[Convex] Generating combination: ${processor} + ${inputKey}`);
+    const localeSuffix = locale !== "en" ? `\nlocale: ${locale}` : "";
+    console.log(`[Convex] Generating combination: ${processor} + ${inputKey} (${locale})`);
     const { output } = await generateText({
       model: mistral("mistral-small-latest"),
       maxRetries: 2,
       output: Output.object({ schema: combinationSchema }),
       system: COMBINATION_PROMPT,
-      prompt: `${processor} + ${args.ingredients.join(" + ")}`,
+      prompt: `${processor} + ${args.ingredients.join(" + ")}${localeSuffix}`,
     });
 
     if (!output) throw new Error("Model returned no valid output");
