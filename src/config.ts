@@ -78,11 +78,12 @@ export const ZONE = {
 
 // Hand arc layout
 export const HAND = {
-  ARC_RADIUS: 350,
-  CARD_SCALE: 0.85,
-  HOVER_LIFT: 60,
+  ARC_RADIUS: 900,
+  CARD_SCALE: 0.75,
+  HOVER_LIFT: 80,
   HOVER_SCALE: 1.2,
-  MAX_ANGLE_SPREAD: 0.85, // radians total spread
+  MAX_ANGLE_SPREAD: 0.45, // radians total spread
+  HOVER_DEBOUNCE_MS: 200, // ms before hover popup triggers
   CENTER_X_OFFSET: -80, // shift left from game center
-  CENTER_Y_OFFSET: -85, // from GAME_H bottom
+  CENTER_Y_OFFSET: -110, // from GAME_H bottom
 } as const;
