@@ -14,7 +14,7 @@ import { useGameStore } from '../../App';
 import { FONT_FAMILY, TITLE_FONT_FAMILY } from '../../config';
 import type { PuzzleData, GameMode } from '../../types';
 import { useTranslation } from '../../i18n';
-import { getDailyDishName, getDailyDate, getDailyBestScore } from '../../lib/daily';
+import { getDailyDishName, getDailyDate, getDailyBestScore, getDailyAttempts } from '../../lib/daily';
 import { randomDishName } from '../../lib/dishName';
 import { getWordlists } from '../../data/wordlists/index';
 import { SPLASH_TEXTS } from './constants';
@@ -86,6 +86,7 @@ export function ModeSelector() {
 
   const dailyDate = getDailyDate();
   const dailyBest = getDailyBestScore(dailyDate);
+  const dailyAttempts = getDailyAttempts(dailyDate);
 
   const { t } = useTranslation();
 
@@ -452,6 +453,11 @@ export function ModeSelector() {
                       {dailyBest !== null && (
                         <span style={{ color: '#4caf50' }}>
                           {t('modes.daily.best', { count: dailyBest })}
+                        </span>
+                      )}
+                      {dailyAttempts > 0 && (
+                        <span style={{ color: '#9e9e9e' }}>
+                          {t('modes.daily.attempts', { count: dailyAttempts })}
                         </span>
                       )}
                     </div>

@@ -95,7 +95,8 @@
     "daily": {
       "title": "오늘의 레시피",
       "description": "오늘의 레시피 도전. 모두 같은 요리!",
-      "best": "최고: {count}"
+      "best": "최고: {count}개 오류",
+      "attempts": "{count}회 도전"
     },
     "survival": {
       "title": "서바이벌",

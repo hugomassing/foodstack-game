@@ -95,7 +95,8 @@
     "daily": {
       "title": "Receita do dia",
       "description": "O desafio de hoje. O mesmo prato para todos!",
-      "best": "Melhor: {count}"
+      "best": "Melhor: {count} erros",
+      "attempts": "{count} tentativas"
     },
     "survival": {
       "title": "Sobrevivência",

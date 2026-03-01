@@ -348,6 +348,8 @@ export class FoodStackGameScene extends Phaser.Scene {
 
       if (!obj.attachedTo) {
         obj.setDepth(obj.cardDepth || 1);
+        obj.setScale(HAND.CARD_SCALE);
+        obj.setRotation(0);
       }
       if (
         (obj.cardType === 'ingredient' ||

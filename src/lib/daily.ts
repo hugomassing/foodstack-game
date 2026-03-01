@@ -60,3 +60,27 @@ export function setDailyBestScore(date: string, errorCount: number): void {
     // localStorage unavailable
   }
 }
+
+const DAILY_ATTEMPTS_KEY = 'foodstack-daily-attempts';
+
+export function getDailyAttempts(date: string): number {
+  try {
+    const stored = localStorage.getItem(DAILY_ATTEMPTS_KEY);
+    if (!stored) return 0;
+    const data = JSON.parse(stored) as Record<string, number>;
+    return data[date] ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
+export function incrementDailyAttempts(date: string): void {
+  try {
+    const stored = localStorage.getItem(DAILY_ATTEMPTS_KEY);
+    const data: Record<string, number> = stored ? JSON.parse(stored) : {};
+    data[date] = (data[date] ?? 0) + 1;
+    localStorage.setItem(DAILY_ATTEMPTS_KEY, JSON.stringify(data));
+  } catch {
+    // localStorage unavailable
+  }
+}

@@ -9,7 +9,7 @@ import { convex } from '../lib/convex';
 import { Trophy, RotateCcw, Download, ArrowRight, Heart, Home, ClipboardList, X } from 'lucide-react';
 import { useTranslation } from '../i18n';
 import type { TranslationKeys } from '../i18n/types';
-import { setDailyBestScore } from '../lib/daily';
+import { setDailyBestScore, incrementDailyAttempts } from '../lib/daily';
 import type { Difficulty } from '../store/gameStore';
 import type { GameMode } from '../types';
 
@@ -453,6 +453,7 @@ export function VictoryOverlay() {
   useEffect(() => {
     if (gameMode === 'daily' && dailyDate) {
       setDailyBestScore(dailyDate, errorCount);
+      incrementDailyAttempts(dailyDate);
     }
   }, [gameMode, dailyDate, errorCount]);
   const savedRef = useRef(false);

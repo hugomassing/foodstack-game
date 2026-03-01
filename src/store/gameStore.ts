@@ -3,6 +3,7 @@ import type { PuzzleData, Step, GameMode, SurvivalRoundResult } from '../types';
 
 export type GamePhase =
   | 'loading'
+  | 'loading_round'
   | 'menu'
   | 'mode_config'
   | 'playing'

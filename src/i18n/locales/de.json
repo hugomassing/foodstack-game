@@ -95,7 +95,8 @@
     "daily": {
       "title": "Rezept des Tages",
       "description": "Heutige Rezept-Challenge. Dasselbe Gericht für alle!",
-      "best": "Bestes: {count}"
+      "best": "Bestes: {count} Fehler",
+      "attempts": "{count} Versuche"
     },
     "survival": {
       "title": "Überleben",

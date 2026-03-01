@@ -36,6 +36,10 @@ export function RecipePickOverlay() {
     setLoading(index);
     setError('');
     const dishName = options[index];
+
+    // Transition to loading screen while the API call runs
+    gameStore.getState().setPhase('loading_round');
+
     try {
       const puzzleData = await convex.action(api.generator.generateOrGetRecipe, {
         dishName,
@@ -43,9 +47,9 @@ export function RecipePickOverlay() {
         locale,
       });
       gameStore.getState().startSurvivalRound(puzzleData as PuzzleData, difficulty);
-    } catch (err) {
-      setLoading(null);
-      setError((err as Error).message);
+    } catch {
+      // Go back to recipe pick on error
+      gameStore.getState().setPhase('recipe_pick');
     }
   };
 

@@ -65,7 +65,7 @@ export default function App() {
       <GameShell>
         <PhaserCanvas />
 
-        {phase === 'loading' && <LoadingScreen />}
+        {(phase === 'loading' || phase === 'loading_round') && <LoadingScreen />}
         {phase === 'menu' && <ModeSelector />}
         {phase === 'mode_config' && <GameMenu />}
         {phase === 'playing' && (

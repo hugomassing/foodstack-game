@@ -95,7 +95,8 @@
     "daily": {
       "title": "今日食谱",
       "description": "今天的食谱挑战。所有人同一道菜！",
-      "best": "最佳: {count}"
+      "best": "最佳: {count}个错误",
+      "attempts": "{count}次尝试"
     },
     "survival": {
       "title": "生存模式",
