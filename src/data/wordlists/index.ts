@@ -8,14 +8,14 @@ import ko from "./ko.json";
 import pt from "./pt.json";
 import zh from "./zh.json";
 
-type Wordlists = typeof en;
+export type Wordlists = typeof en & { FillingGender?: ("m" | "f")[] };
 
 const wordlistsByLocale: Record<string, Wordlists> = {
   en,
   de,
   es,
-  fr,
-  it,
+  fr: fr as unknown as Wordlists,
+  it: it as unknown as Wordlists,
   ja,
   ko,
   pt,
