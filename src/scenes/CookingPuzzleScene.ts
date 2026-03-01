@@ -19,6 +19,7 @@ import { gameStore } from '../store/gameStore';
 import { convex } from '../lib/convex';
 import { api } from '../../convex/_generated/api';
 import type { PuzzleData, Step, Ingredient, Attachment } from '../types';
+import { t } from '../i18n';
 
 const PROCESSOR_ASSET: Record<string, string> = {
   mix: 'bowl_spoon',
@@ -1238,8 +1239,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     // Action label: capitalize processor name, e.g. "Grill!" / "Fry!"
     const actionLabel = procName
-      ? procName.charAt(0).toUpperCase() + procName.slice(1) + '!'
-      : 'Cook!';
+      ? t('game.actionLabel', { processor: procName.charAt(0).toUpperCase() + procName.slice(1) })
+      : t('game.cook');
 
     const btnW = 160;
     const btnH = 54;

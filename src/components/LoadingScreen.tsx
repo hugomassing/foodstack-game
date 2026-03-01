@@ -1,4 +1,5 @@
 import { FONT_FAMILY } from '../config';
+import { useTranslation } from '../i18n';
 
 export function LoadingScreen() {
   return (
@@ -18,7 +19,7 @@ export function LoadingScreen() {
         pointerEvents: 'none',
       }}
     >
-      Loading assets...
+      {useTranslation().t('loading.assets')}
     </div>
   );
 }

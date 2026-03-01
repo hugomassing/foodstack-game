@@ -1,0 +1,42 @@
+{
+  "loading": {
+    "assets": "Loading assets..."
+  },
+  "menu": {
+    "title": "Create Recipe",
+    "selectedOrder": "SELECTED ORDER",
+    "startRecipe": "START RECIPE",
+    "demo": "DEMO",
+    "load": "LOAD",
+    "cookingUp": "Cooking up...",
+    "invalidJson": "Invalid JSON file",
+    "difficulty": {
+      "easy": "EASY",
+      "medium": "MEDIUM",
+      "hard": "HARD"
+    },
+    "category": {
+      "style": "Style",
+      "filling": "Filling",
+      "method": "Method",
+      "base": "Base"
+    }
+  },
+  "game": {
+    "steps": "{current}/{total} STEPS",
+    "cook": "Cook!",
+    "actionLabel": "{processor}!"
+  },
+  "quest": {
+    "recipe": "RECIPE",
+    "progress": "PROGRESS",
+    "final": "FINAL",
+    "exportJson": "EXPORT JSON"
+  },
+  "victory": {
+    "youWin": "YOU WIN!",
+    "playAgain": "PLAY AGAIN",
+    "saveCard": "SAVE CARD",
+    "steps": "{current}/{total} steps"
+  }
+}

@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { FoodAssets } from '../data/food-assets';
 import { GAME_W, GAME_H, DPR, FONT_FAMILY } from '../config';
 import { gameStore } from '../store/gameStore';
+import { t } from '../i18n';
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -18,7 +19,7 @@ export class PreloadScene extends Phaser.Scene {
     const barH = 18;
 
     this.add
-      .text(cx, cy - 40, 'Loading assets...', {
+      .text(cx, cy - 40, t('loading.assets'), {
         fontSize: '14px',
         color: '#aaaacc',
         fontFamily: FONT_FAMILY,
