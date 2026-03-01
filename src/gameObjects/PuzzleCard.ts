@@ -9,7 +9,7 @@ import {
   hexToCardColor,
 } from './FoodCard';
 import { FoodAssets } from '../data/food-assets';
-import { COLORS, PROCESSOR_RING_PAD } from '../config';
+import { COLORS, PROCESSOR_RING_PAD, FONT_FAMILY } from '../config';
 import type { CardType } from '../types';
 
 export class PuzzleCard extends FoodCard {
@@ -32,11 +32,13 @@ export class PuzzleCard extends FoodCard {
     const cardColor =
       type === 'processor'
         ? FOOD_CARD_COLORS.blue
-        : type === 'intermediate'
-          ? FOOD_CARD_COLORS.dark
-          : asset
-            ? hexToCardColor(asset.color)
-            : nameToColor(label);
+        : type === 'error'
+          ? FOOD_CARD_COLORS.error
+          : type === 'intermediate'
+            ? FOOD_CARD_COLORS.dark
+            : asset
+              ? hexToCardColor(asset.color)
+              : nameToColor(label);
 
     super(scene, x, y, {
       name: label,
@@ -54,7 +56,7 @@ export class PuzzleCard extends FoodCard {
     this.setDepth(this.cardDepth);
 
     if (type === 'processor') {
-      this.setInteractive({ draggable: true });
+      this.setInteractive();
       const ring = scene.add.graphics();
       const pad = PROCESSOR_RING_PAD;
       ring.lineStyle(2, COLORS.PROCESSOR_RING, 0.8);
@@ -68,6 +70,58 @@ export class PuzzleCard extends FoodCard {
       this.add(ring);
     } else {
       this.setInteractive({ draggable: true });
+    }
+
+    // Error card decorations
+    if (type === 'error') {
+      const w = FOOD_CARD_W;
+      const h = FOOD_CARD_H;
+      const ox = -w / 2;
+      const oy = -h / 2;
+
+      // Diagonal hazard stripes (subtle, behind content)
+      const stripes = scene.add.graphics();
+      const stripeW = 8;
+      const stripeGap = 14;
+      stripes.lineStyle(stripeW, 0x8b0000, 0.15);
+      for (let s = -h; s < w + h; s += stripeGap) {
+        stripes.lineBetween(ox + s, oy + h, ox + s + h, oy);
+      }
+      // Mask stripes to card bounds using a second fill
+      const mask = scene.add.graphics();
+      mask.fillStyle(0xffffff);
+      mask.fillRoundedRect(ox, oy, w, h, FOOD_CARD_RADIUS);
+      const geoMask = mask.createGeometryMask();
+      stripes.setMask(geoMask);
+      this.add(stripes);
+      // Move stripes behind the image/emoji but in front of the wave
+      this.sendToBack(stripes);
+      this.sendToBack(this.cardBody);
+      this.sendToBack(this.shadow);
+
+      // Red glow border
+      const glow = scene.add.graphics();
+      glow.lineStyle(3, 0xff3333, 0.6);
+      glow.strokeRoundedRect(ox - 1, oy - 1, w + 2, h + 2, FOOD_CARD_RADIUS + 1);
+      this.add(glow);
+
+      // Warning badge (top-right corner)
+      const badgeX = w / 2 - 2;
+      const badgeY = -h / 2 + 2;
+      const badge = scene.add.graphics();
+      badge.fillStyle(0xe74c3c, 1);
+      badge.fillCircle(badgeX, badgeY, 11);
+      badge.lineStyle(2, 0x8b0000, 1);
+      badge.strokeCircle(badgeX, badgeY, 11);
+      this.add(badge);
+
+      const exclaim = scene.add.text(badgeX, badgeY, '!', {
+        fontSize: '14px',
+        fontStyle: 'bold',
+        color: '#ffffff',
+        fontFamily: FONT_FAMILY,
+      }).setOrigin(0.5);
+      this.add(exclaim);
     }
   }
 }

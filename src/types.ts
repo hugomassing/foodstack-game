@@ -1,4 +1,4 @@
-export type CardType = 'ingredient' | 'intermediate' | 'processor';
+export type CardType = 'ingredient' | 'intermediate' | 'error' | 'processor';
 
 export interface Step {
   stepId: string;

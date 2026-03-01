@@ -26,43 +26,44 @@ Across the ENTIRE recipe (all branches, all steps, excluding assemble), you must
 - Every ingredient must be used exactly once across all steps.
 
 ### Quest Titles
-Every step MUST have a "questTitle" — a short, evocative title (2-4 words) that names the task like a quest objective. It should NOT reveal the processor or the exact output. Use thematic, atmospheric, or poetic language.
+Every step MUST have a "questTitle" — a short title (2-4 words) that describes what you're making in that step. It should mention the output or ingredients, NOT the processor/action. Keep it simple and helpful so the player knows what to aim for.
 
 Examples of GOOD quest titles:
-- chop garlic + chili → "Fiery Foundation" (not "Chopped Aromatics")
-- fry shrimp → "The Sizzling Catch" (not "Fried Shrimp")
-- mix glaze → "The Golden Coat" (not "Honey Glaze")
-- boil pasta → "The Rolling Boil" — wait, that reveals boil. Better: "Bubbling Depths"
-- bake dough → "Into the Heat" (not "Baked Bread")
-- assemble final → "The Grand Finale" (not "Assemble Taco")
+- chop garlic + chili → "Spicy Aromatics"
+- fry shrimp → "Crispy Shrimp"
+- mix honey + soy sauce → "Sweet Glaze"
+- boil pasta → "Tender Noodles"
+- bake dough → "Fresh Bread"
+- assemble final → "The Final Dish"
 
 Examples of BAD quest titles:
-- "Chopped Aromatics" ❌ (reveals the processor and output)
+- "Fiery Foundation" ❌ (too vague, player has no idea what to do)
+- "Bubbling Depths" ❌ (poetic but unhelpful)
+- "The Golden Coat" ❌ (doesn't tell player what to make)
 - "Fry the Shrimp" ❌ (reveals the processor)
-- "Mixed Glaze" ❌ (reveals the processor)
 
 ### Hints
-Every step MUST have a "hint" — a short, playful clue (4-8 words) that hints at the cooking action WITHOUT naming the processor directly. The hint should make the player think and feel clever when they figure it out. Use metaphors, sensory descriptions, or wordplay.
+Every step MUST have a "hint" — a short, helpful clue (4-8 words) that tells the player what kind of cooking action to use WITHOUT naming the processor directly. Describe the technique, the tool, or the result. Be clear enough that the player can figure it out.
 
-Examples of GOOD hints (indirect, fun):
-- chop: "A blade's rhythmic dance awaits" or "Reduce these to tiny pieces"
-- fry: "Oil pops and sizzles call" or "A hot bath, but make it quick"
-- boil: "Bubbles will tell you it's ready" or "Let the water do the work"
-- mix: "Round and round until they're one" or "Stir up some harmony"
-- grill: "Leave your mark with heat lines" or "Smoky char builds character"
-- bake: "The oven's warmth transforms all" or "Patience and heat, sealed away"
-- roast: "Low and slow in dry heat" or "A long warm hug from the oven"
-- knead: "Push, fold, repeat with muscle" or "Give this dough a workout"
-- mash: "Smash until smooth and creamy" or "Flatten these into oblivion"
-- steam: "A gentle cloud does the cooking" or "Hot mist works its magic"
-- toast: "Golden brown and crispy edges" or "A quick tan under heat"
-- melt: "Watch it slowly lose its shape" or "Heat turns solid into silk"
-- assemble: "All the pieces find their place" or "Stack, layer, and unite"
+Examples of GOOD hints (clear but indirect):
+- chop: "Cut these into small pieces" or "Use a blade on these"
+- fry: "Cook in hot oil until crispy" or "Sizzle these in a pan"
+- boil: "Cook in hot bubbling water" or "Submerge in boiling liquid"
+- mix: "Combine and stir together" or "Blend these into one"
+- grill: "Cook over open flames" or "Get those char marks going"
+- bake: "Put in the oven until done" or "Let dry heat do the work"
+- roast: "Slow cook in the oven" or "Brown slowly with dry heat"
+- knead: "Work the dough with your hands" or "Push and fold repeatedly"
+- mash: "Crush until smooth" or "Squash these flat"
+- steam: "Cook with hot vapor" or "Let hot mist soften these"
+- toast: "Brown lightly with heat" or "Crisp up the surface"
+- melt: "Heat until it turns liquid" or "Warm until it flows"
+- assemble: "Put all the parts together" or "Layer and combine"
 
-Examples of BAD hints (too obvious):
-- "Chop the onions" ❌ (names the processor)
-- "Use the frying pan" ❌ (names the processor)
-- "Boil this ingredient" ❌ (names the processor)
+Examples of BAD hints:
+- "Chop the onions" ❌ (names the processor directly)
+- "A blade's rhythmic dance awaits" ❌ (too poetic, unclear)
+- "The oven's warmth transforms all" ❌ (too vague)
 
 ### Tree structure
 - 2-3 parallel branches that converge into a final "assemble" node.

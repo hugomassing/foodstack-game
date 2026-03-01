@@ -20,6 +20,7 @@ export const FOOD_CARD_COLORS: Record<string, FoodCardColor> = {
   purple: { bg: 0x9b59b6, wave: 0x8e44ad, border: 0x7d3c98 },
   pink: { bg: 0xe91e63, wave: 0xc2185b, border: 0xad1457 },
   dark: { bg: 0x2c2c3a, wave: 0x1e1e2a, border: 0x14141e },
+  error: { bg: 0x4a1c1c, wave: 0x6b2020, border: 0x8b0000 },
 };
 
 const ingredientColors = Object.values(FOOD_CARD_COLORS);

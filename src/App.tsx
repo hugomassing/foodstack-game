@@ -5,8 +5,8 @@ import { PhaserCanvas } from './components/PhaserCanvas';
 import { LoadingScreen } from './components/LoadingScreen';
 import { GameMenu } from './components/GameMenu';
 import { QuestBookPanel } from './components/QuestBookPanel';
-import { GameHUD } from './components/GameHUD';
 import { VictoryOverlay } from './components/VictoryOverlay';
+import { GameOverOverlay } from './components/GameOverOverlay';
 
 function useGameStore<T>(selector: (state: ReturnType<typeof gameStore.getState>) => T): T {
   return useSyncExternalStore(
@@ -29,14 +29,18 @@ export default function App() {
       {phase === 'playing' && (
         <>
           <QuestBookPanel />
-          <GameHUD />
         </>
       )}
       {phase === 'victory' && (
         <>
           <QuestBookPanel />
-          <GameHUD />
           <VictoryOverlay />
+        </>
+      )}
+      {phase === 'game_over' && (
+        <>
+          <QuestBookPanel />
+          <GameOverOverlay />
         </>
       )}
     </GameShell>
