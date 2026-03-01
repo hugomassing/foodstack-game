@@ -61,7 +61,7 @@
     "chooseDifficulty": "Choose Difficulty",
     "daily": {
       "title": "Daily",
-      "description": "Today's recipe challenge. 10 error limit.",
+      "description": "Today's recipe challenge. Same dish for everyone!",
       "best": "Best: {count}"
     },
     "survival": {
@@ -70,7 +70,7 @@
     },
     "normal": {
       "title": "Quick Play",
-      "description": "Random recipe, unlimited errors. Beat your best!"
+      "description": "Random recipe. Pick your difficulty and go!"
     },
     "seeded": {
       "title": "Custom",

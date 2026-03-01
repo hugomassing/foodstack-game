@@ -1429,7 +1429,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
       this.errorCounterText.setVisible(false);
     } else {
       this.errorCounterText.setVisible(true);
-      this.errorCounterText.setText(`⚠️ ${errorCount}/${maxErrors}`);
+      const label = Number.isFinite(maxErrors) ? `⚠️ ${errorCount}/${maxErrors}` : `⚠️ ${errorCount}`;
+      this.errorCounterText.setText(label);
 
       // Pulse animation on update
       this.tweens.killTweensOf(this.errorCounterText);

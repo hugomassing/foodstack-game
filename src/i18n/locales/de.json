@@ -61,7 +61,7 @@
     "chooseDifficulty": "Schwierigkeit wählen",
     "daily": {
       "title": "Täglich",
-      "description": "Heutige Rezept-Challenge. 10 Fehler erlaubt.",
+      "description": "Heutige Rezept-Challenge. Dasselbe Gericht für alle!",
       "best": "Bestes: {count}"
     },
     "survival": {
@@ -70,7 +70,7 @@
     },
     "normal": {
       "title": "Schnelles Spiel",
-      "description": "Zufälliges Rezept, unbegrenzte Fehler."
+      "description": "Zufälliges Rezept. Wähle deinen Schwierigkeitsgrad und los!"
     },
     "seeded": {
       "title": "Eigenes Rezept",

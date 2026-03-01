@@ -61,7 +61,7 @@
     "chooseDifficulty": "Escolha a dificuldade",
     "daily": {
       "title": "Diário",
-      "description": "O desafio de hoje. Limite de 10 erros.",
+      "description": "O desafio de hoje. O mesmo prato para todos!",
       "best": "Melhor: {count}"
     },
     "survival": {
@@ -70,7 +70,7 @@
     },
     "normal": {
       "title": "Jogo rápido",
-      "description": "Receita aleatória, erros ilimitados."
+      "description": "Receita aleatória. Escolha a dificuldade e vamos!"
     },
     "seeded": {
       "title": "Personalizado",

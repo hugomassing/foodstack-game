@@ -61,7 +61,7 @@
     "chooseDifficulty": "Scegli la difficoltà",
     "daily": {
       "title": "Giornaliero",
-      "description": "La sfida di oggi. Limite di 10 errori.",
+      "description": "La sfida di oggi. Lo stesso piatto per tutti!",
       "best": "Migliore: {count}"
     },
     "survival": {
@@ -70,7 +70,7 @@
     },
     "normal": {
       "title": "Partita rapida",
-      "description": "Ricetta casuale, errori illimitati."
+      "description": "Ricetta casuale. Scegli la difficoltà e via!"
     },
     "seeded": {
       "title": "Personalizzato",

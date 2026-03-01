@@ -61,7 +61,7 @@
     "chooseDifficulty": "Choisir la difficulté",
     "daily": {
       "title": "Quotidien",
-      "description": "Le défi du jour. Limite de 10 erreurs.",
+      "description": "Le défi du jour. Le même plat pour tout le monde !",
       "best": "Meilleur : {count}"
     },
     "survival": {
@@ -70,7 +70,7 @@
     },
     "normal": {
       "title": "Partie rapide",
-      "description": "Recette aléatoire, erreurs illimitées."
+      "description": "Recette aléatoire. Choisis ta difficulté et c'est parti !"
     },
     "seeded": {
       "title": "Personnalisé",

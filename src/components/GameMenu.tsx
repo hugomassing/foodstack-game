@@ -4,7 +4,7 @@ import { convex } from '../lib/convex';
 import { gameStore } from '../store/gameStore';
 import { FONT_FAMILY } from '../config';
 import type { PuzzleData } from '../types';
-import { ChevronLeft, ChevronRight, Play, ArrowLeft, Shuffle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Play, ArrowLeft, Shuffle, Heart, HeartOff } from 'lucide-react';
 import { getWordlists } from '../data/wordlists/index';
 import { useTranslation } from '../i18n';
 import type { TranslationKeys } from '../i18n/types';
@@ -219,6 +219,7 @@ export function GameMenu() {
   const [indices, setIndices] = useState(() => randomSelections(wordLists));
   const [customName, setCustomName] = useState('');
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
+  const [livesEnabled, setLivesEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -271,6 +272,7 @@ export function GameMenu() {
         locale,
       });
       setIsLoading(false);
+      gameStore.setState({ maxErrors: livesEnabled ? 10 : Infinity });
       gameStore.getState().startGame(puzzleData as PuzzleData, difficulty);
     } catch (err) {
       setIsLoading(false);
@@ -548,8 +550,34 @@ export function GameMenu() {
           )}
         </div>
 
-        {/* Difficulty selector */}
-        <DifficultySelector value={difficulty} onChange={setDifficulty} disabled={isLoading} />
+        {/* Difficulty + Lives toggle */}
+        <div style={{ width: '100%', display: 'flex', gap: 6, marginBottom: 4 }}>
+          <div style={{ flex: 1 }}>
+            <DifficultySelector value={difficulty} onChange={setDifficulty} disabled={isLoading} />
+          </div>
+          <div
+            onClick={isLoading ? undefined : () => setLivesEnabled((v) => !v)}
+            style={{
+              width: 44,
+              borderRadius: 10,
+              border: `2px solid ${livesEnabled ? '#e53935' : '#e0e0e0'}`,
+              background: livesEnabled ? '#e53935' : '#ffffff',
+              color: livesEnabled ? '#ffffff' : '#3e2723',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: isLoading ? 'default' : 'pointer',
+              userSelect: 'none',
+              transition: 'all 0.15s',
+              boxShadow: livesEnabled ? '0 3px 0 #b71c1c' : '0 3px 0 #e0e0e0',
+            }}
+          >
+            {livesEnabled
+              ? <Heart size={18} strokeWidth={2.5} fill="#ffffff" color="#ffffff" />
+              : <HeartOff size={18} strokeWidth={2.5} color="#bdbdbd" />
+            }
+          </div>
+        </div>
 
         {/* Selector rows */}
         <div
@@ -735,7 +763,6 @@ function DifficultySelector({
         width: '100%',
         display: 'flex',
         gap: 6,
-        marginBottom: 4,
       }}
     >
       {DIFFICULTIES.map((d) => {
@@ -782,6 +809,7 @@ function DifficultySelector({
     </div>
   );
 }
+
 
 function PushButton({
   icon,
