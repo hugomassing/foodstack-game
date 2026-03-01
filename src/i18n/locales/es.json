@@ -62,7 +62,8 @@
   "game": {
     "steps": "{current}/{total} PASOS",
     "cook": "¡Cocinar!",
-    "actionLabel": "¡{processor}!"
+    "actionLabel": "¡{processor}!",
+    "lives": "Vidas"
   },
   "quest": {
     "recipe": "RECETA",
@@ -76,6 +77,12 @@
     "saveCard": "GUARDAR TARJETA",
     "steps": "{current}/{total} pasos",
     "errors": "{count} errores",
+    "completion": "Finalización",
+    "difficulty": "Dificultad",
+    "errorLabel": "Errores",
+    "survivalLabel": "Supervivencia",
+    "imageFailed": "Error al generar la imagen",
+    "retry": "REINTENTAR",
     "trophyMessages": [
       "Creando tu trofeo...",
       "Pintando los detalles...",
@@ -138,5 +145,34 @@
     "survivalEnd": "¡Sobreviviste {rounds} rondas!",
     "tryAgain": "REINTENTAR",
     "backToMenu": "VOLVER AL MENÚ"
+  },
+  "auth": {
+    "signIn": "Iniciar sesión",
+    "signOut": "CERRAR SESIÓN",
+    "account": "Cuenta",
+    "chooseName": "Elige un nombre",
+    "pickNameDesc": "Elige un nombre para el ranking",
+    "chooseUsername": "Elige un nombre de usuario",
+    "letsCook": "¡A COCINAR!",
+    "emailTab": "CORREO",
+    "usernameTab": "USUARIO",
+    "emailAddress": "Correo electrónico",
+    "sendCode": "ENVIAR CÓDIGO",
+    "codeSent": "Código enviado a {email}",
+    "enterCode": "Introduce el código",
+    "verify": "VERIFICAR",
+    "differentEmail": "Usar otro correo",
+    "username": "Usuario",
+    "password": "Contraseña",
+    "logIn": "ENTRAR",
+    "create": "CREAR",
+    "errors": {
+      "noAccount": "No se encontró la cuenta. ¡Crea una!",
+      "wrongPassword": "Contraseña incorrecta. Inténtalo de nuevo.",
+      "tooManyAttempts": "Demasiados intentos. Espera e inténtalo de nuevo.",
+      "usernameTaken": "Nombre de usuario en uso. Intenta iniciar sesión.",
+      "invalidCode": "Código inválido. Comprueba e inténtalo de nuevo.",
+      "generic": "Algo salió mal"
+    }
   }
 }

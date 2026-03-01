@@ -62,7 +62,8 @@
   "game": {
     "steps": "{current}/{total} SCHRITTE",
     "cook": "Kochen!",
-    "actionLabel": "{processor}!"
+    "actionLabel": "{processor}!",
+    "lives": "Leben"
   },
   "quest": {
     "recipe": "REZEPT",
@@ -76,6 +77,12 @@
     "saveCard": "KARTE SPEICHERN",
     "steps": "{current}/{total} Schritte",
     "errors": "{count} Fehler",
+    "completion": "Abschluss",
+    "difficulty": "Schwierigkeit",
+    "errorLabel": "Fehler",
+    "survivalLabel": "Überleben",
+    "imageFailed": "Bilderzeugung fehlgeschlagen",
+    "retry": "NOCHMAL",
     "trophyMessages": [
       "Trophäe wird gebastelt...",
       "Details werden gemalt...",
@@ -138,5 +145,34 @@
     "survivalEnd": "{rounds} Runden überlebt!",
     "tryAgain": "NOCHMAL",
     "backToMenu": "ZUM MENÜ"
+  },
+  "auth": {
+    "signIn": "Anmelden",
+    "signOut": "ABMELDEN",
+    "account": "Konto",
+    "chooseName": "Wähle einen Namen",
+    "pickNameDesc": "Wähle einen Namen für die Rangliste",
+    "chooseUsername": "Wähle einen Benutzernamen",
+    "letsCook": "LOS GEHT'S",
+    "emailTab": "E-MAIL",
+    "usernameTab": "BENUTZER",
+    "emailAddress": "E-Mail-Adresse",
+    "sendCode": "CODE SENDEN",
+    "codeSent": "Code gesendet an {email}",
+    "enterCode": "Code eingeben",
+    "verify": "BESTÄTIGEN",
+    "differentEmail": "Andere E-Mail verwenden",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "logIn": "ANMELDEN",
+    "create": "ERSTELLEN",
+    "errors": {
+      "noAccount": "Kein Konto gefunden. Erstelle stattdessen eins!",
+      "wrongPassword": "Falsches Passwort. Bitte erneut versuchen.",
+      "tooManyAttempts": "Zu viele Versuche. Bitte warten.",
+      "usernameTaken": "Benutzername vergeben. Versuche dich anzumelden.",
+      "invalidCode": "Ungültiger Code. Bitte überprüfen.",
+      "generic": "Etwas ist schiefgelaufen"
+    }
   }
 }

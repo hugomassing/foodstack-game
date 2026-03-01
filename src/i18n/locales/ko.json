@@ -62,7 +62,8 @@
   "game": {
     "steps": "{current}/{total} 단계",
     "cook": "요리!",
-    "actionLabel": "{processor}!"
+    "actionLabel": "{processor}!",
+    "lives": "생명"
   },
   "quest": {
     "recipe": "레시피",
@@ -76,6 +77,12 @@
     "saveCard": "카드 저장",
     "steps": "{current}/{total} 단계",
     "errors": "{count} 오류",
+    "completion": "완료",
+    "difficulty": "난이도",
+    "errorLabel": "오류",
+    "survivalLabel": "서바이벌",
+    "imageFailed": "이미지 생성 실패",
+    "retry": "재시도",
     "trophyMessages": [
       "트로피 제작 중...",
       "세부 묘사 중...",
@@ -138,5 +145,34 @@
     "survivalEnd": "{rounds} 라운드 생존!",
     "tryAgain": "다시 시도",
     "backToMenu": "메뉴로"
+  },
+  "auth": {
+    "signIn": "로그인",
+    "signOut": "로그아웃",
+    "account": "계정",
+    "chooseName": "이름 선택",
+    "pickNameDesc": "랭킹에 사용할 이름을 선택하세요",
+    "chooseUsername": "사용자 이름 입력",
+    "letsCook": "요리 시작!",
+    "emailTab": "이메일",
+    "usernameTab": "사용자명",
+    "emailAddress": "이메일 주소",
+    "sendCode": "코드 전송",
+    "codeSent": "{email}로 코드를 보냈습니다",
+    "enterCode": "코드 입력",
+    "verify": "확인",
+    "differentEmail": "다른 이메일 사용",
+    "username": "사용자 이름",
+    "password": "비밀번호",
+    "logIn": "로그인",
+    "create": "만들기",
+    "errors": {
+      "noAccount": "계정을 찾을 수 없습니다. 새로 만드세요!",
+      "wrongPassword": "비밀번호가 틀립니다. 다시 시도하세요.",
+      "tooManyAttempts": "시도 횟수가 너무 많습니다. 잠시 기다려 주세요.",
+      "usernameTaken": "이미 사용 중인 이름입니다. 로그인을 시도하세요.",
+      "invalidCode": "유효하지 않은 코드입니다. 확인 후 다시 시도하세요.",
+      "generic": "문제가 발생했습니다"
+    }
   }
 }

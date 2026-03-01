@@ -62,7 +62,8 @@
   "game": {
     "steps": "{current}/{total} 步骤",
     "cook": "烹饪！",
-    "actionLabel": "{processor}！"
+    "actionLabel": "{processor}！",
+    "lives": "生命"
   },
   "quest": {
     "recipe": "食谱",
@@ -76,6 +77,12 @@
     "saveCard": "保存卡片",
     "steps": "{current}/{total} 步骤",
     "errors": "{count} 个错误",
+    "completion": "完成度",
+    "difficulty": "难度",
+    "errorLabel": "错误",
+    "survivalLabel": "生存",
+    "imageFailed": "图片生成失败",
+    "retry": "重试",
     "trophyMessages": [
       "制作奖杯中...",
       "绘制细节中...",
@@ -138,5 +145,34 @@
     "survivalEnd": "生存了 {rounds} 轮！",
     "tryAgain": "重试",
     "backToMenu": "返回菜单"
+  },
+  "auth": {
+    "signIn": "登录",
+    "signOut": "退出登录",
+    "account": "账户",
+    "chooseName": "选择名字",
+    "pickNameDesc": "为排行榜选择一个名字",
+    "chooseUsername": "输入用户名",
+    "letsCook": "开始烹饪",
+    "emailTab": "邮箱",
+    "usernameTab": "用户名",
+    "emailAddress": "邮箱地址",
+    "sendCode": "发送验证码",
+    "codeSent": "验证码已发送至 {email}",
+    "enterCode": "输入验证码",
+    "verify": "验证",
+    "differentEmail": "使用其他邮箱",
+    "username": "用户名",
+    "password": "密码",
+    "logIn": "登录",
+    "create": "注册",
+    "errors": {
+      "noAccount": "未找到账户。请创建新账户！",
+      "wrongPassword": "密码错误。请重试。",
+      "tooManyAttempts": "尝试次数过多。请稍后再试。",
+      "usernameTaken": "用户名已被使用。请尝试登录。",
+      "invalidCode": "验证码无效。请检查后重试。",
+      "generic": "出了点问题"
+    }
   }
 }

@@ -322,7 +322,7 @@ export function VictoryCard({
                     fontFamily: FONT_FAMILY,
                   }}
                 >
-                  Image generation failed
+                  {t('victory.imageFailed')}
                 </div>
                 <button
                   onClick={data.onRetry}
@@ -343,7 +343,7 @@ export function VictoryCard({
                   }}
                 >
                   <RotateCcw size={13} strokeWidth={3} />
-                  RETRY
+                  {t('victory.retry')}
                 </button>
               </>
             ) : (
@@ -396,13 +396,13 @@ export function VictoryCard({
         {/* Completion */}
         <StatRow
           icon={<ClipboardList size={20} strokeWidth={2} color="#5d3a1a" />}
-          label="COMPLETION"
+          label={t('victory.completion')}
         >
           {t('victory.steps', { current: data.stepCount, total: data.totalSteps }).toUpperCase()}
         </StatRow>
 
         {/* Difficulty */}
-        <StatRow icon={<span style={{ fontSize: 18, lineHeight: 1 }}>🌶️</span>} label="DIFFICULTY">
+        <StatRow icon={<span style={{ fontSize: 18, lineHeight: 1 }}>🌶️</span>} label={t('victory.difficulty')}>
           <span
             style={{
               display: 'inline-block',
@@ -421,7 +421,7 @@ export function VictoryCard({
         </StatRow>
 
         {/* Errors */}
-        <StatRow icon={<X size={20} strokeWidth={3} color="#5d3a1a" />} label="ERRORS">
+        <StatRow icon={<X size={20} strokeWidth={3} color="#5d3a1a" />} label={t('victory.errorLabel')}>
           {t('victory.errors', { count: data.errorCount }).toUpperCase()}
         </StatRow>
 
@@ -429,7 +429,7 @@ export function VictoryCard({
         {data.gameMode === 'survival' && data.survivalRound !== undefined && (
           <StatRow
             icon={<Heart size={18} strokeWidth={2} fill="#e53935" color="#e53935" />}
-            label="SURVIVAL"
+            label={t('victory.survivalLabel')}
           >
             {t('survival.round', { round: data.survivalRound })}
             {data.survivalLives !== undefined && ` · ${data.survivalLives}♥`}

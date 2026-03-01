@@ -62,7 +62,8 @@
   "game": {
     "steps": "{current}/{total} STEPS",
     "cook": "Cook!",
-    "actionLabel": "{processor}!"
+    "actionLabel": "{processor}!",
+    "lives": "Lives"
   },
   "quest": {
     "recipe": "RECIPE",
@@ -76,6 +77,12 @@
     "saveCard": "SAVE CARD",
     "steps": "{current}/{total} steps",
     "errors": "{count} errors",
+    "completion": "Completion",
+    "difficulty": "Difficulty",
+    "errorLabel": "Errors",
+    "survivalLabel": "Survival",
+    "imageFailed": "Image generation failed",
+    "retry": "RETRY",
     "trophyMessages": [
       "Crafting your trophy...",
       "Painting the details...",
@@ -138,5 +145,34 @@
     "survivalEnd": "Survived {rounds} rounds!",
     "tryAgain": "TRY AGAIN",
     "backToMenu": "BACK TO MENU"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signOut": "SIGN OUT",
+    "account": "Account",
+    "chooseName": "Choose a Name",
+    "pickNameDesc": "Pick a name for the leaderboard",
+    "chooseUsername": "Choose a username",
+    "letsCook": "LET'S COOK",
+    "emailTab": "EMAIL",
+    "usernameTab": "USERNAME",
+    "emailAddress": "Email address",
+    "sendCode": "SEND CODE",
+    "codeSent": "Code sent to {email}",
+    "enterCode": "Enter code",
+    "verify": "VERIFY",
+    "differentEmail": "Use a different email",
+    "username": "Username",
+    "password": "Password",
+    "logIn": "LOG IN",
+    "create": "CREATE",
+    "errors": {
+      "noAccount": "No account found. Create one instead!",
+      "wrongPassword": "Wrong password. Please try again.",
+      "tooManyAttempts": "Too many attempts. Please wait and try again.",
+      "usernameTaken": "Username already taken. Try logging in instead.",
+      "invalidCode": "Invalid code. Please check and try again.",
+      "generic": "Something went wrong"
+    }
   }
 }

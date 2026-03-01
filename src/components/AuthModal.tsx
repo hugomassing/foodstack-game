@@ -5,23 +5,26 @@ import { api } from '../../convex/_generated/api';
 import { gameStore } from '../store/gameStore';
 import { FONT_FAMILY } from '../config';
 import { X, Mail, User, LogOut } from 'lucide-react';
+import { useTranslation } from '../i18n';
+import type { TranslationKeys } from '../i18n/types';
 
 type Tab = 'email' | 'username';
 
-function friendlyAuthError(err: unknown): string {
+function friendlyAuthError(err: unknown, t: (key: TranslationKeys) => string): string {
   const msg = (err as Error).message || '';
-  if (msg.includes('InvalidAccountId')) return 'No account found. Create one instead!';
-  if (msg.includes('InvalidSecret')) return 'Wrong password. Please try again.';
-  if (msg.includes('TooManyFailedAttempts')) return 'Too many attempts. Please wait and try again.';
+  if (msg.includes('InvalidAccountId')) return t('auth.errors.noAccount');
+  if (msg.includes('InvalidSecret')) return t('auth.errors.wrongPassword');
+  if (msg.includes('TooManyFailedAttempts')) return t('auth.errors.tooManyAttempts');
   if (msg.includes('AccountAlreadyExists') || msg.includes('already exists'))
-    return 'Username already taken. Try logging in instead.';
-  if (msg.includes('InvalidVerificationCode')) return 'Invalid code. Please check and try again.';
-  return msg || 'Something went wrong';
+    return t('auth.errors.usernameTaken');
+  if (msg.includes('InvalidVerificationCode')) return t('auth.errors.invalidCode');
+  return msg || t('auth.errors.generic');
 }
 
 export function AuthModal() {
   const { isAuthenticated } = useConvexAuth();
   const { signIn, signOut } = useAuthActions();
+  const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>('email');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -62,7 +65,7 @@ export function AuthModal() {
       }
     } catch (err) {
       gameStore.getState().setAuthTransition(false);
-      setError(friendlyAuthError(err));
+      setError(friendlyAuthError(err, t));
     }
     setLoading(false);
   };
@@ -79,7 +82,7 @@ export function AuthModal() {
       setLoading(false);
       close();
     } catch (err) {
-      setError((err as Error).message || 'Something went wrong');
+      setError((err as Error).message || t('auth.errors.generic'));
       setLoading(false);
     }
   };
@@ -96,7 +99,7 @@ export function AuthModal() {
       window.location.reload();
     } catch (err) {
       gameStore.getState().setAuthTransition(false);
-      setError(friendlyAuthError(err));
+      setError(friendlyAuthError(err, t));
       setLoading(false);
     }
   };
@@ -231,7 +234,7 @@ export function AuthModal() {
               }}
             >
               <LogOut size={16} strokeWidth={3} />
-              SIGN OUT
+              {t('auth.signOut')}
             </button>
           </div>
         ) : needsUsername ? (
@@ -248,7 +251,7 @@ export function AuthModal() {
                 letterSpacing: '-0.02em',
               }}
             >
-              Choose a Name
+              {t('auth.chooseName')}
             </h2>
             <div
               style={{
@@ -258,17 +261,17 @@ export function AuthModal() {
                 fontWeight: 700,
               }}
             >
-              Pick a name for the leaderboard
+              {t('auth.pickNameDesc')}
             </div>
             <AuthInput
-              placeholder="Choose a username"
+              placeholder={t('auth.chooseUsername')}
               type="text"
               value={pickedName}
               onChange={setPickedName}
               disabled={loading}
             />
             <AuthButton
-              label="LET'S COOK"
+              label={t('auth.letsCook')}
               onClick={handlePickUsername}
               disabled={loading || !pickedName.trim()}
               loading={loading}
@@ -300,7 +303,7 @@ export function AuthModal() {
                 letterSpacing: '-0.02em',
               }}
             >
-              Account
+              {t('auth.account')}
             </h2>
 
             {/* Tabs */}
@@ -308,7 +311,7 @@ export function AuthModal() {
               <TabButton
                 active={tab === 'email'}
                 icon={<Mail size={14} strokeWidth={3} />}
-                label="EMAIL"
+                label={t('auth.emailTab')}
                 onClick={() => {
                   setTab('email');
                   setError('');
@@ -317,7 +320,7 @@ export function AuthModal() {
               <TabButton
                 active={tab === 'username'}
                 icon={<User size={14} strokeWidth={3} />}
-                label="USERNAME"
+                label={t('auth.usernameTab')}
                 onClick={() => {
                   setTab('username');
                   setError('');
@@ -330,14 +333,14 @@ export function AuthModal() {
                 {emailStep === 'email' && (
                   <>
                     <AuthInput
-                      placeholder="Email address"
+                      placeholder={t('auth.emailAddress')}
                       type="email"
                       value={email}
                       onChange={setEmail}
                       disabled={loading}
                     />
                     <AuthButton
-                      label="SEND CODE"
+                      label={t('auth.sendCode')}
                       onClick={handleEmailSubmit}
                       disabled={loading || !email.trim()}
                       loading={loading}
@@ -354,17 +357,17 @@ export function AuthModal() {
                         fontWeight: 700,
                       }}
                     >
-                      Code sent to {email}
+                      {t('auth.codeSent', { email })}
                     </div>
                     <AuthInput
-                      placeholder="Enter code"
+                      placeholder={t('auth.enterCode')}
                       type="text"
                       value={code}
                       onChange={setCode}
                       disabled={loading}
                     />
                     <AuthButton
-                      label="VERIFY"
+                      label={t('auth.verify')}
                       onClick={handleEmailSubmit}
                       disabled={loading || !code.trim()}
                       loading={loading}
@@ -383,7 +386,7 @@ export function AuthModal() {
                         fontWeight: 700,
                       }}
                     >
-                      Use a different email
+                      {t('auth.differentEmail')}
                     </div>
                   </>
                 )}
@@ -391,14 +394,14 @@ export function AuthModal() {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <AuthInput
-                  placeholder="Username"
+                  placeholder={t('auth.username')}
                   type="text"
                   value={username}
                   onChange={setUsername}
                   disabled={loading}
                 />
                 <AuthInput
-                  placeholder="Password"
+                  placeholder={t('auth.password')}
                   type="password"
                   value={password}
                   onChange={setPassword}
@@ -406,13 +409,13 @@ export function AuthModal() {
                 />
                 <div style={{ display: 'flex', gap: 8 }}>
                   <AuthButton
-                    label="LOG IN"
+                    label={t('auth.logIn')}
                     onClick={() => handleUsernameSubmit('signIn')}
                     disabled={loading || !username.trim() || !password.trim()}
                     loading={loading}
                   />
                   <AuthButton
-                    label="CREATE"
+                    label={t('auth.create')}
                     onClick={() => handleUsernameSubmit('signUp')}
                     disabled={loading || !username.trim() || !password.trim()}
                     loading={loading}

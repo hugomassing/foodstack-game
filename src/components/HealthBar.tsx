@@ -1,12 +1,14 @@
 import { ChefHat } from 'lucide-react';
 import { BD_X, BD_W, HEALTH_BAR_H, FONT_FAMILY } from '../config';
 import { useGameStore } from '../App';
+import { useTranslation } from '../i18n';
 
 const HAT_SIZE = 20;
 
 export function HealthBar() {
   const errorCount = useGameStore((s) => s.errorCount);
   const maxErrors = useGameStore((s) => s.maxErrors);
+  const { t } = useTranslation();
 
   // Hide for infinite mode (seeded with no error limit)
   if (!Number.isFinite(maxErrors)) return null;
@@ -45,7 +47,7 @@ export function HealthBar() {
           opacity: 0.9,
         }}
       >
-        Lives
+        {t('game.lives')}
       </span>
       {Array.from({ length: maxErrors }, (_, i) => {
         const isLost = i < errorCount;

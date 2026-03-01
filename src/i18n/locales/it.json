@@ -62,7 +62,8 @@
   "game": {
     "steps": "{current}/{total} PASSI",
     "cook": "Cuoci!",
-    "actionLabel": "{processor}!"
+    "actionLabel": "{processor}!",
+    "lives": "Vite"
   },
   "quest": {
     "recipe": "RICETTA",
@@ -76,6 +77,12 @@
     "saveCard": "SALVA CARTA",
     "steps": "{current}/{total} passi",
     "errors": "{count} errori",
+    "completion": "Completamento",
+    "difficulty": "Difficoltà",
+    "errorLabel": "Errori",
+    "survivalLabel": "Sopravvivenza",
+    "imageFailed": "Generazione immagine fallita",
+    "retry": "RIPROVA",
     "trophyMessages": [
       "Creazione del trofeo...",
       "Pittura dei dettagli...",
@@ -138,5 +145,34 @@
     "survivalEnd": "Sopravvissuto {rounds} round!",
     "tryAgain": "RIPROVA",
     "backToMenu": "TORNA AL MENU"
+  },
+  "auth": {
+    "signIn": "Accedi",
+    "signOut": "ESCI",
+    "account": "Account",
+    "chooseName": "Scegli un nome",
+    "pickNameDesc": "Scegli un nome per la classifica",
+    "chooseUsername": "Scegli un nome utente",
+    "letsCook": "SI CUCINA!",
+    "emailTab": "E-MAIL",
+    "usernameTab": "UTENTE",
+    "emailAddress": "Indirizzo e-mail",
+    "sendCode": "INVIA CODICE",
+    "codeSent": "Codice inviato a {email}",
+    "enterCode": "Inserisci il codice",
+    "verify": "VERIFICA",
+    "differentEmail": "Usa un'altra e-mail",
+    "username": "Nome utente",
+    "password": "Password",
+    "logIn": "ACCEDI",
+    "create": "CREA",
+    "errors": {
+      "noAccount": "Nessun account trovato. Creane uno!",
+      "wrongPassword": "Password sbagliata. Riprova.",
+      "tooManyAttempts": "Troppi tentativi. Attendi e riprova.",
+      "usernameTaken": "Nome utente già in uso. Prova ad accedere.",
+      "invalidCode": "Codice non valido. Controlla e riprova.",
+      "generic": "Qualcosa è andato storto"
+    }
   }
 }

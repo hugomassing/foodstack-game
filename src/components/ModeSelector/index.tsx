@@ -1008,7 +1008,7 @@ export function ModeSelector() {
                         <Play size={14} fill="currentColor" strokeWidth={0} />
                       )
                     }
-                    label={isAnonymous ? 'Sign in' : t('modes.start')}
+                    label={isAnonymous ? t('auth.signIn') : t('modes.start')}
                     color={isAnonymous ? '#8d6e63' : '#e53935'}
                     hoverColor={isAnonymous ? '#6d4c41' : '#c62828'}
                     height={32}
@@ -1037,7 +1037,7 @@ export function ModeSelector() {
                         <Play size={14} fill="currentColor" strokeWidth={0} />
                       )
                     }
-                    label={isAnonymous ? 'Sign in' : t('modes.play')}
+                    label={isAnonymous ? t('auth.signIn') : t('modes.play')}
                     color={isAnonymous ? '#8d6e63' : '#29b6f6'}
                     hoverColor={isAnonymous ? '#6d4c41' : '#03a9f4'}
                     height={32}
@@ -1066,7 +1066,7 @@ export function ModeSelector() {
                         <Settings size={14} strokeWidth={2.5} />
                       )
                     }
-                    label={isAnonymous ? 'Sign in' : t('modes.configure')}
+                    label={isAnonymous ? t('auth.signIn') : t('modes.configure')}
                     color={isAnonymous ? '#8d6e63' : '#7e57c2'}
                     hoverColor={isAnonymous ? '#6d4c41' : '#5e35b1'}
                     height={32}
