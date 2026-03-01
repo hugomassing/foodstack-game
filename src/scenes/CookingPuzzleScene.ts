@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { FOOD_CARD_W, FOOD_CARD_H } from '../gameObjects/FoodCard';
+import { FOOD_CARD_W, FOOD_CARD_H, FOOD_CARD_RADIUS } from '../gameObjects/FoodCard';
 import { PuzzleCard } from '../gameObjects/PuzzleCard';
 import {
   GAME_W,
@@ -134,7 +134,8 @@ interface ProcessorZone {
   bg: Phaser.GameObjects.Graphics;
   icon: Phaser.GameObjects.Image | Phaser.GameObjects.Text;
   label: Phaser.GameObjects.Text;
-  rect: Phaser.Geom.Rectangle;
+  rect: Phaser.Geom.Rectangle;       // full-column hit area
+  cardRect: Phaser.Geom.Rectangle;   // card-sized visual slot
 }
 
 export class CookingPuzzleScene extends Phaser.Scene {
@@ -432,33 +433,36 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
       const container = this.add.container(0, 0).setDepth(2);
 
-      // Zone background fill (simple rect, clipped by board mask)
-      const bg = this.add.graphics();
-      bg.fillStyle(ZONE.BG_COLOR, 1);
-      bg.fillRect(zoneX, zoneY, zoneW, zoneH);
+      // Card-sized slot centered in column
+      const cardBoxX = zoneX + (zoneW - FOOD_CARD_W) / 2;
+      const cardBoxY = zoneY + (zoneH - FOOD_CARD_H) / 2;
 
-      // Bottom separator line
+      const bg = this.add.graphics();
+
+      // Bottom separator line (keep the zone row / card area divider)
       bg.lineStyle(1, ZONE.SEPARATOR_COLOR, 0.4);
       bg.lineBetween(zoneX, zoneY + zoneH, zoneX + zoneW, zoneY + zoneH);
 
-      // Vertical separator on right side (except last zone)
-      if (i < count - 1) {
-        bg.lineStyle(1, ZONE.SEPARATOR_COLOR, 0.25);
-        bg.lineBetween(zoneX + zoneW, zoneY + 4, zoneX + zoneW, zoneY + zoneH - 4);
-      }
+      // Faint fill inside the card slot
+      bg.fillStyle(ZONE.BG_COLOR, 0.3);
+      bg.fillRoundedRect(cardBoxX, cardBoxY, FOOD_CARD_W, FOOD_CARD_H, FOOD_CARD_RADIUS);
+
+      // Dashed border around the card slot
+      bg.lineStyle(1.5, ZONE.SEPARATOR_COLOR, ZONE.PLACEHOLDER_ALPHA);
+      this.drawDashedRoundedRect(bg, cardBoxX, cardBoxY, FOOD_CARD_W, FOOD_CARD_H, FOOD_CARD_RADIUS, 6, 4);
 
       bg.setMask(boardMask);
       container.add(bg);
 
-      // Icon (upper portion of zone)
-      const iconCx = zoneX + zoneW / 2;
-      const iconCy = zoneY + zoneH * 0.35;
+      // Icon centered inside the card slot
+      const iconCx = cardBoxX + FOOD_CARD_W / 2;
+      const iconCy = cardBoxY + FOOD_CARD_H * 0.38;
       let icon: Phaser.GameObjects.Image | Phaser.GameObjects.Text;
 
       const textureKey = assetId ? `food_${assetId}` : null;
       if (textureKey && this.textures.exists(textureKey)) {
         const img = this.add.image(iconCx, iconCy, textureKey);
-        const maxDim = zoneH * 0.34;
+        const maxDim = FOOD_CARD_H * 0.34;
         const scale = Math.min(maxDim / img.width, maxDim / img.height);
         img.setScale(scale).setOrigin(0.5);
         icon = img;
@@ -487,10 +491,43 @@ export class CookingPuzzleScene extends Phaser.Scene {
       container.add(label);
 
       const rect = new Phaser.Geom.Rectangle(zoneX, zoneY, zoneW, zoneH);
+      const cardRect = new Phaser.Geom.Rectangle(cardBoxX, cardBoxY, FOOD_CARD_W, FOOD_CARD_H);
 
-      this.processorZones.set(procName, { name: procName, emoji, container, bg, icon, label, rect });
+      this.processorZones.set(procName, { name: procName, emoji, container, bg, icon, label, rect, cardRect });
       this.processorAttachments.set(procName, []);
     }
+  }
+
+  // -- Dashed rounded rect helper --
+
+  private drawDashedRoundedRect(
+    g: Phaser.GameObjects.Graphics,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    radius: number,
+    dashLen: number,
+    gapLen: number,
+  ): void {
+    const step = dashLen + gapLen;
+    const dash = (x1: number, y1: number, x2: number, y2: number) => {
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const len = Math.sqrt(dx * dx + dy * dy);
+      const nx = dx / len;
+      const ny = dy / len;
+      let pos = 0;
+      while (pos < len) {
+        const end = Math.min(pos + dashLen, len);
+        g.lineBetween(x1 + nx * pos, y1 + ny * pos, x1 + nx * end, y1 + ny * end);
+        pos += step;
+      }
+    };
+    dash(x + radius, y, x + w - radius, y); // top
+    dash(x + w, y + radius, x + w, y + h - radius); // right
+    dash(x + w - radius, y + h, x + radius, y + h); // bottom
+    dash(x, y + h - radius, x, y + radius); // left
   }
 
   // -- Create hand cards in arc --
@@ -783,8 +820,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
     if (!zone) return;
 
     const centerX = zone.rect.x + zone.rect.width / 2;
-    // Stack cards inside the zone, starting below the label area (~65% down the zone)
-    const startY = zone.rect.y + zone.rect.height * 0.65 + FOOD_CARD_H / 2;
+    // First card fills the placeholder slot; subsequent cards stack downward
+    const startY = zone.cardRect.y + FOOD_CARD_H / 2;
 
     attachments.forEach((att, i) => {
       const targetX = centerX;
@@ -1396,20 +1433,23 @@ export class CookingPuzzleScene extends Phaser.Scene {
     if (!zone) return;
 
     const pad = 2;
+    const rect = zone.cardRect;
     this.dropHighlight.clear();
     this.dropHighlight.lineStyle(3, ZONE.HIGHLIGHT_COLOR, 1);
-    this.dropHighlight.strokeRect(
-      zone.rect.x + pad,
-      zone.rect.y + pad,
-      zone.rect.width - pad * 2,
-      zone.rect.height - pad * 2,
+    this.dropHighlight.strokeRoundedRect(
+      rect.x + pad,
+      rect.y + pad,
+      rect.width - pad * 2,
+      rect.height - pad * 2,
+      FOOD_CARD_RADIUS,
     );
     this.dropHighlight.fillStyle(ZONE.HIGHLIGHT_COLOR, ZONE.HIGHLIGHT_FILL_ALPHA);
-    this.dropHighlight.fillRect(
-      zone.rect.x + pad,
-      zone.rect.y + pad,
-      zone.rect.width - pad * 2,
-      zone.rect.height - pad * 2,
+    this.dropHighlight.fillRoundedRect(
+      rect.x + pad,
+      rect.y + pad,
+      rect.width - pad * 2,
+      rect.height - pad * 2,
+      FOOD_CARD_RADIUS,
     );
     this.dropHighlight.setVisible(true);
   }

@@ -74,6 +74,7 @@ export const ZONE = {
   LABEL_Y_OFFSET: 28, // label below icon
   DISABLED_ALPHA: 0.4,
   CARD_START_OFFSET: 14, // gap below zone bottom for attached cards
+  PLACEHOLDER_ALPHA: 0.35, // alpha for dashed border + faint fill of zone slot
 } as const;
 
 // Hand arc layout
