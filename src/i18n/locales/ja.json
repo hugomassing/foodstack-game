@@ -42,7 +42,11 @@
     "leaderboard": {
       "loading": "読み込み中...",
       "empty": "まだ完成した料理がありません。最初の一人になろう！",
-      "dishes": "品"
+      "trophies": "トロフィー",
+      "survival": "サバイバル",
+      "trophyCount": "{count}個のトロフィー",
+      "rounds": "{count}ラウンド",
+      "emptySurvival": "サバイバル記録がありません。サバイバルモードに挑戦しよう！"
     },
     "history": {
       "loading": "読み込み中...",

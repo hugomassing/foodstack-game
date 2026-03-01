@@ -42,7 +42,11 @@
     "leaderboard": {
       "loading": "加载中...",
       "empty": "还没有完成的菜品。成为第一个吧！",
-      "dishes": "道菜"
+      "trophies": "奖杯",
+      "survival": "生存",
+      "trophyCount": "{count}个奖杯",
+      "rounds": "{count}轮",
+      "emptySurvival": "还没有生存记录。试试生存模式吧！"
     },
     "history": {
       "loading": "加载中...",

@@ -42,7 +42,11 @@
     "leaderboard": {
       "loading": "Chargement...",
       "empty": "Aucun plat terminé. Soyez le premier !",
-      "dishes": "plats"
+      "trophies": "TROPHÉES",
+      "survival": "SURVIE",
+      "trophyCount": "{count} trophées",
+      "rounds": "{count} manches",
+      "emptySurvival": "Aucune session de survie. Essayez le mode survie !"
     },
     "history": {
       "loading": "Chargement...",

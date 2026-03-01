@@ -42,7 +42,11 @@
     "leaderboard": {
       "loading": "Loading...",
       "empty": "No dishes completed yet. Be the first!",
-      "dishes": "dishes"
+      "trophies": "TROPHIES",
+      "survival": "SURVIVAL",
+      "trophyCount": "{count} trophies",
+      "rounds": "{count} rounds",
+      "emptySurvival": "No survival sessions yet. Try survival mode!"
     },
     "history": {
       "loading": "Loading...",

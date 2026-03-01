@@ -38,33 +38,87 @@ export const saveResult = mutation({
   },
 });
 
-export const leaderboard = query({
+export const saveSurvivalSession = mutation({
+  args: {
+    roundsCompleted: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    await ctx.db.insert("survivalSessions", {
+      userId,
+      roundsCompleted: args.roundsCompleted,
+      completedAt: Date.now(),
+    });
+  },
+});
+
+export const trophyLeaderboard = query({
   args: {},
   handler: async (ctx) => {
     const results = await ctx.db.query("gameResults").collect();
 
-    // Aggregate count per user
-    const counts = new Map<string, number>();
+    // Count unique dish names per user
+    const userDishes = new Map<string, Set<string>>();
     for (const r of results) {
       const uid = r.userId as string;
-      counts.set(uid, (counts.get(uid) ?? 0) + 1);
+      const key = r.dishName.toLowerCase().trim();
+      if (!userDishes.has(uid)) userDishes.set(uid, new Set());
+      userDishes.get(uid)!.add(key);
     }
 
-    // Sort descending by count, take top 20
-    const sorted = [...counts.entries()]
+    // Sort descending by unique count, take top 20
+    const sorted = [...userDishes.entries()]
+      .map(([uid, dishes]) => [uid, dishes.size] as const)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 20);
 
-    // Join with users table for display name
     const entries = await Promise.all(
-      sorted.map(async ([userId, dishCount], index) => {
+      sorted.map(async ([userId, trophyCount], index) => {
         const user = await ctx.db.get(userId as never);
         const displayName =
           (user as { displayName?: string; name?: string } | null)
             ?.displayName ??
           (user as { displayName?: string; name?: string } | null)?.name ??
           "Anonymous Chef";
-        return { rank: index + 1, displayName, dishCount };
+        return { rank: index + 1, displayName, trophyCount };
+      }),
+    );
+
+    return entries;
+  },
+});
+
+export const survivalLeaderboard = query({
+  args: {},
+  handler: async (ctx) => {
+    const sessions = await ctx.db.query("survivalSessions").collect();
+
+    // Get max roundsCompleted per user
+    const bestRounds = new Map<string, number>();
+    for (const s of sessions) {
+      const uid = s.userId as string;
+      const current = bestRounds.get(uid) ?? 0;
+      if (s.roundsCompleted > current) {
+        bestRounds.set(uid, s.roundsCompleted);
+      }
+    }
+
+    // Sort descending by best rounds, take top 20
+    const sorted = [...bestRounds.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 20);
+
+    const entries = await Promise.all(
+      sorted.map(async ([userId, rounds], index) => {
+        const user = await ctx.db.get(userId as never);
+        const displayName =
+          (user as { displayName?: string; name?: string } | null)
+            ?.displayName ??
+          (user as { displayName?: string; name?: string } | null)?.name ??
+          "Anonymous Chef";
+        return { rank: index + 1, displayName, rounds };
       }),
     );
 

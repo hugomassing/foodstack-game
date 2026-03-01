@@ -42,7 +42,11 @@
     "leaderboard": {
       "loading": "Laden...",
       "empty": "Noch keine Gerichte abgeschlossen. Sei der Erste!",
-      "dishes": "Gerichte"
+      "trophies": "TROPHÄEN",
+      "survival": "ÜBERLEBEN",
+      "trophyCount": "{count} Trophäen",
+      "rounds": "{count} Runden",
+      "emptySurvival": "Noch keine Überlebensrunden. Probiere den Überlebensmodus!"
     },
     "history": {
       "loading": "Laden...",

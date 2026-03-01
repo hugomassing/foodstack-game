@@ -48,6 +48,12 @@ export default defineSchema({
     .index("by_user", ["userId", "completedAt"])
     .index("by_completed", ["completedAt"]),
 
+  survivalSessions: defineTable({
+    userId: v.id("users"),
+    roundsCompleted: v.number(),
+    completedAt: v.number(),
+  }).index("by_user", ["userId"]),
+
   combinations: defineTable({
     processor: v.string(),
     inputKey: v.string(),

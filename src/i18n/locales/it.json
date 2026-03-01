@@ -42,7 +42,11 @@
     "leaderboard": {
       "loading": "Caricamento...",
       "empty": "Nessun piatto completato. Sii il primo!",
-      "dishes": "piatti"
+      "trophies": "TROFEI",
+      "survival": "SOPRAVVIVENZA",
+      "trophyCount": "{count} trofei",
+      "rounds": "{count} round",
+      "emptySurvival": "Nessuna sessione di sopravvivenza. Prova la modalità sopravvivenza!"
     },
     "history": {
       "loading": "Caricamento...",

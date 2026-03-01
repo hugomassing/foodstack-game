@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useMutation } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 import { GAME_W, GAME_H, FONT_FAMILY } from '../config';
 import { useGameStore } from '../App';
 import { gameStore } from '../store/gameStore';
@@ -15,6 +17,15 @@ export function GameOverOverlay() {
   const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const [showBtn, setShowBtn] = useState(false);
+  const saveSurvivalSession = useMutation(api.gameResults.saveSurvivalSession);
+  const savedRef = useRef(false);
+
+  useEffect(() => {
+    if (gameMode === 'survival' && !savedRef.current) {
+      savedRef.current = true;
+      saveSurvivalSession({ roundsCompleted: survivalRound });
+    }
+  }, [gameMode, survivalRound, saveSurvivalSession]);
 
   useEffect(() => {
     const t1 = setTimeout(() => setShow(true), 100);
