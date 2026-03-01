@@ -1,0 +1,42 @@
+{
+  "loading": {
+    "assets": "Carregando recursos..."
+  },
+  "menu": {
+    "title": "Criar receita",
+    "selectedOrder": "PEDIDO SELECIONADO",
+    "startRecipe": "INICIAR RECEITA",
+    "demo": "DEMO",
+    "load": "CARREGAR",
+    "cookingUp": "Preparando...",
+    "invalidJson": "Arquivo JSON inválido",
+    "difficulty": {
+      "easy": "FÁCIL",
+      "medium": "MÉDIO",
+      "hard": "DIFÍCIL"
+    },
+    "category": {
+      "style": "Estilo",
+      "filling": "Recheio",
+      "method": "Método",
+      "base": "Base"
+    }
+  },
+  "game": {
+    "steps": "{current}/{total} PASSOS",
+    "cook": "Cozinhar!",
+    "actionLabel": "{processor}!"
+  },
+  "quest": {
+    "recipe": "RECEITA",
+    "progress": "PROGRESSO",
+    "final": "FINAL",
+    "exportJson": "EXPORTAR JSON"
+  },
+  "victory": {
+    "youWin": "VOCÊ VENCEU!",
+    "playAgain": "JOGAR NOVAMENTE",
+    "saveCard": "SALVAR CARTÃO",
+    "steps": "{current}/{total} passos"
+  }
+}

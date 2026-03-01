@@ -1,0 +1,42 @@
+{
+  "loading": {
+    "assets": "Cargando recursos..."
+  },
+  "menu": {
+    "title": "Crear receta",
+    "selectedOrder": "PEDIDO SELECCIONADO",
+    "startRecipe": "INICIAR RECETA",
+    "demo": "DEMO",
+    "load": "CARGAR",
+    "cookingUp": "Cocinando...",
+    "invalidJson": "Archivo JSON no válido",
+    "difficulty": {
+      "easy": "FÁCIL",
+      "medium": "MEDIO",
+      "hard": "DIFÍCIL"
+    },
+    "category": {
+      "style": "Estilo",
+      "filling": "Relleno",
+      "method": "Método",
+      "base": "Base"
+    }
+  },
+  "game": {
+    "steps": "{current}/{total} PASOS",
+    "cook": "¡Cocinar!",
+    "actionLabel": "¡{processor}!"
+  },
+  "quest": {
+    "recipe": "RECETA",
+    "progress": "PROGRESO",
+    "final": "FINAL",
+    "exportJson": "EXPORTAR JSON"
+  },
+  "victory": {
+    "youWin": "¡GANASTE!",
+    "playAgain": "JUGAR DE NUEVO",
+    "saveCard": "GUARDAR TARJETA",
+    "steps": "{current}/{total} pasos"
+  }
+}

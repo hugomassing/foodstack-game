@@ -1,0 +1,42 @@
+{
+  "loading": {
+    "assets": "리소스 로딩 중..."
+  },
+  "menu": {
+    "title": "레시피 만들기",
+    "selectedOrder": "선택한 주문",
+    "startRecipe": "레시피 시작",
+    "demo": "데모",
+    "load": "불러오기",
+    "cookingUp": "요리 중...",
+    "invalidJson": "유효하지 않은 JSON 파일",
+    "difficulty": {
+      "easy": "쉬움",
+      "medium": "보통",
+      "hard": "어려움"
+    },
+    "category": {
+      "style": "스타일",
+      "filling": "속재료",
+      "method": "조리법",
+      "base": "베이스"
+    }
+  },
+  "game": {
+    "steps": "{current}/{total} 단계",
+    "cook": "요리!",
+    "actionLabel": "{processor}!"
+  },
+  "quest": {
+    "recipe": "레시피",
+    "progress": "진행",
+    "final": "최종",
+    "exportJson": "JSON 내보내기"
+  },
+  "victory": {
+    "youWin": "승리!",
+    "playAgain": "다시 하기",
+    "saveCard": "카드 저장",
+    "steps": "{current}/{total} 단계"
+  }
+}
