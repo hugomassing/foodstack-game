@@ -30,8 +30,14 @@ export const recipeSchema = z.object({
     name: z.string(),
     displayNameI18n: i18nMap,
     emoji: z.string(),
-    assetId: z.string().optional().describe('Utensil asset ID from the catalog (e.g. knife, frying_pan, cooking_pot)'),
-  })),
+    assetId: z.string().optional().describe('Utensil asset ID from the catalog (e.g. knife, frying_pan, cooking_pot). MUST be unique per processor — no two processors may share the same assetId.'),
+  })).refine(
+    (processors) => {
+      const ids = processors.map(p => p.assetId).filter(Boolean);
+      return new Set(ids).size === ids.length;
+    },
+    { message: 'Every processor must have a unique assetId — no duplicate utensil icons allowed' },
+  ),
   ingredients: z.array(z.object({
     name: z.string(),
     nameI18n: i18nMap,

@@ -289,6 +289,23 @@
     ]
   },
   {
+    "id": "blender",
+    "label": "Blender",
+    "category": "utensil",
+    "filename": "food/utensil/blender.png",
+    "color": "#7a8a9a",
+    "description": "An electric blender for pureeing, mixing, and liquefying ingredients",
+    "tags": [
+      "appliance",
+      "electric",
+      "puree",
+      "mix",
+      "blend",
+      "smooth",
+      "liquid"
+    ]
+  },
+  {
     "id": "blowfish",
     "label": "Blowfish",
     "category": "seafood",
@@ -1190,6 +1207,23 @@
     ]
   },
   {
+    "id": "cutting_board",
+    "label": "Cutting Board",
+    "category": "utensil",
+    "filename": "food/utensil/cutting_board.png",
+    "color": "#d4a060",
+    "description": "A wooden cutting board for slicing, dicing, and preparing ingredients",
+    "tags": [
+      "board",
+      "wood",
+      "cutting",
+      "prep",
+      "slice",
+      "dice",
+      "surface"
+    ]
+  },
+  {
     "id": "dango",
     "label": "Dango",
     "category": "sweet",
@@ -1204,6 +1238,23 @@
       "colorful",
       "chewy",
       "mochi"
+    ]
+  },
+  {
+    "id": "deep_fryer",
+    "label": "Deep Fryer",
+    "category": "utensil",
+    "filename": "food/utensil/deep_fryer.png",
+    "color": "#5a5a5a",
+    "description": "A deep fryer with a wire basket for frying food in hot oil",
+    "tags": [
+      "appliance",
+      "fry",
+      "oil",
+      "hot",
+      "crispy",
+      "basket",
+      "deep"
     ]
   },
   {
@@ -1697,6 +1748,23 @@
       "raw",
       "sour",
       "crunchy"
+    ]
+  },
+  {
+    "id": "grill_grate",
+    "label": "Grill Grate",
+    "category": "utensil",
+    "filename": "food/utensil/grill_grate.png",
+    "color": "#4a5a6a",
+    "description": "A round metal grill grate for cooking over open flame",
+    "tags": [
+      "grill",
+      "metal",
+      "flame",
+      "char",
+      "barbecue",
+      "outdoor",
+      "grate"
     ]
   },
   {
@@ -2397,6 +2465,23 @@
     ]
   },
   {
+    "id": "mortar_pestle",
+    "label": "Mortar & Pestle",
+    "category": "utensil",
+    "filename": "food/utensil/mortar_pestle.png",
+    "color": "#c04050",
+    "description": "A red stone mortar and pestle for grinding and crushing ingredients",
+    "tags": [
+      "stone",
+      "grind",
+      "crush",
+      "mash",
+      "paste",
+      "spice",
+      "pound"
+    ]
+  },
+  {
     "id": "muffin",
     "label": "Muffin",
     "category": "sweet",
@@ -2564,6 +2649,23 @@
       "orange",
       "refreshing",
       "breakfast"
+    ]
+  },
+  {
+    "id": "oven",
+    "label": "Oven",
+    "category": "utensil",
+    "filename": "food/utensil/oven.png",
+    "color": "#5a6a7a",
+    "description": "A deep fryer or oven appliance for baking and roasting with dry heat",
+    "tags": [
+      "appliance",
+      "bake",
+      "roast",
+      "heat",
+      "broil",
+      "dry",
+      "cook"
     ]
   },
   {
@@ -2890,6 +2992,23 @@
     ]
   },
   {
+    "id": "piping_bag",
+    "label": "Piping Bag",
+    "category": "utensil",
+    "filename": "food/utensil/piping_bag.png",
+    "color": "#e8dcc8",
+    "description": "A pastry piping bag with a metal tip for decorating and stuffing",
+    "tags": [
+      "pastry",
+      "decorate",
+      "pipe",
+      "squeeze",
+      "stuff",
+      "cream",
+      "icing"
+    ]
+  },
+  {
     "id": "pita",
     "label": "Pita",
     "category": "prepared",
@@ -3060,6 +3179,23 @@
     ]
   },
   {
+    "id": "preserving_jar",
+    "label": "Preserving Jar",
+    "category": "utensil",
+    "filename": "food/utensil/preserving_jar.png",
+    "color": "#e8a848",
+    "description": "A glass jar with a screw-top lid for preserving, pickling, and fermenting",
+    "tags": [
+      "glass",
+      "preserve",
+      "ferment",
+      "pickle",
+      "store",
+      "seal",
+      "lid"
+    ]
+  },
+  {
     "id": "pretzel",
     "label": "Pretzel",
     "category": "grain",
@@ -3210,6 +3346,23 @@
       "flat",
       "savory",
       "crunchy"
+    ]
+  },
+  {
+    "id": "rolling_pin",
+    "label": "Rolling Pin",
+    "category": "utensil",
+    "filename": "food/utensil/rolling_pin.png",
+    "color": "#d8b878",
+    "description": "A wooden rolling pin for flattening and shaping dough",
+    "tags": [
+      "wood",
+      "roll",
+      "flatten",
+      "dough",
+      "knead",
+      "shape",
+      "baking"
     ]
   },
   {
@@ -3468,6 +3621,23 @@
     ]
   },
   {
+    "id": "sieve",
+    "label": "Sieve",
+    "category": "utensil",
+    "filename": "food/utensil/sieve.png",
+    "color": "#a0b0c0",
+    "description": "A fine-mesh colander for straining and sifting ingredients",
+    "tags": [
+      "mesh",
+      "strain",
+      "sift",
+      "drain",
+      "colander",
+      "filter",
+      "separate"
+    ]
+  },
+  {
     "id": "skewer",
     "label": "Skewer",
     "category": "prepared",
@@ -3482,6 +3652,23 @@
       "street-food",
       "savory",
       "hot"
+    ]
+  },
+  {
+    "id": "smoker_box",
+    "label": "Smoker Box",
+    "category": "utensil",
+    "filename": "food/utensil/smoker_box.png",
+    "color": "#3a3a3a",
+    "description": "A metal smoker box with wood chips for smoking food",
+    "tags": [
+      "metal",
+      "smoke",
+      "wood",
+      "chips",
+      "flavor",
+      "slow",
+      "aromatic"
     ]
   },
   {
@@ -3570,6 +3757,23 @@
     ]
   },
   {
+    "id": "spatula",
+    "label": "Spatula",
+    "category": "utensil",
+    "filename": "food/utensil/spatula.png",
+    "color": "#8a9aaa",
+    "description": "A flat metal spatula with a wooden handle for flipping and folding",
+    "tags": [
+      "metal",
+      "flip",
+      "fold",
+      "toss",
+      "turn",
+      "flat",
+      "handle"
+    ]
+  },
+  {
     "id": "sponge",
     "label": "Kitchen Sponge",
     "category": "utensil",
@@ -3652,6 +3856,23 @@
       "juicy",
       "premium",
       "savory"
+    ]
+  },
+  {
+    "id": "steamer",
+    "label": "Steamer",
+    "category": "utensil",
+    "filename": "food/utensil/steamer.png",
+    "color": "#d8c098",
+    "description": "A bamboo steamer basket for cooking food with steam",
+    "tags": [
+      "bamboo",
+      "steam",
+      "basket",
+      "asian",
+      "gentle",
+      "moist",
+      "stack"
     ]
   },
   {
@@ -3927,6 +4148,23 @@
     ]
   },
   {
+    "id": "toaster",
+    "label": "Toaster",
+    "category": "utensil",
+    "filename": "food/utensil/toaster.png",
+    "color": "#a0aab8",
+    "description": "A pop-up toaster for browning and crisping bread",
+    "tags": [
+      "appliance",
+      "toast",
+      "brown",
+      "crisp",
+      "bread",
+      "heat",
+      "slot"
+    ]
+  },
+  {
     "id": "tomato",
     "label": "Tomato",
     "category": "vegetable",
@@ -4114,6 +4352,23 @@
     ]
   },
   {
+    "id": "whisk",
+    "label": "Whisk",
+    "category": "utensil",
+    "filename": "food/utensil/whisk.png",
+    "color": "#b0c0d0",
+    "description": "A wire balloon whisk in a bowl for whipping and aerating",
+    "tags": [
+      "wire",
+      "whip",
+      "aerate",
+      "beat",
+      "stir",
+      "mix",
+      "batter"
+    ]
+  },
+  {
     "id": "whiskey",
     "label": "Whiskey",
     "category": "drink",
@@ -4165,6 +4420,23 @@
     ]
   },
   {
+    "id": "wok",
+    "label": "Wok",
+    "category": "utensil",
+    "filename": "food/utensil/wok.png",
+    "color": "#4a5a5a",
+    "description": "A deep round-bottomed wok for stir-frying at high heat",
+    "tags": [
+      "pan",
+      "stir-fry",
+      "asian",
+      "high-heat",
+      "deep",
+      "round",
+      "vegetables"
+    ]
+  },
+  {
     "id": "yogurt",
     "label": "Yogurt",
     "category": "dairy",
@@ -4179,6 +4451,23 @@
       "probiotic",
       "cold",
       "breakfast"
+    ]
+  },
+  {
+    "id": "zester",
+    "label": "Zester",
+    "category": "utensil",
+    "filename": "food/utensil/zester.png",
+    "color": "#6a7a8a",
+    "description": "A microplane zester for grating citrus zest and hard ingredients",
+    "tags": [
+      "grate",
+      "zest",
+      "citrus",
+      "fine",
+      "sharp",
+      "microplane",
+      "shred"
     ]
   },
   {
