@@ -786,7 +786,7 @@ function DifficultySelector({
             onClick={disabled ? undefined : () => onChange(d.value)}
             style={{
               flex: 1,
-              padding: '8px 0',
+              padding: '8px 6px',
               borderRadius: 10,
               border: `2px solid ${active ? '#3e2723' : '#e0e0e0'}`,
               background: active ? '#3e2723' : '#ffffff',

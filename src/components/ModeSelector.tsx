@@ -7,12 +7,31 @@ import type { Difficulty } from '../store/gameStore';
 import { useGameStore } from '../App';
 import { FONT_FAMILY, TITLE_FONT_FAMILY } from '../config';
 import type { PuzzleData, GameMode } from '../types';
-import { Calendar, Skull, Zap, Settings, Play, User, Trophy, Clock } from 'lucide-react';
+import { Calendar, Skull, Zap, Settings, Play, User, Trophy, Clock, Lock as LockIcon } from 'lucide-react';
 import { useTranslation, loadLocale } from '../i18n';
 import { getDailyDishName, getDailyDate, getDailyBestScore } from '../lib/daily';
 import { randomDishName } from '../lib/dishName';
 import { getWordlists } from '../data/wordlists/index';
 import type { TranslationKeys } from '../i18n/types';
+
+const SPLASH_TEXTS = [
+  'Now with more AI!',
+  'Your favorite chef!',
+  '100% secret ingredients!',
+  'No Michelin stars yet!',
+  "Chef's kiss!",
+  'Fork yeah!',
+  'Gluten-free code!',
+  'Spicy content inside!',
+  'Made with real recipes!',
+  'No actual cooking required!',
+  'Michelin stars loading…',
+  'Feed your curiosity!',
+  'Taste the algorithm!',
+  'Better than delivery!',
+  'Zero calories. Probably.',
+  'As seen on no TV!',
+];
 
 const LOCALES = [
   { code: 'en', flag: '\u{1F1EC}\u{1F1E7}' },
@@ -59,7 +78,7 @@ const DIFFICULTIES = [
   { value: 'hard' as const, labelKey: 'menu.difficulty.hard' as TranslationKeys, count: 3 },
 ];
 
-function LoadingCard({ dishName, cookingUpLabel }: { dishName: string; cookingUpLabel: string }) {
+function LoadingScreen({ dishName }: { dishName: string }) {
   const { t } = useTranslation();
   const [msgIndex, setMsgIndex] = useState(0);
   const [fading, setFading] = useState(false);
@@ -76,116 +95,162 @@ function LoadingCard({ dishName, cookingUpLabel }: { dishName: string; cookingUp
   }, []);
 
   return (
-    <>
+    <div
+      style={{
+        position: 'absolute',
+        top: 0, left: 0,
+        width: '100%', height: '100%',
+        background: '#2d1b14',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: FONT_FAMILY,
+        zIndex: 10,
+        overflow: 'hidden',
+      }}
+    >
       <style>{`
-        @keyframes loadingSpin {
-          0% { transform: rotate(0deg) scale(1); }
-          25% { transform: rotate(10deg) scale(1.15); }
-          50% { transform: rotate(0deg) scale(1); }
-          75% { transform: rotate(-10deg) scale(1.15); }
-          100% { transform: rotate(0deg) scale(1); }
+        @keyframes waveFloat {
+          0%, 100% { transform: translateY(0px) scale(1); }
+          50% { transform: translateY(-14px) scale(1.1); }
+        }
+        @keyframes titlePulse {
+          0%, 100% { opacity: 1; filter: drop-shadow(0 0 0px #ffca28); }
+          50% { opacity: 0.88; filter: drop-shadow(0 0 18px #ffca2888); }
         }
         @keyframes loadingDot {
-          0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
+          0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
           40% { transform: scale(1); opacity: 1; }
         }
+        @keyframes bgDrift {
+          0% { transform: rotate(-5deg) scale(1.4) translate(0, 0); }
+          100% { transform: rotate(-5deg) scale(1.4) translate(-30px, -10px); }
+        }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
       `}</style>
-      <div
-        style={{
-          width: 380,
-          padding: '36px 28px 32px',
-          background: '#fffaf0',
-          borderRadius: 28,
-          border: '4px solid #3e2723',
-          boxShadow: '0 10px 0 #3e2723',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 16,
-          position: 'relative',
-          zIndex: 10,
-        }}
-      >
-        <div
-          style={{ position: 'absolute', top: 0, left: '50%', transform: 'translate(-50%, -50%)' }}
-        >
-          <div
-            style={{
-              width: 26,
-              height: 26,
-              background: '#ff5252',
-              borderRadius: '50%',
-              border: '3px solid #3e2723',
-              boxShadow: '0 2px 0 #3e2723',
-            }}
-          />
-        </div>
-        <div
-          style={{
-            fontSize: 14,
-            fontWeight: 900,
-            color: '#d84315',
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
-            fontFamily: FONT_FAMILY,
-          }}
-        >
-          {cookingUpLabel}
-        </div>
-        <div
-          style={{
-            fontSize: 22,
-            fontWeight: 900,
-            color: '#3e2723',
-            textTransform: 'uppercase',
-            letterSpacing: '-0.02em',
-            fontFamily: FONT_FAMILY,
-            textAlign: 'center',
-          }}
-        >
-          {dishName}
-        </div>
-        <div
-          style={{
-            animation: 'loadingSpin 1.6s ease-in-out infinite',
-            margin: '8px 0',
-            transition: 'opacity 0.3s',
-            opacity: fading ? 0 : 1,
-          }}
-        >
-          <img src={LOADING_ASSETS[msgIndex]} alt="" style={{ width: 64, height: 64 }} />
-        </div>
-        <div
-          style={{
-            fontSize: 18,
-            fontWeight: 900,
-            color: '#5d4037',
-            fontFamily: FONT_FAMILY,
-            textAlign: 'center',
-            transition: 'opacity 0.3s',
-            opacity: fading ? 0 : 1,
-            minHeight: 28,
-          }}
-        >
-          {t(`menu.loadingMessages.${msgIndex}` as TranslationKeys)}
-        </div>
-        <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: '50%',
-                background: '#ffca28',
-                border: '2px solid #3e2723',
-                animation: `loadingDot 1.2s ease-in-out ${i * 0.2}s infinite`,
-              }}
-            />
+
+      {/* Drifting background pattern */}
+      <div style={{ position: 'absolute', inset: 0, opacity: 0.07, overflow: 'hidden', pointerEvents: 'none' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(8, 1fr)',
+          gap: 40, padding: 24,
+          height: '150%', width: '150%',
+          animation: 'bgDrift 10s ease-in-out infinite alternate',
+        }}>
+          {Array.from({ length: 64 }).map((_, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src={FOOD_ICONS[i % FOOD_ICONS.length]} alt="" style={{ width: 32, height: 32 }} />
+            </div>
           ))}
         </div>
       </div>
-    </>
+
+      {/* Game title */}
+      <h1
+        style={{
+          fontSize: 52,
+          fontWeight: 900,
+          fontFamily: TITLE_FONT_FAMILY,
+          color: '#ffca28',
+          margin: '0 0 32px',
+          letterSpacing: '-0.03em',
+          textTransform: 'uppercase',
+          WebkitTextStroke: '5px #e53935',
+          paintOrder: 'stroke fill',
+          animation: 'titlePulse 2.5s ease-in-out infinite',
+        }}
+      >
+        Foodstack
+      </h1>
+
+      {/* Wave of food icons */}
+      <div style={{ display: 'flex', gap: 10, marginBottom: 36 }}>
+        {LOADING_ASSETS.slice(0, 7).map((src, i) => (
+          <img
+            key={i}
+            src={src}
+            alt=""
+            style={{
+              width: 36, height: 36,
+              animation: `waveFloat 1.5s ease-in-out ${(i * 0.15).toFixed(2)}s infinite`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Divider */}
+      <div style={{
+        width: 180, height: 2,
+        background: 'linear-gradient(90deg, transparent, #ffca2855, transparent)',
+        borderRadius: 1,
+        marginBottom: 24,
+      }} />
+
+      {/* "Cooking up" label */}
+      <div style={{
+        fontSize: 11,
+        fontWeight: 900,
+        color: '#ff9800',
+        textTransform: 'uppercase',
+        letterSpacing: '0.22em',
+        marginBottom: 10,
+        animation: 'fadeInUp 0.5s ease-out',
+      }}>
+        {t('menu.cookingUp')}
+      </div>
+
+      {/* Dish name */}
+      <div style={{
+        fontSize: 26,
+        fontWeight: 900,
+        color: '#ffffff',
+        fontFamily: FONT_FAMILY,
+        textTransform: 'uppercase',
+        letterSpacing: '-0.01em',
+        textAlign: 'center',
+        maxWidth: 340,
+        lineHeight: 1.2,
+        animation: 'fadeInUp 0.65s ease-out',
+        marginBottom: 20,
+      }}>
+        {dishName}
+      </div>
+
+      {/* Cycling tip */}
+      <div style={{
+        fontSize: 13,
+        fontWeight: 700,
+        color: '#a1887f',
+        textAlign: 'center',
+        maxWidth: 300,
+        lineHeight: 1.4,
+        minHeight: 20,
+        transition: 'opacity 0.3s',
+        opacity: fading ? 0 : 0.85,
+      }}>
+        {t(`menu.loadingMessages.${msgIndex}` as TranslationKeys)}
+      </div>
+
+      {/* Dots */}
+      <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            style={{
+              width: 8, height: 8,
+              borderRadius: '50%',
+              background: '#ffca28',
+              animation: `loadingDot 1.2s ease-in-out ${i * 0.2}s infinite`,
+            }}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -209,7 +274,7 @@ function DifficultySelector({
             onClick={disabled ? undefined : () => onChange(d.value)}
             style={{
               flex: 1,
-              padding: '8px 0',
+              padding: '8px 6px',
               borderRadius: 10,
               border: `2px solid ${active ? '#3e2723' : '#e0e0e0'}`,
               background: active ? '#3e2723' : '#ffffff',
@@ -428,6 +493,7 @@ interface ModeCardProps {
   description: string;
   accent: string;
   extra?: React.ReactNode;
+  locked?: boolean;
   children: React.ReactNode;
 }
 
@@ -489,6 +555,22 @@ type ModeWithDifficulty = 'daily' | 'survival' | 'normal';
 export function ModeSelector() {
   const [mainTab, setMainTab] = useState<MainTab>('modes');
   const { t, locale } = useTranslation();
+  const isAnonymous = useGameStore((s) => s.isAnonymous);
+  const setShowAuthModal = useGameStore((s) => s.setShowAuthModal);
+  const [splashIdx, setSplashIdx] = useState(() => Math.floor(Math.random() * SPLASH_TEXTS.length));
+  const [splashFading, setSplashFading] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSplashFading(true);
+      setTimeout(() => {
+        setSplashIdx((i) => (i + 1) % SPLASH_TEXTS.length);
+        setSplashFading(false);
+      }, 300);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const [isLoading, setIsLoading] = useState(false);
   const [loadingDishName, setLoadingDishName] = useState('');
   const [error, setError] = useState('');
@@ -560,59 +642,7 @@ export function ModeSelector() {
   const font = FONT_FAMILY;
 
   if (isLoading) {
-    return (
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontFamily: font,
-          zIndex: 10,
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            pointerEvents: 'none',
-            opacity: 0.12,
-            overflow: 'hidden',
-          }}
-        >
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(8, 1fr)',
-              gap: 40,
-              padding: 24,
-              height: '100%',
-              width: '100%',
-              transform: 'rotate(-5deg) scale(1.3)',
-            }}
-          >
-            {Array.from({ length: 48 }).map((_, i) => (
-              <div
-                key={i}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <img
-                  src={FOOD_ICONS[i % FOOD_ICONS.length]}
-                  alt=""
-                  style={{ width: 32, height: 32 }}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-        <LoadingCard dishName={loadingDishName} cookingUpLabel={t('menu.cookingUp')} />
-      </div>
-    );
+    return <LoadingScreen dishName={loadingDishName} />;
   }
 
   return (
@@ -624,11 +654,14 @@ export function ModeSelector() {
         width: '100%',
         height: '100%',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
+        gap: 10,
         fontFamily: font,
         zIndex: 10,
         overflow: 'hidden',
+        background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E") repeat, linear-gradient(145deg, #ff5252 0%, #c62828 55%, #7f0000 100%)`,
       }}
     >
       {/* Background food pattern */}
@@ -637,7 +670,7 @@ export function ModeSelector() {
           position: 'absolute',
           inset: 0,
           pointerEvents: 'none',
-          opacity: 0.12,
+          opacity: 0.18,
           overflow: 'hidden',
         }}
       >
@@ -670,11 +703,57 @@ export function ModeSelector() {
       <LanguageSwitcher />
       <ProfileBadge />
 
+      {/* Logo */}
+      <div style={{ position: 'relative', width: 490, userSelect: 'none', textAlign: 'center', zIndex: 20 }}>
+        <h1
+          style={{
+            fontSize: 64,
+            fontWeight: 900,
+            fontFamily: TITLE_FONT_FAMILY,
+            color: '#ffffff',
+            margin: 0,
+            lineHeight: 1,
+            letterSpacing: '-0.03em',
+            WebkitTextStroke: '7px #3e2723',
+            paintOrder: 'stroke fill',
+          }}
+        >
+          Foodstack
+        </h1>
+        <div
+          style={{
+            position: 'absolute',
+            bottom: -14,
+            right: 36,
+            transform: 'rotate(-10deg)',
+            background: '#ffca28',
+            borderRadius: 5,
+            padding: '3px 10px',
+            boxShadow: '0 3px 0 #b8860b',
+            transition: 'opacity 0.3s',
+            opacity: splashFading ? 0 : 1,
+          }}
+        >
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 900,
+              color: '#3e2723',
+              fontFamily: FONT_FAMILY,
+              letterSpacing: '0.02em',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {SPLASH_TEXTS[splashIdx]}
+          </span>
+        </div>
+      </div>
+
       {/* Card */}
       <div
         style={{
           width: 520,
-          padding: '20px 24px 16px',
+          padding: '14px 24px 16px',
           background: '#fffaf0',
           borderRadius: 28,
           border: '4px solid #3e2723',
@@ -684,43 +763,9 @@ export function ModeSelector() {
           alignItems: 'center',
           gap: 8,
           position: 'relative',
-          marginTop: 8,
           zIndex: 10,
         }}
       >
-        {/* Top pin */}
-        <div
-          style={{ position: 'absolute', top: 0, left: '50%', transform: 'translate(-50%, -50%)' }}
-        >
-          <div
-            style={{
-              width: 26,
-              height: 26,
-              background: '#ff5252',
-              borderRadius: '50%',
-              border: '3px solid #3e2723',
-              boxShadow: '0 2px 0 #3e2723',
-            }}
-          />
-        </div>
-
-        {/* Title */}
-        <h1
-          style={{
-            fontSize: 32,
-            fontWeight: 900,
-            fontFamily: TITLE_FONT_FAMILY,
-            color: '#ffffff',
-            margin: '2px 0 4px',
-            letterSpacing: '-0.03em',
-            textTransform: 'uppercase',
-            WebkitTextStroke: '6px #3e2723',
-            paintOrder: 'stroke fill',
-          }}
-        >
-          {t('modes.title')}
-        </h1>
-
         {/* Main tab bar */}
         <MainTabBar value={mainTab} onChange={setMainTab} />
 
@@ -781,134 +826,142 @@ export function ModeSelector() {
           </div>
         )}
 
-        {/* Modes tab */}
-        {mainTab === 'modes' && (
-          <>
-            {/* 2x2 mode grid */}
-            <div
-              style={{
-                width: '100%',
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 8,
-              }}
-            >
-              {/* Daily */}
-              <ModeCard
-                icon={<Calendar size={16} strokeWidth={2.5} color="#fff" />}
-                title={t('modes.daily.title')}
-                description={t('modes.daily.description')}
-                accent="#ff9800"
-                extra={
-                  <div
-                    style={{
-                      fontSize: 10,
-                      color: '#8d6e63',
-                      fontWeight: 700,
-                      display: 'flex',
-                      gap: 8,
-                    }}
-                  >
-                    <span>{dailyDate}</span>
-                    {dailyBest !== null && (
-                      <span style={{ color: '#4caf50' }}>
-                        {t('modes.daily.best', { count: dailyBest })}
-                      </span>
-                    )}
-                  </div>
-                }
-              >
-                <PushButton
-                  icon={<Play size={14} fill="currentColor" strokeWidth={0} />}
-                  label={t('modes.play')}
-                  color="#ff9800"
-                  hoverColor="#f57c00"
-                  height={32}
-                  shadowDepth={4}
-                  onClick={() => onModeWithDifficulty('daily')}
-                  disabled={isLoading}
-                  style={{ width: '100%' }}
-                />
-              </ModeCard>
+        {/* Tab content — fixed min height so card doesn't resize between tabs */}
+        <div style={{ width: '100%', minHeight: 256, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
 
-              {/* Survival */}
-              <ModeCard
-                icon={<Skull size={16} strokeWidth={2.5} color="#fff" />}
-                title={t('modes.survival.title')}
-                description={t('modes.survival.description')}
-                accent="#e53935"
+          {/* Modes tab */}
+          {mainTab === 'modes' && (
+            <>
+              {/* 2x2 mode grid */}
+              <div
+                style={{
+                  width: '100%',
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: 8,
+                }}
               >
-                <PushButton
-                  icon={<Play size={14} fill="currentColor" strokeWidth={0} />}
-                  label={t('modes.start')}
-                  color="#e53935"
-                  hoverColor="#c62828"
-                  height={32}
-                  shadowDepth={4}
-                  onClick={() => onModeWithDifficulty('survival')}
-                  disabled={isLoading}
-                  style={{ width: '100%' }}
-                />
-              </ModeCard>
+                {/* Daily */}
+                <ModeCard
+                  icon={<Calendar size={16} strokeWidth={2.5} color="#fff" />}
+                  title={t('modes.daily.title')}
+                  description={t('modes.daily.description')}
+                  accent="#ff9800"
+                  extra={
+                    <div
+                      style={{
+                        fontSize: 10,
+                        color: '#8d6e63',
+                        fontWeight: 700,
+                        display: 'flex',
+                        gap: 8,
+                      }}
+                    >
+                      <span>{dailyDate}</span>
+                      {dailyBest !== null && (
+                        <span style={{ color: '#4caf50' }}>
+                          {t('modes.daily.best', { count: dailyBest })}
+                        </span>
+                      )}
+                    </div>
+                  }
+                >
+                  <PushButton
+                    icon={<Play size={14} fill="currentColor" strokeWidth={0} />}
+                    label={t('modes.play')}
+                    color="#ff9800"
+                    hoverColor="#f57c00"
+                    height={32}
+                    shadowDepth={4}
+                    onClick={() => onModeWithDifficulty('daily')}
+                    disabled={isLoading}
+                    style={{ width: '100%' }}
+                  />
+                </ModeCard>
 
-              {/* Normal (Quick Play) */}
-              <ModeCard
-                icon={<Zap size={16} strokeWidth={2.5} color="#fff" />}
-                title={t('modes.normal.title')}
-                description={t('modes.normal.description')}
-                accent="#29b6f6"
-              >
-                <PushButton
-                  icon={<Play size={14} fill="currentColor" strokeWidth={0} />}
-                  label={t('modes.play')}
-                  color="#29b6f6"
-                  hoverColor="#03a9f4"
-                  height={32}
-                  shadowDepth={4}
-                  onClick={() => onModeWithDifficulty('normal')}
-                  disabled={isLoading}
-                  style={{ width: '100%' }}
-                />
-              </ModeCard>
+                {/* Survival */}
+                <ModeCard
+                  icon={<Skull size={16} strokeWidth={2.5} color="#fff" />}
+                  title={t('modes.survival.title')}
+                  description={t('modes.survival.description')}
+                  accent="#e53935"
+                  locked={isAnonymous}
+                >
+                  <PushButton
+                    icon={isAnonymous ? <LockIcon size={14} strokeWidth={2.5} /> : <Play size={14} fill="currentColor" strokeWidth={0} />}
+                    label={isAnonymous ? 'Sign in' : t('modes.start')}
+                    color={isAnonymous ? '#8d6e63' : '#e53935'}
+                    hoverColor={isAnonymous ? '#6d4c41' : '#c62828'}
+                    height={32}
+                    shadowDepth={4}
+                    onClick={() => isAnonymous ? setShowAuthModal(true) : onModeWithDifficulty('survival')}
+                    disabled={isLoading}
+                    style={{ width: '100%' }}
+                  />
+                </ModeCard>
 
-              {/* Seeded (Custom) */}
-              <ModeCard
-                icon={<Settings size={16} strokeWidth={2.5} color="#fff" />}
-                title={t('modes.seeded.title')}
-                description={t('modes.seeded.description')}
-                accent="#7e57c2"
-              >
-                <PushButton
-                  icon={<Settings size={14} strokeWidth={2.5} />}
-                  label={t('modes.configure')}
-                  color="#7e57c2"
-                  hoverColor="#5e35b1"
-                  height={32}
-                  shadowDepth={4}
-                  onClick={onSeeded}
-                  disabled={isLoading}
-                  style={{ width: '100%' }}
-                />
-              </ModeCard>
-            </div>
+                {/* Normal (Quick Play) */}
+                <ModeCard
+                  icon={<Zap size={16} strokeWidth={2.5} color="#fff" />}
+                  title={t('modes.normal.title')}
+                  description={t('modes.normal.description')}
+                  accent="#29b6f6"
+                  locked={isAnonymous}
+                >
+                  <PushButton
+                    icon={isAnonymous ? <LockIcon size={14} strokeWidth={2.5} /> : <Play size={14} fill="currentColor" strokeWidth={0} />}
+                    label={isAnonymous ? 'Sign in' : t('modes.play')}
+                    color={isAnonymous ? '#8d6e63' : '#29b6f6'}
+                    hoverColor={isAnonymous ? '#6d4c41' : '#03a9f4'}
+                    height={32}
+                    shadowDepth={4}
+                    onClick={() => isAnonymous ? setShowAuthModal(true) : onModeWithDifficulty('normal')}
+                    disabled={isLoading}
+                    style={{ width: '100%' }}
+                  />
+                </ModeCard>
 
-            {/* Error */}
-            {error && (
-              <div style={{ fontSize: 13, color: '#e74c3c', textAlign: 'center', marginTop: 4 }}>
-                {error}
+                {/* Seeded (Custom) */}
+                <ModeCard
+                  icon={<Settings size={16} strokeWidth={2.5} color="#fff" />}
+                  title={t('modes.seeded.title')}
+                  description={t('modes.seeded.description')}
+                  accent="#7e57c2"
+                  locked={isAnonymous}
+                >
+                  <PushButton
+                    icon={isAnonymous ? <LockIcon size={14} strokeWidth={2.5} /> : <Settings size={14} strokeWidth={2.5} />}
+                    label={isAnonymous ? 'Sign in' : t('modes.configure')}
+                    color={isAnonymous ? '#8d6e63' : '#7e57c2'}
+                    hoverColor={isAnonymous ? '#6d4c41' : '#5e35b1'}
+                    height={32}
+                    shadowDepth={4}
+                    onClick={() => isAnonymous ? setShowAuthModal(true) : onSeeded()}
+                    disabled={isLoading}
+                    style={{ width: '100%' }}
+                  />
+                </ModeCard>
               </div>
-            )}
-          </>
-        )}
 
-        {/* Trophies tab */}
-        {mainTab === 'trophies' && <TrophyDexPanel />}
+              {/* Error */}
+              {error && (
+                <div style={{ fontSize: 13, color: '#e74c3c', textAlign: 'center', marginTop: 4 }}>
+                  {error}
+                </div>
+              )}
+            </>
+          )}
 
-        {/* Rankings tab */}
-        {mainTab === 'rankings' && <LeaderboardPanel />}
+          {/* Trophies tab */}
+          {mainTab === 'trophies' && <TrophyDexPanel />}
 
-        {/* History tab */}
-        {mainTab === 'history' && <HistoryPanel />}
+          {/* Rankings tab */}
+          {mainTab === 'rankings' && <LeaderboardPanel />}
+
+          {/* History tab */}
+          {mainTab === 'history' && <HistoryPanel />}
+
+        </div>{/* end tab content */}
       </div>
     </div>
   );
