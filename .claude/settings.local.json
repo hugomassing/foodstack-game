@@ -28,7 +28,12 @@
       "mcp__chrome-devtools__resize_page",
       "Bash(node:*)",
       "mcp__chrome-devtools__click",
-      "mcp__chrome-devtools__hover"
+      "mcp__chrome-devtools__hover",
+      "WebSearch",
+      "WebFetch(domain:docs.mistral.ai)",
+      "WebFetch(domain:ai-sdk.dev)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:docs.convex.dev)"
     ]
   }
 }
