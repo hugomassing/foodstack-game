@@ -1,5 +1,4 @@
 import type { Difficulty } from '../../store/gameStore';
-import type { TranslationKeys } from '../../i18n/types';
 
 export const SPLASH_TEXTS = [
   'Now with more AI!',
@@ -59,10 +58,10 @@ export const LOADING_ASSETS = [
 
 export const CHILI_SRC = '/assets/sprites/food/vegetable/chili.png';
 
-export const DIFFICULTIES: { value: Difficulty; labelKey: TranslationKeys; count: number }[] = [
-  { value: 'easy', labelKey: 'menu.difficulty.easy', count: 1 },
-  { value: 'medium', labelKey: 'menu.difficulty.medium', count: 2 },
-  { value: 'hard', labelKey: 'menu.difficulty.hard', count: 3 },
+export const DIFFICULTIES: { value: Difficulty; count: number }[] = [
+  { value: 'easy', count: 1 },
+  { value: 'medium', count: 2 },
+  { value: 'hard', count: 3 },
 ];
 
 export const DIFFICULTY_COLORS: Record<string, string> = {
