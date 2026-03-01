@@ -15,6 +15,18 @@
       "medium": "MEDIO",
       "hard": "DIFÍCIL"
     },
+    "loadingMessages": [
+      "Preparando ingredientes",
+      "Cortando verduras",
+      "Calentando la sartén",
+      "Reuniendo especias",
+      "Agarrando los cubiertos",
+      "Leyendo el libro de cocina",
+      "Llamando al chef",
+      "Precalentando el horno",
+      "Derritiendo la mantequilla",
+      "Mezclando la masa"
+    ],
     "category": {
       "style": "Estilo",
       "filling": "Relleno",

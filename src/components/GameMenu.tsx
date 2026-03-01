@@ -21,17 +21,17 @@ const LOCALES = [
   { code: "zh", flag: "\u{1F1E8}\u{1F1F3}" },
 ];
 
-const LOADING_MESSAGES = [
-  { emoji: "🥕", text: "Preparing ingredients" },
-  { emoji: "🔪", text: "Chopping vegetables" },
-  { emoji: "🍳", text: "Heating up the pan" },
-  { emoji: "🧂", text: "Gathering spices" },
-  { emoji: "🥄", text: "Grabbing utensils" },
-  { emoji: "📖", text: "Reading the cookbook" },
-  { emoji: "👨‍🍳", text: "Calling the chef" },
-  { emoji: "🔥", text: "Preheating the oven" },
-  { emoji: "🧈", text: "Melting the butter" },
-  { emoji: "🫗", text: "Mixing the batter" },
+const LOADING_ASSETS = [
+  "/assets/sprites/food/vegetable/carrot.png",
+  "/assets/sprites/food/utensil/knife.png",
+  "/assets/sprites/food/utensil/frying_pan.png",
+  "/assets/sprites/food/utensil/salt_shaker.png",
+  "/assets/sprites/food/utensil/fork_knife.png",
+  "/assets/sprites/food/utensil/plate.png",
+  "/assets/sprites/food/utensil/bowl_spoon.png",
+  "/assets/sprites/food/utensil/fire.png",
+  "/assets/sprites/food/dairy/butter.png",
+  "/assets/sprites/food/utensil/pouring_liquid.png",
 ];
 
 type Category = "Style" | "Filling" | "Method" | "Base";
@@ -99,7 +99,17 @@ function formatDishName(
   return result;
 }
 
-const FOOD_ICONS = ["🍖", "🥩", "🍕", "🥪", "🥕", "🍴", "🔥", "💧", "☕"];
+const FOOD_ICONS = [
+  "/assets/sprites/food/protein/steak.png",
+  "/assets/sprites/food/protein/ham.png",
+  "/assets/sprites/food/prepared/pizza.png",
+  "/assets/sprites/food/prepared/sandwich.png",
+  "/assets/sprites/food/vegetable/carrot.png",
+  "/assets/sprites/food/utensil/fork_knife.png",
+  "/assets/sprites/food/utensil/fire.png",
+  "/assets/sprites/food/utensil/pouring_liquid.png",
+  "/assets/sprites/food/drink/hot_beverage.png",
+];
 
 function randomSelections(wl: WordLists): Record<Category, number> {
   const result = {} as Record<Category, number>;
@@ -116,6 +126,7 @@ function LoadingCard({
   dishName: string;
   cookingUpLabel: string;
 }) {
+  const { t } = useTranslation();
   const [msgIndex, setMsgIndex] = useState(0);
   const [fading, setFading] = useState(false);
 
@@ -123,14 +134,12 @@ function LoadingCard({
     const interval = setInterval(() => {
       setFading(true);
       setTimeout(() => {
-        setMsgIndex((i) => (i + 1) % LOADING_MESSAGES.length);
+        setMsgIndex((i) => (i + 1) % LOADING_ASSETS.length);
         setFading(false);
       }, 300);
     }, 1800);
     return () => clearInterval(interval);
   }, []);
-
-  const msg = LOADING_MESSAGES[msgIndex];
 
   return (
     <>
@@ -217,18 +226,20 @@ function LoadingCard({
           {dishName}
         </div>
 
-        {/* Animated emoji */}
+        {/* Animated sprite */}
         <div
           style={{
-            fontSize: 64,
             animation: "loadingSpin 1.6s ease-in-out infinite",
-            lineHeight: 1,
             margin: "8px 0",
             transition: "opacity 0.3s",
             opacity: fading ? 0 : 1,
           }}
         >
-          {msg.emoji}
+          <img
+            src={LOADING_ASSETS[msgIndex]}
+            alt=""
+            style={{ width: 64, height: 64 }}
+          />
         </div>
 
         {/* Rotating message */}
@@ -244,7 +255,7 @@ function LoadingCard({
             minHeight: 28,
           }}
         >
-          {msg.text}
+          {t(`menu.loadingMessages.${msgIndex}` as TranslationKeys)}
         </div>
 
         {/* Bouncing dots */}
@@ -414,10 +425,13 @@ export function GameMenu() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: 32,
                 }}
               >
-                {FOOD_ICONS[i % FOOD_ICONS.length]}
+                <img
+                  src={FOOD_ICONS[i % FOOD_ICONS.length]}
+                  alt=""
+                  style={{ width: 32, height: 32 }}
+                />
               </div>
             ))}
           </div>
