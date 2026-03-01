@@ -1,0 +1,42 @@
+{
+  "loading": {
+    "assets": "読み込み中..."
+  },
+  "menu": {
+    "title": "レシピを作成",
+    "selectedOrder": "選択した注文",
+    "startRecipe": "レシピ開始",
+    "demo": "デモ",
+    "load": "読み込む",
+    "cookingUp": "調理中...",
+    "invalidJson": "無効なJSONファイル",
+    "difficulty": {
+      "easy": "かんたん",
+      "medium": "ふつう",
+      "hard": "むずかしい"
+    },
+    "category": {
+      "style": "スタイル",
+      "filling": "具材",
+      "method": "調理法",
+      "base": "ベース"
+    }
+  },
+  "game": {
+    "steps": "{current}/{total} ステップ",
+    "cook": "調理！",
+    "actionLabel": "{processor}！"
+  },
+  "quest": {
+    "recipe": "レシピ",
+    "progress": "進捗",
+    "final": "最終",
+    "exportJson": "JSONエクスポート"
+  },
+  "victory": {
+    "youWin": "クリア！",
+    "playAgain": "もう一度",
+    "saveCard": "カードを保存",
+    "steps": "{current}/{total} ステップ"
+  }
+}

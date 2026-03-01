@@ -1,0 +1,42 @@
+{
+  "loading": {
+    "assets": "Chargement..."
+  },
+  "menu": {
+    "title": "Créer une recette",
+    "selectedOrder": "COMMANDE CHOISIE",
+    "startRecipe": "LANCER LA RECETTE",
+    "demo": "DÉMO",
+    "load": "CHARGER",
+    "cookingUp": "En préparation...",
+    "invalidJson": "Fichier JSON invalide",
+    "difficulty": {
+      "easy": "FACILE",
+      "medium": "MOYEN",
+      "hard": "DIFFICILE"
+    },
+    "category": {
+      "style": "Style",
+      "filling": "Garniture",
+      "method": "Méthode",
+      "base": "Base"
+    }
+  },
+  "game": {
+    "steps": "{current}/{total} ÉTAPES",
+    "cook": "Cuisiner !",
+    "actionLabel": "{processor} !"
+  },
+  "quest": {
+    "recipe": "RECETTE",
+    "progress": "PROGRESSION",
+    "final": "FINAL",
+    "exportJson": "EXPORTER JSON"
+  },
+  "victory": {
+    "youWin": "VICTOIRE !",
+    "playAgain": "REJOUER",
+    "saveCard": "SAUVEGARDER",
+    "steps": "{current}/{total} étapes"
+  }
+}

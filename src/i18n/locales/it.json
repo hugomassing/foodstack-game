@@ -1,0 +1,42 @@
+{
+  "loading": {
+    "assets": "Caricamento..."
+  },
+  "menu": {
+    "title": "Crea ricetta",
+    "selectedOrder": "ORDINE SELEZIONATO",
+    "startRecipe": "AVVIA RICETTA",
+    "demo": "DEMO",
+    "load": "CARICA",
+    "cookingUp": "In cottura...",
+    "invalidJson": "File JSON non valido",
+    "difficulty": {
+      "easy": "FACILE",
+      "medium": "MEDIO",
+      "hard": "DIFFICILE"
+    },
+    "category": {
+      "style": "Stile",
+      "filling": "Farcitura",
+      "method": "Metodo",
+      "base": "Base"
+    }
+  },
+  "game": {
+    "steps": "{current}/{total} PASSI",
+    "cook": "Cuoci!",
+    "actionLabel": "{processor}!"
+  },
+  "quest": {
+    "recipe": "RICETTA",
+    "progress": "PROGRESSO",
+    "final": "FINALE",
+    "exportJson": "ESPORTA JSON"
+  },
+  "victory": {
+    "youWin": "HAI VINTO!",
+    "playAgain": "GIOCA ANCORA",
+    "saveCard": "SALVA CARTA",
+    "steps": "{current}/{total} passi"
+  }
+}

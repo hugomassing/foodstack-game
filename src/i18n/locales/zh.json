@@ -1,0 +1,42 @@
+{
+  "loading": {
+    "assets": "加载资源中..."
+  },
+  "menu": {
+    "title": "创建食谱",
+    "selectedOrder": "已选订单",
+    "startRecipe": "开始烹饪",
+    "demo": "演示",
+    "load": "加载",
+    "cookingUp": "烹饪中...",
+    "invalidJson": "无效的JSON文件",
+    "difficulty": {
+      "easy": "简单",
+      "medium": "中等",
+      "hard": "困难"
+    },
+    "category": {
+      "style": "风格",
+      "filling": "馅料",
+      "method": "做法",
+      "base": "主食"
+    }
+  },
+  "game": {
+    "steps": "{current}/{total} 步骤",
+    "cook": "烹饪！",
+    "actionLabel": "{processor}！"
+  },
+  "quest": {
+    "recipe": "食谱",
+    "progress": "进度",
+    "final": "最终",
+    "exportJson": "导出JSON"
+  },
+  "victory": {
+    "youWin": "你赢了！",
+    "playAgain": "再来一局",
+    "saveCard": "保存卡片",
+    "steps": "{current}/{total} 步骤"
+  }
+}
