@@ -808,18 +808,18 @@ export function ModeSelector() {
       >
         <h1
           style={{
-            fontSize: 64,
+            fontSize: 92,
             fontWeight: 900,
             fontFamily: TITLE_FONT_FAMILY,
             color: '#ffffff',
             margin: 0,
             lineHeight: 1,
-            letterSpacing: '-0.03em',
-            WebkitTextStroke: '7px #3e2723',
             paintOrder: 'stroke fill',
+            textTransform: 'uppercase',
+            textShadow: '0 0 7px #3e2723',
           }}
         >
-          Foodstack
+          Foodstack!
         </h1>
         <div
           style={{

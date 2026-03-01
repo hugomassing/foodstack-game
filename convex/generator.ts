@@ -396,7 +396,7 @@ export const generateVictoryCard = action({
 
       // Create agent with image_generation tool
       const agent = await client.beta.agents.create({
-        model: "mistral-medium-2505",
+        model: "mistral-small-latest",
         name: "foodstack-trophy-designer",
         tools: [{ type: "image_generation" }],
         instructions: VICTORY_CARD_SYSTEM_PROMPT,

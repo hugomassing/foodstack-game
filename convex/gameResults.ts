@@ -139,18 +139,36 @@ export const history = query({
       .take(50);
 
     return Promise.all(
-      results.map(async (r) => ({
-        _id: r._id,
-        dishName: r.dishName,
-        difficulty: r.difficulty,
-        stepCount: r.stepCount,
-        totalSteps: r.totalSteps,
-        errorCount: r.errorCount,
-        completedAt: r.completedAt,
-        victoryCardUrl: r.victoryCardStorageId
-          ? await ctx.storage.getUrl(r.victoryCardStorageId)
-          : null,
-      })),
+      results.map(async (r) => {
+        // victoryCardStorageId is usually null because saveResult fires before
+        // image generation completes. Fall back to the victoryCards table.
+        let victoryCardUrl: string | null = null;
+        if (r.victoryCardStorageId) {
+          victoryCardUrl = await ctx.storage.getUrl(r.victoryCardStorageId);
+        } else {
+          const normalizedName = r.dishName.toLowerCase().trim();
+          const card = await ctx.db
+            .query("victoryCards")
+            .withIndex("by_dish_and_difficulty", (q) =>
+              q.eq("dishName", normalizedName).eq("difficulty", r.difficulty)
+            )
+            .first();
+          if (card) {
+            victoryCardUrl = await ctx.storage.getUrl(card.storageId);
+          }
+        }
+
+        return {
+          _id: r._id,
+          dishName: r.dishName,
+          difficulty: r.difficulty,
+          stepCount: r.stepCount,
+          totalSteps: r.totalSteps,
+          errorCount: r.errorCount,
+          completedAt: r.completedAt,
+          victoryCardUrl,
+        };
+      }),
     );
   },
 });
