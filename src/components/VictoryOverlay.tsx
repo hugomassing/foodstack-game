@@ -5,7 +5,7 @@ import { useGameStore } from '../App';
 import { gameStore } from '../store/gameStore';
 import { api } from '../../convex/_generated/api';
 import { convex } from '../lib/convex';
-import { Trophy, RotateCcw, Download, ArrowRight, Heart } from 'lucide-react';
+import { Trophy, RotateCcw, Download, ArrowRight, Heart, Home } from 'lucide-react';
 import { useTranslation } from '../i18n';
 import type { TranslationKeys } from '../i18n/types';
 import { setDailyBestScore } from '../lib/daily';
@@ -467,6 +467,29 @@ export function VictoryOverlay() {
             <PlayAgainIcon size={16} strokeWidth={3} />
             {playAgainLabel}
           </button>
+          {gameMode !== 'survival' && (
+            <button
+              onClick={() => gameStore.getState().resetGameplay()}
+              style={{
+                fontSize: 14,
+                fontWeight: 900,
+                color: '#ffffff',
+                background: '#8d6e63',
+                border: '3px solid #3e2723',
+                borderRadius: 12,
+                padding: '10px 20px',
+                cursor: 'pointer',
+                fontFamily: FONT_FAMILY,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                letterSpacing: '0.04em',
+              }}
+            >
+              <Home size={16} strokeWidth={3} />
+              {t('gameOver.backToMenu')}
+            </button>
+          )}
         </div>
       </div>
     </div>

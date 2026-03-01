@@ -85,18 +85,7 @@ export const gameStore = createStore<GameState>((set, get) => ({
 
   startGame: (data, difficulty) => {
     const mode = get().gameMode;
-    let maxErrors: number;
-    switch (mode) {
-      case 'daily':
-        maxErrors = 10;
-        break;
-      case 'survival':
-        maxErrors = get().survivalLives;
-        break;
-      default:
-        maxErrors = Number.POSITIVE_INFINITY;
-        break;
-    }
+    const maxErrors = mode === 'survival' ? get().survivalLives : Number.POSITIVE_INFINITY;
     set({
       puzzleData: data,
       phase: 'playing',

@@ -147,7 +147,7 @@ export function GameOverOverlay() {
             transition: 'opacity 0.5s',
           }}
         >
-          {gameMode === 'daily' ? (
+          {gameMode !== 'survival' && (
             <button
               onClick={handleRetry}
               style={{
@@ -169,29 +169,28 @@ export function GameOverOverlay() {
               <RotateCcw size={16} strokeWidth={3} />
               {t('gameOver.tryAgain')}
             </button>
-          ) : (
-            <button
-              onClick={handleBackToMenu}
-              style={{
-                fontSize: 15,
-                fontWeight: 900,
-                color: '#ffffff',
-                background: '#e74c3c',
-                border: '3px solid #8b0000',
-                borderRadius: 12,
-                padding: '10px 24px',
-                cursor: 'pointer',
-                fontFamily: FONT_FAMILY,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                letterSpacing: '0.04em',
-              }}
-            >
-              <Home size={16} strokeWidth={3} />
-              {t('gameOver.backToMenu')}
-            </button>
           )}
+          <button
+            onClick={handleBackToMenu}
+            style={{
+              fontSize: 15,
+              fontWeight: 900,
+              color: '#ffffff',
+              background: gameMode === 'survival' ? '#e74c3c' : '#8d6e63',
+              border: `3px solid ${gameMode === 'survival' ? '#8b0000' : '#3e2723'}`,
+              borderRadius: 12,
+              padding: '10px 24px',
+              cursor: 'pointer',
+              fontFamily: FONT_FAMILY,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              letterSpacing: '0.04em',
+            }}
+          >
+            <Home size={16} strokeWidth={3} />
+            {t('gameOver.backToMenu')}
+          </button>
         </div>
       </div>
     </div>
