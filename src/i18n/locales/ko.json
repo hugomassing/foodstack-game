@@ -61,7 +61,7 @@
     "chooseDifficulty": "난이도 선택",
     "daily": {
       "title": "일일",
-      "description": "오늘의 레시피 도전. 오류 10회 제한.",
+      "description": "오늘의 레시피 도전. 모두 같은 요리!",
       "best": "최고: {count}"
     },
     "survival": {
@@ -70,7 +70,7 @@
     },
     "normal": {
       "title": "빠른 플레이",
-      "description": "랜덤 레시피, 오류 무제한."
+      "description": "랜덤 레시피. 난이도를 선택하고 시작!"
     },
     "seeded": {
       "title": "커스텀",
