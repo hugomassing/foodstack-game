@@ -1,5 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Calendar, Skull, Zap, Settings, Play, Lock as LockIcon } from 'lucide-react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { toPng } from 'html-to-image';
+import {
+  Calendar, Skull, Zap, Settings, Play, Lock as LockIcon,
+  UtensilsCrossed, ChefHat, Flame, Pizza, Fish, Sandwich, Apple,
+  Beef, Egg, Cherry, Cookie, IceCream2, Utensils, Wine, Coffee,
+  Croissant, Carrot, Soup, Cake, Candy, Popcorn, Wheat, CupSoda, Drumstick,
+} from 'lucide-react';
 import { api } from '../../../convex/_generated/api';
 import { convex } from '../../lib/convex';
 import { gameStore } from '../../store/gameStore';
@@ -11,7 +17,7 @@ import { useTranslation } from '../../i18n';
 import { getDailyDishName, getDailyDate, getDailyBestScore } from '../../lib/daily';
 import { randomDishName } from '../../lib/dishName';
 import { getWordlists } from '../../data/wordlists/index';
-import { SPLASH_TEXTS, FOOD_ICONS } from './constants';
+import { SPLASH_TEXTS } from './constants';
 import { LoadingScreen } from './LoadingScreen';
 import { DifficultySelector } from './DifficultySelector';
 import { PushButton } from './PushButton';
@@ -21,8 +27,18 @@ import { MainTabBar } from './MainTabBar';
 import type { MainTab } from './MainTabBar';
 import { ProfileBadge } from './ProfileBadge';
 import { TrophyDexPanel } from './TrophyDexPanel';
+import type { TrophyEntry } from './TrophyDexPanel';
 import { LeaderboardPanel } from './LeaderboardPanel';
 import { HistoryPanel } from './HistoryPanel';
+import { VictoryCard } from '../VictoryOverlay';
+import type { VictoryCardData } from '../VictoryOverlay';
+import { Download, X } from 'lucide-react';
+
+const BG_ICONS = [
+  UtensilsCrossed, ChefHat, Flame, Pizza, Fish, Sandwich, Apple,
+  Beef, Egg, Cherry, Cookie, IceCream2, Utensils, Wine, Coffee,
+  Croissant, Carrot, Soup, Cake, Candy, Popcorn, Wheat, CupSoda, Drumstick,
+];
 
 type ModeWithDifficulty = 'daily' | 'survival' | 'normal';
 
@@ -50,6 +66,23 @@ export function ModeSelector() {
   const [error, setError] = useState('');
   const [difficultyFor, setDifficultyFor] = useState<ModeWithDifficulty | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
+  const [trophyEntry, setTrophyEntry] = useState<TrophyEntry | null>(null);
+  const trophyCardRef = useRef<HTMLDivElement>(null);
+
+  const onSelectEntry = useCallback((entry: TrophyEntry) => setTrophyEntry(entry), []);
+
+  const handleTrophyDownload = useCallback(async () => {
+    if (!trophyCardRef.current || !trophyEntry) return;
+    try {
+      const dataUrl = await toPng(trophyCardRef.current, { pixelRatio: 2 });
+      const link = document.createElement('a');
+      link.download = `${trophyEntry.dishName}-card.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch {
+      // silent fail
+    }
+  }, [trophyEntry]);
 
   const dailyDate = getDailyDate();
   const dailyBest = getDailyBestScore(dailyDate);
@@ -158,20 +191,105 @@ export function ModeSelector() {
             transform: 'rotate(-5deg) scale(1.3)',
           }}
         >
-          {Array.from({ length: 48 }).map((_, i) => (
-            <div
-              key={i}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <img src={FOOD_ICONS[i % FOOD_ICONS.length]} alt="" style={{ width: 32, height: 32 }} />
-            </div>
-          ))}
+          {Array.from({ length: 48 }).map((_, i) => {
+            const Icon = BG_ICONS[i % BG_ICONS.length];
+            return (
+              <div
+                key={i}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Icon size={32} color="#ffffff" />
+              </div>
+            );
+          })}
         </div>
       </div>
+
+      {/* Trophy card viewer overlay */}
+      {trophyEntry && (() => {
+        const best = trophyEntry.bestResult;
+        const cardData: VictoryCardData = {
+          dishName: trophyEntry.dishName,
+          difficulty: best?.difficulty ?? (trophyEntry.difficulties[0] as Difficulty) ?? 'medium',
+          stepCount: best?.stepCount ?? 0,
+          totalSteps: best?.totalSteps ?? 0,
+          errorCount: best?.errorCount ?? 0,
+          gameMode: (best?.gameMode ?? 'normal') as GameMode,
+          victoryImageUrl: trophyEntry.victoryCardUrl,
+          victoryImageLoading: false,
+        };
+        return (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(0,0,0,0.72)',
+              zIndex: 50,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 12,
+            }}
+          >
+            <style>{`
+              @keyframes shimmer {
+                0% { background-position: -200% 0; }
+                100% { background-position: 200% 0; }
+              }
+            `}</style>
+            <VictoryCard data={cardData} cardRef={trophyCardRef} />
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button
+                onClick={handleTrophyDownload}
+                style={{
+                  fontSize: 14,
+                  fontWeight: 900,
+                  color: '#ffffff',
+                  background: '#29b6f6',
+                  border: '3px solid #3e2723',
+                  borderRadius: 12,
+                  padding: '10px 20px',
+                  cursor: 'pointer',
+                  fontFamily: FONT_FAMILY,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  letterSpacing: '0.04em',
+                }}
+              >
+                <Download size={16} strokeWidth={3} />
+                {t('victory.saveCard')}
+              </button>
+              <button
+                onClick={() => setTrophyEntry(null)}
+                style={{
+                  fontSize: 14,
+                  fontWeight: 900,
+                  color: '#ffffff',
+                  background: '#8d6e63',
+                  border: '3px solid #3e2723',
+                  borderRadius: 12,
+                  padding: '10px 20px',
+                  cursor: 'pointer',
+                  fontFamily: FONT_FAMILY,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  letterSpacing: '0.04em',
+                }}
+              >
+                <X size={16} strokeWidth={3} />
+                {t('modes.back')}
+              </button>
+            </div>
+          </div>
+        );
+      })()}
 
       <LanguageSwitcher />
       <ProfileBadge />
@@ -300,7 +418,7 @@ export function ModeSelector() {
         )}
 
         {/* Tab content — fixed min height so card doesn't resize between tabs */}
-        <div style={{ width: '100%', minHeight: 256, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ width: '100%', minHeight: 256, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
 
           {/* Modes tab */}
           {mainTab === 'modes' && (
@@ -426,7 +544,7 @@ export function ModeSelector() {
           )}
 
           {/* Trophies tab */}
-          {mainTab === 'trophies' && <TrophyDexPanel />}
+          {mainTab === 'trophies' && <TrophyDexPanel onSelectEntry={onSelectEntry} />}
 
           {/* Rankings tab */}
           {mainTab === 'rankings' && <LeaderboardPanel />}

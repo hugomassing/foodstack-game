@@ -1,30 +1,34 @@
 export const VICTORY_CARD_SYSTEM_PROMPT = `You are a trophy designer for a cooking puzzle game called Foodstack.
 
-When asked, generate a single image of a decorative food trophy using the FLUX image generation tool.
+When asked, generate a single image of a cartoon food trophy using the FLUX image generation tool.
 
 ## STYLE RULES
-- The trophy is a golden cup/chalice made ENTIRELY of the dish's real food ingredients
-- Hyper-detailed food photography style, studio lighting, shallow depth of field
-- The food ingredients should be sculpted into or overflowing from the trophy shape
-- Warm, appetizing color palette — golden highlights, rich shadows
+- Bright, bold cartoon illustration style — thick outlines, flat cel shading, exaggerated proportions
+- The trophy shape is a classic golden cup/chalice, but built entirely from the dish's key ingredients
+- Ingredients are playful and expressive: oversized, stackable, with big highlight dots and chunky shadows
+- Each ingredient has a happy face or is bursting with energy (steam puffs, sparkles, little stars)
+- Warm saturated color palette — punchy yellows, deep oranges, vibrant greens — no muddy tones
 - Clean solid-color background (provided in the prompt)
 - No text, no watermarks, no borders, no UI elements in the image
 - Portrait orientation (3:4 aspect ratio)`;
 
 const DIFFICULTY_CONFIG = {
   easy: {
-    trophySize: "small",
-    mood: "cheerful and cute",
+    trophySize: "small and round",
+    mood: "super cute and bubbly",
+    extras: "tiny sparkles and little hearts floating around",
     bgColor: "#a8d5ba",
   },
   medium: {
-    trophySize: "medium",
-    mood: "elegant and appetizing",
+    trophySize: "medium with a wide base",
+    mood: "cheerful and proud",
+    extras: "confetti and a glowing shine streak across the cup",
     bgColor: "#f5c869",
   },
   hard: {
-    trophySize: "grand and ornate",
-    mood: "dramatic and epic",
+    trophySize: "tall and dramatic with flame accents",
+    mood: "epic and triumphant",
+    extras: "dramatic sparkles, fire bursts, and a golden glow radiating outward",
     bgColor: "#e07a5f",
   },
 } as const;
@@ -35,14 +39,21 @@ export function buildVictoryCardUserPrompt(
   ingredients: string[],
 ): string {
   const config = DIFFICULTY_CONFIG[difficulty];
-  const ingredientList = ingredients.join(", ");
+  // Highlight the first 3 as the "hero" ingredients for visual clarity
+  const heroIngredients = ingredients.slice(0, 3).join(", ");
+  const remainingIngredients = ingredients.slice(3).join(", ");
+  const ingredientDescription = remainingIngredients
+    ? `Hero ingredients (make these prominent and recognizable): ${heroIngredients}. Also include: ${remainingIngredients}.`
+    : `Ingredients (make these prominent and recognizable): ${heroIngredients}.`;
 
-  return `Generate an image of a ${config.trophySize} golden food trophy for the dish "${dishName}".
+  return `Generate a cartoon trophy image for the dish "${dishName}".
 
-The trophy is made of and overflowing with these ingredients: ${ingredientList}.
-
+Trophy shape: ${config.trophySize} golden cartoon chalice.
+${ingredientDescription}
+The cup is constructed from stacked cartoon versions of these ingredients — each ingredient is chunky, rounded, and expressive with thick outlines.
 Mood: ${config.mood}.
+Decorative extras: ${config.extras}.
 Background: solid ${config.bgColor}.
 Aspect ratio: 3:4 portrait.
-Style: hyper-detailed food photography, studio lighting, shallow depth of field.`;
+Style: bold cartoon illustration, thick black outlines, cel shading, bright flat colors, no photo-realism.`;
 }

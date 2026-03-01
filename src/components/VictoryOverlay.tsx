@@ -6,30 +6,428 @@ import { useGameStore } from '../App';
 import { gameStore } from '../store/gameStore';
 import { api } from '../../convex/_generated/api';
 import { convex } from '../lib/convex';
-import { Trophy, RotateCcw, Download, ArrowRight, Heart, Home } from 'lucide-react';
+import { Trophy, RotateCcw, Download, ArrowRight, Heart, Home, ClipboardList, X } from 'lucide-react';
 import { useTranslation } from '../i18n';
 import type { TranslationKeys } from '../i18n/types';
 import { setDailyBestScore } from '../lib/daily';
+import type { Difficulty } from '../store/gameStore';
+import type { GameMode } from '../types';
 
 const TROPHY_EMOJIS = ['\u{1F3C6}', '\u{1F3A8}', '\u2728', '\u{1F37D}\uFE0F', '\u{1F4F8}', '\u{1F947}'];
 
-const DIFFICULTY_LABELS = {
+export const DIFFICULTY_LABELS = {
   easy: {
     labelKey: 'menu.difficulty.easy' as TranslationKeys,
-    icon: '\u{1F336}\uFE0F',
     color: '#4caf50',
   },
   medium: {
     labelKey: 'menu.difficulty.medium' as TranslationKeys,
-    icon: '\u{1F336}\uFE0F\u{1F336}\uFE0F',
     color: '#ff9800',
   },
   hard: {
     labelKey: 'menu.difficulty.hard' as TranslationKeys,
-    icon: '\u{1F336}\uFE0F\u{1F336}\uFE0F\u{1F336}\uFE0F',
     color: '#e53935',
   },
 } as const;
+
+function StatRow({
+  icon,
+  label,
+  children,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      style={{
+        background: '#e8d5b4',
+        borderRadius: 10,
+        padding: '7px 10px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+      }}
+    >
+      <div
+        style={{
+          width: 38,
+          height: 38,
+          background: '#cbb48a',
+          borderRadius: 8,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+        }}
+      >
+        {icon}
+      </div>
+      <div>
+        <div
+          style={{
+            fontSize: 9,
+            fontWeight: 700,
+            color: '#8d6040',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+            fontFamily: FONT_FAMILY,
+          }}
+        >
+          {label}
+        </div>
+        <div
+          style={{
+            fontSize: 15,
+            fontWeight: 900,
+            color: '#3e2723',
+            lineHeight: 1.2,
+            fontFamily: FONT_FAMILY,
+          }}
+        >
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export interface VictoryCardData {
+  dishName: string;
+  difficulty: Difficulty;
+  stepCount: number;
+  totalSteps: number;
+  errorCount: number;
+  gameMode: GameMode;
+  victoryImageUrl: string | null;
+  victoryImageLoading?: boolean;
+  survivalRound?: number;
+  survivalLives?: number;
+  onRetry?: () => void;
+}
+
+/** The sharable card visual — no buttons, no store coupling. */
+export function VictoryCard({
+  data,
+  cardRef,
+}: {
+  data: VictoryCardData;
+  cardRef?: React.RefObject<HTMLDivElement | null>;
+}) {
+  const { t } = useTranslation();
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [msgIndex, setMsgIndex] = useState(0);
+  const [fading, setFading] = useState(false);
+
+  const loading = data.victoryImageLoading ?? false;
+  const hasImage = !!data.victoryImageUrl;
+  const showFallback = !loading && !hasImage;
+  const diffConfig = DIFFICULTY_LABELS[data.difficulty];
+  const trophyText = t(`victory.trophyMessages.${msgIndex}` as TranslationKeys);
+  const trophyEmoji = TROPHY_EMOJIS[msgIndex];
+
+  // Rotate loading messages
+  useEffect(() => {
+    if (!loading) return;
+    const interval = setInterval(() => {
+      setFading(true);
+      setTimeout(() => {
+        setMsgIndex((i) => (i + 1) % TROPHY_EMOJIS.length);
+        setFading(false);
+      }, 300);
+    }, 2200);
+    return () => clearInterval(interval);
+  }, [loading]);
+
+  return (
+    <div
+      ref={cardRef}
+      style={{
+        width: 580,
+        height: 326,
+        background: '#f5edd8',
+        borderRadius: 20,
+        border: '3px solid #5d3a1a',
+        boxShadow: '0 8px 0 #3e2723',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'row',
+        position: 'relative',
+      }}
+    >
+      {/* Decorative inner frame */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 7,
+          border: '1px solid rgba(93, 58, 26, 0.28)',
+          borderRadius: 14,
+          pointerEvents: 'none',
+          zIndex: 10,
+        }}
+      />
+      {/* Corner ornaments */}
+      {(['tl', 'tr', 'bl', 'br'] as const).map((pos) => (
+        <div
+          key={pos}
+          style={{
+            position: 'absolute',
+            fontSize: 13,
+            color: '#5d3a1a',
+            opacity: 0.55,
+            pointerEvents: 'none',
+            zIndex: 11,
+            lineHeight: 1,
+            ...(pos === 'tl'
+              ? { top: 4, left: 6 }
+              : pos === 'tr'
+                ? { top: 4, right: 6 }
+                : pos === 'bl'
+                  ? { bottom: 4, left: 6 }
+                  : { bottom: 4, right: 6 }),
+          }}
+        >
+          ✦
+        </div>
+      ))}
+
+      {/* Image area (left side) */}
+      <div
+        style={{
+          width: 300,
+          flexShrink: 0,
+          position: 'relative',
+          overflow: 'hidden',
+          background: '#f5edd8',
+        }}
+      >
+        {/* Loading shimmer */}
+        {loading && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 12,
+              background:
+                'linear-gradient(90deg, #f5edd8 25%, #fdf5e4 50%, #f5edd8 75%)',
+              backgroundSize: '200% 100%',
+              animation: 'shimmer 1.8s ease-in-out infinite',
+            }}
+          >
+            <div
+              style={{
+                fontSize: 48,
+                animation: 'trophySpin 1.6s ease-in-out infinite',
+                transition: 'opacity 0.3s',
+                opacity: fading ? 0 : 1,
+              }}
+            >
+              {trophyEmoji}
+            </div>
+            <div
+              style={{
+                fontSize: 13,
+                fontWeight: 900,
+                color: '#5d4037',
+                fontFamily: FONT_FAMILY,
+                transition: 'opacity 0.3s',
+                opacity: fading ? 0 : 1,
+              }}
+            >
+              {trophyText}
+            </div>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    background: '#c8a265',
+                    border: '2px solid #3e2723',
+                    animation: `loadingDot 1.2s ease-in-out ${i * 0.2}s infinite`,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* AI-generated image */}
+        {hasImage && (
+          <img
+            src={data.victoryImageUrl!}
+            crossOrigin="anonymous"
+            alt="Victory trophy"
+            onLoad={() => setImageLoaded(true)}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center top',
+              opacity: imageLoaded ? 1 : 0,
+              transition: 'opacity 0.6s ease-in',
+            }}
+          />
+        )}
+
+        {/* Fallback */}
+        {showFallback && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 10,
+            }}
+          >
+            {data.onRetry ? (
+              <>
+                <div style={{ fontSize: 36, lineHeight: 1 }}>⚠️</div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: '#8d6e63',
+                    textAlign: 'center',
+                    padding: '0 20px',
+                    fontFamily: FONT_FAMILY,
+                  }}
+                >
+                  Image generation failed
+                </div>
+                <button
+                  onClick={data.onRetry}
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 900,
+                    color: '#ffffff',
+                    background: '#ff9800',
+                    border: '2px solid #3e2723',
+                    borderRadius: 10,
+                    padding: '6px 16px',
+                    cursor: 'pointer',
+                    fontFamily: FONT_FAMILY,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    letterSpacing: '0.04em',
+                  }}
+                >
+                  <RotateCcw size={13} strokeWidth={3} />
+                  RETRY
+                </button>
+              </>
+            ) : (
+              <>
+                <Trophy size={64} strokeWidth={1.5} color="#c8a265" />
+                <div
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 900,
+                    color: '#4caf50',
+                    letterSpacing: '0.06em',
+                    fontFamily: FONT_FAMILY,
+                  }}
+                >
+                  {t('victory.youWin')}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Info panel (right side) */}
+      <div
+        style={{
+          flex: 1,
+          padding: '18px 16px 18px 14px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          gap: 7,
+        }}
+      >
+        {/* Dish name */}
+        <div
+          style={{
+            fontSize: 20,
+            fontWeight: 900,
+            color: '#3e2723',
+            textTransform: 'uppercase',
+            letterSpacing: '-0.01em',
+            lineHeight: 1.15,
+            marginBottom: 2,
+            fontFamily: FONT_FAMILY,
+          }}
+        >
+          {data.dishName}
+        </div>
+
+        {/* Completion */}
+        <StatRow
+          icon={<ClipboardList size={20} strokeWidth={2} color="#5d3a1a" />}
+          label="COMPLETION"
+        >
+          {t('victory.steps', { current: data.stepCount, total: data.totalSteps }).toUpperCase()}
+        </StatRow>
+
+        {/* Difficulty */}
+        <StatRow
+          icon={<span style={{ fontSize: 18, lineHeight: 1 }}>🌶️</span>}
+          label="DIFFICULTY"
+        >
+          <span
+            style={{
+              display: 'inline-block',
+              background: diffConfig.color,
+              color: '#fff',
+              borderRadius: 20,
+              padding: '1px 10px',
+              fontSize: 13,
+              fontWeight: 900,
+              letterSpacing: '0.06em',
+              fontFamily: FONT_FAMILY,
+            }}
+          >
+            {t(diffConfig.labelKey).toUpperCase()}
+          </span>
+        </StatRow>
+
+        {/* Errors */}
+        <StatRow
+          icon={<X size={20} strokeWidth={3} color="#5d3a1a" />}
+          label="ERRORS"
+        >
+          {t('victory.errors', { count: data.errorCount }).toUpperCase()}
+        </StatRow>
+
+        {/* Survival-specific row */}
+        {data.gameMode === 'survival' && data.survivalRound !== undefined && (
+          <StatRow
+            icon={<Heart size={18} strokeWidth={2} fill="#e53935" color="#e53935" />}
+            label="SURVIVAL"
+          >
+            {t('survival.round', { round: data.survivalRound })}
+            {data.survivalLives !== undefined && ` · ${data.survivalLives}♥`}
+          </StatRow>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export function VictoryOverlay() {
   const victoryDish = useGameStore((s) => s.victoryDish);
@@ -47,9 +445,6 @@ export function VictoryOverlay() {
 
   const [show, setShow] = useState(false);
   const [showBtn, setShowBtn] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [msgIndex, setMsgIndex] = useState(0);
-  const [fading, setFading] = useState(false);
   const { t } = useTranslation();
 
   const cardRef = useRef<HTMLDivElement>(null);
@@ -89,21 +484,8 @@ export function VictoryOverlay() {
     };
   }, []);
 
-  // Rotating loading messages
-  useEffect(() => {
-    if (!victoryImageLoading) return;
-    const interval = setInterval(() => {
-      setFading(true);
-      setTimeout(() => {
-        setMsgIndex((i) => (i + 1) % TROPHY_EMOJIS.length);
-        setFading(false);
-      }, 300);
-    }, 2200);
-    return () => clearInterval(interval);
-  }, [victoryImageLoading]);
-
-  // Request victory card image on mount
-  useEffect(() => {
+  // Image generation — extracted so it can be called on initial mount and on retry
+  const generateImage = useCallback(() => {
     if (!victoryDish || !puzzleData) return;
 
     const ingredients = puzzleData.ingredients.map((i) => i.name);
@@ -123,6 +505,11 @@ export function VictoryOverlay() {
       });
   }, [victoryDish, difficulty, puzzleData]);
 
+  // Generate on mount
+  useEffect(() => {
+    generateImage();
+  }, [generateImage]);
+
   const handleDownload = useCallback(async () => {
     if (!cardRef.current) return;
     try {
@@ -140,7 +527,6 @@ export function VictoryOverlay() {
     if (gameMode === 'survival') {
       gameStore.getState().completeSurvivalRecipe();
     } else if (gameMode === 'daily') {
-      // Retry same daily - re-start game with same puzzle
       const data = gameStore.getState().puzzleData;
       if (data) {
         gameStore.getState().startGame(data, difficulty);
@@ -149,20 +535,30 @@ export function VictoryOverlay() {
       gameStore.getState().resetGameplay();
     }
   };
-  const diffConfig = DIFFICULTY_LABELS[difficulty];
-  const trophyText = t(`victory.trophyMessages.${msgIndex}` as TranslationKeys);
-  const trophyEmoji = TROPHY_EMOJIS[msgIndex];
-  const hasImage = !!victoryImageUrl;
-  const showFallback = !victoryImageLoading && !hasImage;
 
   const playAgainLabel =
     gameMode === 'survival'
       ? t('survival.continue')
-      : gameMode === 'daily'
-        ? t('victory.playAgain')
-        : t('victory.playAgain');
+      : t('victory.playAgain');
 
   const PlayAgainIcon = gameMode === 'survival' ? ArrowRight : RotateCcw;
+
+  if (!victoryDish) return null;
+
+  const cardData: VictoryCardData = {
+    dishName: victoryDish,
+    difficulty,
+    stepCount,
+    totalSteps,
+    errorCount,
+    gameMode,
+    victoryImageUrl,
+    victoryImageLoading,
+    survivalRound,
+    survivalLives,
+    onRetry: generateImage,
+  };
+
   return (
     <div
       style={{
@@ -210,221 +606,7 @@ export function VictoryOverlay() {
           gap: 12,
         }}
       >
-        {/* Capturable card — horizontal 16:9 layout */}
-        <div
-          ref={cardRef}
-          style={{
-            width: 580,
-            height: 326,
-            background: '#fffaf0',
-            borderRadius: 24,
-            border: '4px solid #3e2723',
-            boxShadow: '0 10px 0 #3e2723',
-            overflow: 'hidden',
-            display: 'flex',
-            flexDirection: 'row',
-          }}
-        >
-          {/* Image area (square, left side) */}
-          <div
-            style={{
-              width: 318,
-              flexShrink: 0,
-              position: 'relative',
-              overflow: 'hidden',
-              background: '#f5f0e8',
-            }}
-          >
-            {/* Loading shimmer */}
-            {victoryImageLoading && (
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 12,
-                  background: 'linear-gradient(90deg, #f5f0e8 25%, #faf5ed 50%, #f5f0e8 75%)',
-                  backgroundSize: '200% 100%',
-                  animation: 'shimmer 1.8s ease-in-out infinite',
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 48,
-                    animation: 'trophySpin 1.6s ease-in-out infinite',
-                    transition: 'opacity 0.3s',
-                    opacity: fading ? 0 : 1,
-                  }}
-                >
-                  {trophyEmoji}
-                </div>
-                <div
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 900,
-                    color: '#5d4037',
-                    fontFamily: FONT_FAMILY,
-                    transition: 'opacity 0.3s',
-                    opacity: fading ? 0 : 1,
-                  }}
-                >
-                  {trophyText}
-                </div>
-                <div style={{ display: 'flex', gap: 6 }}>
-                  {[0, 1, 2].map((i) => (
-                    <div
-                      key={i}
-                      style={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: '50%',
-                        background: '#ffca28',
-                        border: '2px solid #3e2723',
-                        animation: `loadingDot 1.2s ease-in-out ${i * 0.2}s infinite`,
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* AI-generated image */}
-            {hasImage && (
-              <img
-                src={victoryImageUrl}
-                crossOrigin="anonymous"
-                alt="Victory trophy"
-                onLoad={() => setImageLoaded(true)}
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  opacity: imageLoaded ? 1 : 0,
-                  transition: 'opacity 0.6s ease-in',
-                }}
-              />
-            )}
-
-            {/* Fallback: static trophy icon */}
-            {showFallback && (
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 8,
-                }}
-              >
-                <Trophy size={64} strokeWidth={1.5} color="#f1c40f" />
-                <div
-                  style={{
-                    fontSize: 18,
-                    fontWeight: 900,
-                    color: '#4caf50',
-                    letterSpacing: '0.06em',
-                  }}
-                >
-                  {t('victory.youWin')}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Info panel (right side) */}
-          <div
-            style={{
-              flex: 1,
-              borderLeft: '3px solid #3e2723',
-              padding: '24px 22px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              gap: 10,
-            }}
-          >
-            {/* Dish name */}
-            <div
-              style={{
-                fontSize: 22,
-                fontWeight: 900,
-                color: '#3e2723',
-                textTransform: 'uppercase',
-                letterSpacing: '-0.02em',
-                lineHeight: 1.2,
-              }}
-            >
-              {victoryDish}
-            </div>
-
-            {/* Difficulty badge + stats */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 900,
-                  color: '#ffffff',
-                  background: diffConfig.color,
-                  borderRadius: 6,
-                  padding: '3px 8px',
-                  letterSpacing: '0.06em',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 4,
-                }}
-              >
-                <span>{diffConfig.icon}</span>
-                <span>{t(diffConfig.labelKey)}</span>
-              </div>
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: '#8d6e63',
-                }}
-              >
-                {t('victory.steps', { current: stepCount, total: totalSteps })}
-              </div>
-            </div>
-            {/* Error count */}
-            <div
-              style={{
-                fontSize: 12,
-                fontWeight: 700,
-                color: errorCount > 0 ? '#e74c3c' : '#4caf50',
-              }}
-            >
-              {t('victory.errors', { count: errorCount })}
-            </div>
-
-            {/* Survival-specific info */}
-            {gameMode === 'survival' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <div style={{ fontSize: 12, fontWeight: 900, color: '#3e2723' }}>
-                  {t('survival.round', { round: survivalRound })}
-                </div>
-                <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                  {Array.from({ length: Math.min(survivalLives, 10) }).map((_, i) => (
-                    <Heart key={i} size={12} strokeWidth={2} fill="#e53935" color="#e53935" />
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        <VictoryCard data={cardData} cardRef={cardRef} />
 
         {/* Buttons (below card, not captured) */}
         <div

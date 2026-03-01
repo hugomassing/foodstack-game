@@ -167,10 +167,16 @@ export const trophyDex = query({
       {
         dishName: string;
         totalCompletions: number;
-        victoryCardStorageId?: string;
         userModes: Set<string>;
         userDifficulties: Set<string>;
         acquired: boolean;
+        bestResult?: {
+          stepCount: number;
+          totalSteps: number;
+          errorCount: number;
+          difficulty: 'easy' | 'medium' | 'hard';
+          gameMode?: 'daily' | 'survival' | 'normal' | 'seeded';
+        };
       }
     >();
 
@@ -192,25 +198,60 @@ export const trophyDex = query({
         entry.acquired = true;
         if (r.gameMode) entry.userModes.add(r.gameMode);
         entry.userDifficulties.add(r.difficulty);
-      }
-      // Keep a victory card reference if we don't have one yet
-      if (!entry.victoryCardStorageId && r.victoryCardStorageId) {
-        entry.victoryCardStorageId = r.victoryCardStorageId as string;
+        // Track best run: fewest errors, tie-break by most steps completed
+        if (
+          !entry.bestResult ||
+          r.errorCount < entry.bestResult.errorCount ||
+          (r.errorCount === entry.bestResult.errorCount &&
+            r.stepCount > entry.bestResult.stepCount)
+        ) {
+          entry.bestResult = {
+            stepCount: r.stepCount,
+            totalSteps: r.totalSteps,
+            errorCount: r.errorCount,
+            difficulty: r.difficulty,
+            gameMode: r.gameMode,
+          };
+        }
       }
     }
 
-    // Build output with victory card URLs
+    // Build output — resolve victory card URLs directly from victoryCards table.
+    // We cannot use gameResults.victoryCardStorageId because saveResult fires before
+    // the async image generation completes, so that field is always null.
+    const DIFF_ORDER = ["easy", "medium", "hard"] as const;
     const entries = await Promise.all(
-      [...dishMap.values()].map(async (e) => ({
-        dishName: e.dishName,
-        totalCompletions: e.totalCompletions,
-        acquired: e.acquired,
-        modes: [...e.userModes],
-        difficulties: [...e.userDifficulties],
-        victoryCardUrl: e.victoryCardStorageId
-          ? await ctx.storage.getUrl(e.victoryCardStorageId as never)
-          : null,
-      })),
+      [...dishMap.entries()].map(async ([normalizedName, e]) => {
+        // Try each difficulty (user's first, then all) until we find a stored card
+        const diffOrder = [
+          ...e.userDifficulties,
+          ...DIFF_ORDER.filter((d) => !e.userDifficulties.has(d)),
+        ] as Array<"easy" | "medium" | "hard">;
+
+        let victoryCardUrl: string | null = null;
+        for (const diff of diffOrder) {
+          const card = await ctx.db
+            .query("victoryCards")
+            .withIndex("by_dish_and_difficulty", (q) =>
+              q.eq("dishName", normalizedName).eq("difficulty", diff)
+            )
+            .first();
+          if (card) {
+            victoryCardUrl = await ctx.storage.getUrl(card.storageId);
+            break;
+          }
+        }
+
+        return {
+          dishName: e.dishName,
+          totalCompletions: e.totalCompletions,
+          acquired: e.acquired,
+          modes: [...e.userModes],
+          difficulties: [...e.userDifficulties],
+          bestResult: e.bestResult ?? null,
+          victoryCardUrl,
+        };
+      }),
     );
 
     // Sort: acquired first (alphabetical), then unacquired (alphabetical)
