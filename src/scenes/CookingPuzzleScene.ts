@@ -720,6 +720,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
         // Intermediate card: fling back to random board position
         const newX = Phaser.Math.Between(BD_X + 68, BD_X + BD_W - 68);
         const newY = Phaser.Math.Between(BD_Y + 20, BD_Y + BD_H - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10);
+        att.card.setInteractive({ draggable: true });
         this.tweens.add({
           targets: att.card,
           x: newX,

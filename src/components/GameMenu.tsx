@@ -430,35 +430,6 @@ export function GameMenu() {
           Create Recipe
         </h1>
 
-        {/* Difficulty selector */}
-        <DifficultySelector
-          value={difficulty}
-          onChange={setDifficulty}
-          disabled={isLoading}
-        />
-
-        {/* Selector rows */}
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            gap: 5,
-            marginBottom: 4,
-          }}
-        >
-          {CATEGORIES.map((cat) => (
-            <SelectorRow
-              key={cat}
-              category={cat}
-              value={WORD_LISTS[cat][indices[cat]]}
-              onPrev={() => cycleWord(cat, -1)}
-              onNext={() => cycleWord(cat, 1)}
-              disabled={isLoading}
-            />
-          ))}
-        </div>
-
         {/* Summary box */}
         <div
           style={{
@@ -526,6 +497,35 @@ export function GameMenu() {
               {generatedName}
             </div>
           )}
+        </div>
+
+        {/* Difficulty selector */}
+        <DifficultySelector
+          value={difficulty}
+          onChange={setDifficulty}
+          disabled={isLoading}
+        />
+
+        {/* Selector rows */}
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            gap: 5,
+            marginBottom: 4,
+          }}
+        >
+          {CATEGORIES.map((cat) => (
+            <SelectorRow
+              key={cat}
+              category={cat}
+              value={WORD_LISTS[cat][indices[cat]]}
+              onPrev={() => cycleWord(cat, -1)}
+              onNext={() => cycleWord(cat, 1)}
+              disabled={isLoading}
+            />
+          ))}
         </div>
 
         {/* START RECIPE button */}
@@ -601,6 +601,7 @@ function SelectorRow({
     <div
       style={{
         width: "100%",
+        boxSizing: "border-box",
         background: "#ffffff",
         borderRadius: 14,
         border: "2px solid #e0e0e0",
@@ -679,10 +680,12 @@ function ArrowBtn({
   );
 }
 
+const CHILI_SRC = "/assets/sprites/food/vegetable/chili.png";
+
 const DIFFICULTIES = [
-  { value: "easy" as const, label: "EASY", icon: "🌶️" },
-  { value: "medium" as const, label: "MEDIUM", icon: "🌶️🌶️" },
-  { value: "hard" as const, label: "HARD", icon: "🌶️🌶️🌶️" },
+  { value: "easy" as const, label: "EASY", count: 1 },
+  { value: "medium" as const, label: "MEDIUM", count: 2 },
+  { value: "hard" as const, label: "HARD", count: 3 },
 ];
 
 function DifficultySelector({
@@ -711,26 +714,37 @@ function DifficultySelector({
             onClick={disabled ? undefined : () => onChange(d.value)}
             style={{
               flex: 1,
-              padding: "6px 0",
+              padding: "8px 0",
               borderRadius: 10,
               border: `2px solid ${active ? "#3e2723" : "#e0e0e0"}`,
               background: active ? "#3e2723" : "#ffffff",
               color: active ? "#ffffff" : "#3e2723",
-              textAlign: "center",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 5,
               cursor: disabled ? "default" : "pointer",
               userSelect: "none",
               transition: "all 0.15s",
               boxShadow: active ? "0 3px 0 #2a1a12" : "0 3px 0 #e0e0e0",
             }}
           >
-            <div style={{ fontSize: 12, lineHeight: 1 }}>{d.icon}</div>
+            <div style={{ display: "flex", gap: 1, alignItems: "center" }}>
+              {Array.from({ length: d.count }).map((_, i) => (
+                <img
+                  key={i}
+                  src={CHILI_SRC}
+                  alt=""
+                  style={{ width: 16, height: 16 }}
+                />
+              ))}
+            </div>
             <div
               style={{
                 fontSize: 11,
                 fontWeight: 900,
                 letterSpacing: "0.08em",
                 fontFamily: FONT_FAMILY,
-                marginTop: 2,
               }}
             >
               {d.label}
