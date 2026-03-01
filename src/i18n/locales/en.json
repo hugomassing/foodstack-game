@@ -35,6 +35,7 @@
     },
     "tabs": {
       "cook": "COOK",
+      "trophies": "TROPHIES",
       "leaderboard": "RANKING",
       "history": "HISTORY"
     },
@@ -46,6 +47,12 @@
     "history": {
       "loading": "Loading...",
       "empty": "You haven't completed any dishes yet. Start cooking!"
+    },
+    "trophies": {
+      "loading": "Loading...",
+      "empty": "No dishes have been cooked yet. Be the first!",
+      "chefs": "{count} chefs",
+      "notAcquired": "???"
     }
   },
   "game": {

@@ -35,6 +35,7 @@
     },
     "tabs": {
       "cook": "요리",
+      "trophies": "트로피",
       "leaderboard": "랭킹",
       "history": "기록"
     },
@@ -46,6 +47,12 @@
     "history": {
       "loading": "로딩 중...",
       "empty": "아직 완성한 요리가 없습니다. 요리를 시작하세요!"
+    },
+    "trophies": {
+      "loading": "로딩 중...",
+      "empty": "아직 요리된 음식이 없습니다. 첫 번째가 되어보세요!",
+      "chefs": "{count}명의 셰프",
+      "notAcquired": "???"
     }
   },
   "game": {

@@ -35,6 +35,7 @@
     },
     "tabs": {
       "cook": "KOCHEN",
+      "trophies": "TROPHÄEN",
       "leaderboard": "RANGLISTE",
       "history": "VERLAUF"
     },
@@ -46,6 +47,12 @@
     "history": {
       "loading": "Laden...",
       "empty": "Du hast noch keine Gerichte abgeschlossen. Fang an zu kochen!"
+    },
+    "trophies": {
+      "loading": "Laden...",
+      "empty": "Noch keine Gerichte gekocht. Sei der Erste!",
+      "chefs": "{count} Köche",
+      "notAcquired": "???"
     }
   },
   "game": {

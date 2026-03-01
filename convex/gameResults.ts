@@ -6,6 +6,7 @@ export const saveResult = mutation({
   args: {
     dishName: v.string(),
     difficulty: v.union(v.literal("easy"), v.literal("medium"), v.literal("hard")),
+    gameMode: v.optional(v.union(v.literal("daily"), v.literal("survival"), v.literal("normal"), v.literal("seeded"))),
     stepCount: v.number(),
     totalSteps: v.number(),
     errorCount: v.number(),
@@ -27,6 +28,7 @@ export const saveResult = mutation({
       userId,
       dishName: args.dishName,
       difficulty: args.difficulty,
+      gameMode: args.gameMode,
       stepCount: args.stepCount,
       totalSteps: args.totalSteps,
       errorCount: args.errorCount,
@@ -96,5 +98,71 @@ export const history = query({
           : null,
       })),
     );
+  },
+});
+
+export const trophyDex = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    const results = await ctx.db.query("gameResults").collect();
+
+    // Group by normalized dish name
+    const dishMap = new Map<
+      string,
+      {
+        dishName: string;
+        totalCompletions: number;
+        victoryCardStorageId?: string;
+        userModes: Set<string>;
+        userDifficulties: Set<string>;
+        acquired: boolean;
+      }
+    >();
+
+    for (const r of results) {
+      const key = r.dishName.toLowerCase().trim();
+      let entry = dishMap.get(key);
+      if (!entry) {
+        entry = {
+          dishName: r.dishName,
+          totalCompletions: 0,
+          userModes: new Set(),
+          userDifficulties: new Set(),
+          acquired: false,
+        };
+        dishMap.set(key, entry);
+      }
+      entry.totalCompletions++;
+      if (userId && r.userId === userId) {
+        entry.acquired = true;
+        if (r.gameMode) entry.userModes.add(r.gameMode);
+        entry.userDifficulties.add(r.difficulty);
+      }
+      // Keep a victory card reference if we don't have one yet
+      if (!entry.victoryCardStorageId && r.victoryCardStorageId) {
+        entry.victoryCardStorageId = r.victoryCardStorageId as string;
+      }
+    }
+
+    // Build output with victory card URLs
+    const entries = await Promise.all(
+      [...dishMap.values()].map(async (e) => ({
+        dishName: e.dishName,
+        totalCompletions: e.totalCompletions,
+        acquired: e.acquired,
+        modes: [...e.userModes],
+        difficulties: [...e.userDifficulties],
+        victoryCardUrl: e.victoryCardStorageId
+          ? await ctx.storage.getUrl(e.victoryCardStorageId as never)
+          : null,
+      })),
+    );
+
+    // Sort: acquired first (alphabetical), then unacquired (alphabetical)
+    return entries.sort((a, b) => {
+      if (a.acquired !== b.acquired) return a.acquired ? -1 : 1;
+      return a.dishName.localeCompare(b.dishName);
+    });
   },
 });

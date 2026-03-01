@@ -38,6 +38,7 @@ export default defineSchema({
     userId: v.id("users"),
     dishName: v.string(),
     difficulty: v.union(v.literal("easy"), v.literal("medium"), v.literal("hard")),
+    gameMode: v.optional(v.union(v.literal("daily"), v.literal("survival"), v.literal("normal"), v.literal("seeded"))),
     stepCount: v.number(),
     totalSteps: v.number(),
     errorCount: v.number(),

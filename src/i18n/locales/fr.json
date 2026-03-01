@@ -35,6 +35,7 @@
     },
     "tabs": {
       "cook": "CUISINER",
+      "trophies": "TROPHÉES",
       "leaderboard": "CLASSEMENT",
       "history": "HISTORIQUE"
     },
@@ -46,6 +47,12 @@
     "history": {
       "loading": "Chargement...",
       "empty": "Vous n'avez terminé aucun plat. Commencez à cuisiner !"
+    },
+    "trophies": {
+      "loading": "Chargement...",
+      "empty": "Aucun plat n'a été cuisiné. Soyez le premier !",
+      "chefs": "{count} chefs",
+      "notAcquired": "???"
     }
   },
   "game": {

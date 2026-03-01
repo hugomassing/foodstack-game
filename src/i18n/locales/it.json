@@ -35,6 +35,7 @@
     },
     "tabs": {
       "cook": "CUCINARE",
+      "trophies": "TROFEI",
       "leaderboard": "CLASSIFICA",
       "history": "CRONOLOGIA"
     },
@@ -46,6 +47,12 @@
     "history": {
       "loading": "Caricamento...",
       "empty": "Non hai ancora completato nessun piatto. Inizia a cucinare!"
+    },
+    "trophies": {
+      "loading": "Caricamento...",
+      "empty": "Nessun piatto è stato cucinato. Sii il primo!",
+      "chefs": "{count} chef",
+      "notAcquired": "???"
     }
   },
   "game": {

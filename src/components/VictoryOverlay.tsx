@@ -70,6 +70,7 @@ export function VictoryOverlay() {
     saveResult({
       dishName: victoryDish,
       difficulty,
+      gameMode,
       stepCount,
       totalSteps,
       errorCount,
