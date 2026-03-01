@@ -32,6 +32,20 @@
       "filling": "Filling",
       "method": "Method",
       "base": "Base"
+    },
+    "tabs": {
+      "cook": "COOK",
+      "leaderboard": "RANKING",
+      "history": "HISTORY"
+    },
+    "leaderboard": {
+      "loading": "Loading...",
+      "empty": "No dishes completed yet. Be the first!",
+      "dishes": "dishes"
+    },
+    "history": {
+      "loading": "Loading...",
+      "empty": "You haven't completed any dishes yet. Start cooking!"
     }
   },
   "game": {

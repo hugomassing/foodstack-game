@@ -32,6 +32,20 @@
       "filling": "Relleno",
       "method": "Método",
       "base": "Base"
+    },
+    "tabs": {
+      "cook": "COCINAR",
+      "leaderboard": "RANKING",
+      "history": "HISTORIAL"
+    },
+    "leaderboard": {
+      "loading": "Cargando...",
+      "empty": "Aún no hay platos completados. ¡Sé el primero!",
+      "dishes": "platos"
+    },
+    "history": {
+      "loading": "Cargando...",
+      "empty": "Aún no has completado ningún plato. ¡Empieza a cocinar!"
     }
   },
   "game": {

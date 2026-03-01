@@ -32,6 +32,20 @@
       "filling": "Recheio",
       "method": "Método",
       "base": "Base"
+    },
+    "tabs": {
+      "cook": "COZINHAR",
+      "leaderboard": "RANKING",
+      "history": "HISTÓRICO"
+    },
+    "leaderboard": {
+      "loading": "Carregando...",
+      "empty": "Nenhum prato finalizado ainda. Seja o primeiro!",
+      "dishes": "pratos"
+    },
+    "history": {
+      "loading": "Carregando...",
+      "empty": "Você ainda não completou nenhum prato. Comece a cozinhar!"
     }
   },
   "game": {

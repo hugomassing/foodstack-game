@@ -10,10 +10,12 @@
 
 import type * as combinationPrompt from "../combinationPrompt.js";
 import type * as combinations from "../combinations.js";
+import type * as gameResults from "../gameResults.js";
 import type * as generator from "../generator.js";
 import type * as prompt from "../prompt.js";
 import type * as recipeSchema from "../recipeSchema.js";
 import type * as recipes from "../recipes.js";
+import type * as users from "../users.js";
 import type * as victoryCardPrompt from "../victoryCardPrompt.js";
 import type * as victoryCards from "../victoryCards.js";
 
@@ -26,10 +28,12 @@ import type {
 declare const fullApi: ApiFromModules<{
   combinationPrompt: typeof combinationPrompt;
   combinations: typeof combinations;
+  gameResults: typeof gameResults;
   generator: typeof generator;
   prompt: typeof prompt;
   recipeSchema: typeof recipeSchema;
   recipes: typeof recipes;
+  users: typeof users;
   victoryCardPrompt: typeof victoryCardPrompt;
   victoryCards: typeof victoryCards;
 }>;

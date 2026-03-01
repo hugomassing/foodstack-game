@@ -32,6 +32,20 @@
       "filling": "Füllung",
       "method": "Methode",
       "base": "Basis"
+    },
+    "tabs": {
+      "cook": "KOCHEN",
+      "leaderboard": "RANGLISTE",
+      "history": "VERLAUF"
+    },
+    "leaderboard": {
+      "loading": "Laden...",
+      "empty": "Noch keine Gerichte abgeschlossen. Sei der Erste!",
+      "dishes": "Gerichte"
+    },
+    "history": {
+      "loading": "Laden...",
+      "empty": "Du hast noch keine Gerichte abgeschlossen. Fang an zu kochen!"
     }
   },
   "game": {

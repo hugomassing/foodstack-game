@@ -15,7 +15,6 @@ function useGameStore<T>(selector: (state: ReturnType<typeof gameStore.getState>
 }
 
 export { useGameStore };
-
 export default function App() {
   const phase = useGameStore((s) => s.phase);
 
