@@ -49,6 +49,46 @@
     "youWin": "¡GANASTE!",
     "playAgain": "JUGAR DE NUEVO",
     "saveCard": "GUARDAR TARJETA",
-    "steps": "{current}/{total} pasos"
+    "steps": "{current}/{total} pasos",
+    "errors": "{count} errores"
+  },
+  "modes": {
+    "title": "FOODSTACK",
+    "play": "JUGAR",
+    "start": "EMPEZAR",
+    "configure": "CONFIGURAR",
+    "back": "VOLVER",
+    "chooseDifficulty": "Elige dificultad",
+    "daily": {
+      "title": "Diario",
+      "description": "El reto de hoy. Límite de 10 errores.",
+      "best": "Mejor: {count}"
+    },
+    "survival": {
+      "title": "Supervivencia",
+      "description": "Sobrevive tantas recetas como puedas. 10 vidas."
+    },
+    "normal": {
+      "title": "Partida rápida",
+      "description": "Receta aleatoria, errores ilimitados."
+    },
+    "seeded": {
+      "title": "Personalizado",
+      "description": "Elige tus categorías y crea un nombre de plato."
+    }
+  },
+  "survival": {
+    "round": "Ronda {round}",
+    "lives": "{count} vidas",
+    "continue": "CONTINUAR",
+    "chooseNext": "Elige la siguiente receta",
+    "errors": "errores"
+  },
+  "gameOver": {
+    "title": "¡Desastre en la cocina!",
+    "tooManyErrors": "Demasiados fallos ({count}/{max})",
+    "survivalEnd": "¡Sobreviviste {rounds} rondas!",
+    "tryAgain": "REINTENTAR",
+    "backToMenu": "VOLVER AL MENÚ"
   }
 }

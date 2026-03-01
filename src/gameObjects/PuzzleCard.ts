@@ -115,12 +115,15 @@ export class PuzzleCard extends FoodCard {
       badge.strokeCircle(badgeX, badgeY, 11);
       this.add(badge);
 
-      const exclaim = scene.add.text(badgeX, badgeY, '!', {
-        fontSize: '14px',
-        fontStyle: 'bold',
-        color: '#ffffff',
-        fontFamily: FONT_FAMILY,
-      }).setOrigin(0.5).setResolution(DPR);
+      const exclaim = scene.add
+        .text(badgeX, badgeY, '!', {
+          fontSize: '14px',
+          fontStyle: 'bold',
+          color: '#ffffff',
+          fontFamily: FONT_FAMILY,
+        })
+        .setOrigin(0.5)
+        .setResolution(DPR);
       this.add(exclaim);
     }
   }

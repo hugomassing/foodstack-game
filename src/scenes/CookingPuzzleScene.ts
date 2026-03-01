@@ -39,20 +39,45 @@ const PROCESSOR_ASSET: Record<string, string> = {
 };
 
 const APPROX_MAP: Record<string, string> = {
-  pork: 'ham', 'pork chops': 'ham', 'ground pork': 'ham',
-  beef: 'steak', 'ground beef': 'steak', 'beef strips': 'steak',
-  chicken: 'drumstick', 'chicken breast': 'drumstick', 'chicken thigh': 'drumstick',
-  'bell pepper': 'pepper', jalapeño: 'pepper', 'chili peppers': 'chili',
-  'spring onion': 'onion', scallion: 'onion', shallot: 'onion',
-  tortilla: 'flatbread', wrap: 'flatbread', 'pita bread': 'pita',
-  'bread crumbs': 'bread_slice', 'cream cheese': 'cream', 'sour cream': 'cream',
-  broth: 'soup', stock: 'soup', 'fish sauce': 'soy_sauce',
-  syrup: 'honey', 'maple syrup': 'honey', vinegar: 'soy_sauce',
-  'rice noodles': 'noodles', 'egg noodles': 'noodles',
-  'sesame oil': 'olive_oil', 'cooking oil': 'olive_oil', oil: 'olive_oil',
-  'lime juice': 'lime', 'lemon juice': 'lemon',
-  'whipped cream': 'cream', 'heavy cream': 'cream',
-  'mozzarella': 'cheese', 'parmesan': 'cheese', 'cheddar': 'cheese',
+  pork: 'ham',
+  'pork chops': 'ham',
+  'ground pork': 'ham',
+  beef: 'steak',
+  'ground beef': 'steak',
+  'beef strips': 'steak',
+  chicken: 'drumstick',
+  'chicken breast': 'drumstick',
+  'chicken thigh': 'drumstick',
+  'bell pepper': 'pepper',
+  jalapeño: 'pepper',
+  'chili peppers': 'chili',
+  'spring onion': 'onion',
+  scallion: 'onion',
+  shallot: 'onion',
+  tortilla: 'flatbread',
+  wrap: 'flatbread',
+  'pita bread': 'pita',
+  'bread crumbs': 'bread_slice',
+  'cream cheese': 'cream',
+  'sour cream': 'cream',
+  broth: 'soup',
+  stock: 'soup',
+  'fish sauce': 'soy_sauce',
+  syrup: 'honey',
+  'maple syrup': 'honey',
+  vinegar: 'soy_sauce',
+  'rice noodles': 'noodles',
+  'egg noodles': 'noodles',
+  'sesame oil': 'olive_oil',
+  'cooking oil': 'olive_oil',
+  oil: 'olive_oil',
+  'lime juice': 'lime',
+  'lemon juice': 'lemon',
+  'whipped cream': 'cream',
+  'heavy cream': 'cream',
+  mozzarella: 'cheese',
+  parmesan: 'cheese',
+  cheddar: 'cheese',
 };
 
 function localAssetMatch(name: string): string | null {
@@ -316,7 +341,12 @@ export class CookingPuzzleScene extends Phaser.Scene {
       if (!obj.attachedTo) {
         obj.setDepth(obj.cardDepth || 1);
       }
-      if ((obj.cardType === 'ingredient' || obj.cardType === 'intermediate' || obj.cardType === 'error') && this.hoveredProcessor) {
+      if (
+        (obj.cardType === 'ingredient' ||
+          obj.cardType === 'intermediate' ||
+          obj.cardType === 'error') &&
+        this.hoveredProcessor
+      ) {
         if (this.activeProcessor && this.activeProcessor !== this.hoveredProcessor) return;
         this.attachToProcessor(obj, this.hoveredProcessor);
       }
@@ -370,10 +400,12 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     for (let i = 0; i < count; i++) {
       const procName = processors[i];
-      const x = BD_X + BD_W * (i + 0.5) / count;
+      const x = BD_X + (BD_W * (i + 0.5)) / count;
       const emoji =
         procEmojiMap.get(procName) ??
-        (procName === this.puzzleData.finalStep.processor ? this.puzzleData.finalStep.processorEmoji ?? '' : '');
+        (procName === this.puzzleData.finalStep.processor
+          ? (this.puzzleData.finalStep.processorEmoji ?? '')
+          : '');
       const assetId = procAssetMap.get(procName) ?? PROCESSOR_ASSET[procName] ?? null;
       const card = new PuzzleCard(this, x, rowY, procName, 'processor', { emoji, assetId });
       this.cards.push(card);
@@ -720,7 +752,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
       } else {
         // Intermediate card: fling back to random board position
         const newX = Phaser.Math.Between(BD_X + 68, BD_X + BD_W - 68);
-        const newY = Phaser.Math.Between(BD_Y + 20, BD_Y + BD_H - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10);
+        const newY = Phaser.Math.Between(
+          BD_Y + 20,
+          BD_Y + BD_H - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10,
+        );
         att.card.setInteractive({ draggable: true });
         this.tweens.add({
           targets: att.card,
@@ -820,7 +855,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
       onUpdate: (_tween: Phaser.Tweens.Tween, _target: unknown, _key: string, current: number) => {
         const progress = current;
         for (let i = 0; i < dotCount; i++) {
-          const angle = ((i / dotCount) + progress) * Math.PI * 2;
+          const angle = (i / dotCount + progress) * Math.PI * 2;
           dots[i].x = cx + Math.cos(angle) * radius;
           dots[i].y = cy + Math.sin(angle) * radius;
         }
@@ -1057,10 +1092,9 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     // Update zustand store — triggers React re-renders for QuestBookPanel and GameHUD
     if (!isRedo) {
-      gameStore.getState().completeStep(
-        step.stepId,
-        isFinal ? undefined : [step.stepId, step.output],
-      );
+      gameStore
+        .getState()
+        .completeStep(step.stepId, isFinal ? undefined : [step.stepId, step.output]);
     }
 
     this.deactivateProcessor();
@@ -1088,7 +1122,9 @@ export class CookingPuzzleScene extends Phaser.Scene {
     const useLogical = logicalAsset && this.textures.exists(`food_${logicalAsset}`);
     const primaryAsset = useLogical
       ? logicalAsset
-      : inputTextureKeys.length > 0 ? inputTextureKeys[0].slice(5) : null;
+      : inputTextureKeys.length > 0
+        ? inputTextureKeys[0].slice(5)
+        : null;
 
     // Spawn below the processor, clamped to board bounds
     const boardMaxY = BD_Y + BD_H - FOOD_CARD_H / 2 - SCATTER.FOOTER;
@@ -1139,7 +1175,12 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
         const shadow = this.add.image(offsetX + 2, imageY + offsetY + 3, key);
         const shadowScale = Math.min(fanDim / shadow.width, fanDim / shadow.height);
-        shadow.setScale(shadowScale).setOrigin(0.5).setTint(0x000000).setAlpha(0.2).setRotation(rot);
+        shadow
+          .setScale(shadowScale)
+          .setOrigin(0.5)
+          .setTint(0x000000)
+          .setAlpha(0.2)
+          .setRotation(rot);
         card.add(shadow);
 
         const img = this.add.image(offsetX, imageY + offsetY, key);
@@ -1203,8 +1244,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
       );
       if (!Phaser.Geom.Intersects.RectangleToRectangle(cardRect, procRect)) continue;
 
-      const overlapW = Math.min(cardRect.right, procRect.right) - Math.max(cardRect.left, procRect.left);
-      const overlapH = Math.min(cardRect.bottom, procRect.bottom) - Math.max(cardRect.top, procRect.top);
+      const overlapW =
+        Math.min(cardRect.right, procRect.right) - Math.max(cardRect.left, procRect.left);
+      const overlapH =
+        Math.min(cardRect.bottom, procRect.bottom) - Math.max(cardRect.top, procRect.top);
       const area = overlapW * overlapH;
       if (area > bestArea) {
         bestArea = area;
@@ -1420,7 +1463,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
         const angle = rng.between(-25, 25);
 
         const img = this.add.image(x, y, key);
-        img.setScale(iconSize / 512)
+        img
+          .setScale(iconSize / 512)
           .setAngle(angle)
           .setAlpha(0.12)
           .setDepth(-3)

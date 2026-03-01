@@ -5,23 +5,36 @@ import { useGameStore } from '../App';
 import { gameStore } from '../store/gameStore';
 import { api } from '../../convex/_generated/api';
 import { convex } from '../lib/convex';
-import { Trophy, RotateCcw, Download } from 'lucide-react';
+import { Trophy, RotateCcw, Download, ArrowRight, Heart } from 'lucide-react';
 import { useTranslation } from '../i18n';
 import type { TranslationKeys } from '../i18n/types';
+import { setDailyBestScore } from '../lib/daily';
 
 const TROPHY_MESSAGES = [
-  { emoji: '🏆', text: 'Crafting your trophy...' },
-  { emoji: '🎨', text: 'Painting the details...' },
-  { emoji: '✨', text: 'Adding the sparkle...' },
-  { emoji: '🍽️', text: 'Plating the masterpiece...' },
-  { emoji: '📸', text: 'Taking the photo...' },
-  { emoji: '🥇', text: 'Polishing the gold...' },
+  { emoji: '\u{1F3C6}', text: 'Crafting your trophy...' },
+  { emoji: '\u{1F3A8}', text: 'Painting the details...' },
+  { emoji: '\u2728', text: 'Adding the sparkle...' },
+  { emoji: '\u{1F37D}\uFE0F', text: 'Plating the masterpiece...' },
+  { emoji: '\u{1F4F8}', text: 'Taking the photo...' },
+  { emoji: '\u{1F947}', text: 'Polishing the gold...' },
 ];
 
 const DIFFICULTY_LABELS = {
-  easy: { labelKey: 'menu.difficulty.easy' as TranslationKeys, icon: '🌶️', color: '#4caf50' },
-  medium: { labelKey: 'menu.difficulty.medium' as TranslationKeys, icon: '🌶️🌶️', color: '#ff9800' },
-  hard: { labelKey: 'menu.difficulty.hard' as TranslationKeys, icon: '🌶️🌶️🌶️', color: '#e53935' },
+  easy: {
+    labelKey: 'menu.difficulty.easy' as TranslationKeys,
+    icon: '\u{1F336}\uFE0F',
+    color: '#4caf50',
+  },
+  medium: {
+    labelKey: 'menu.difficulty.medium' as TranslationKeys,
+    icon: '\u{1F336}\uFE0F\u{1F336}\uFE0F',
+    color: '#ff9800',
+  },
+  hard: {
+    labelKey: 'menu.difficulty.hard' as TranslationKeys,
+    icon: '\u{1F336}\uFE0F\u{1F336}\uFE0F\u{1F336}\uFE0F',
+    color: '#e53935',
+  },
 } as const;
 
 export function VictoryOverlay() {
@@ -32,6 +45,11 @@ export function VictoryOverlay() {
   const totalSteps = useGameStore((s) => s.totalSteps);
   const victoryImageUrl = useGameStore((s) => s.victoryImageUrl);
   const victoryImageLoading = useGameStore((s) => s.victoryImageLoading);
+  const errorCount = useGameStore((s) => s.errorCount);
+  const gameMode = useGameStore((s) => s.gameMode);
+  const survivalLives = useGameStore((s) => s.survivalLives);
+  const survivalRound = useGameStore((s) => s.survivalRound);
+  const dailyDate = useGameStore((s) => s.dailyDate);
 
   const [show, setShow] = useState(false);
   const [showBtn, setShowBtn] = useState(false);
@@ -41,6 +59,13 @@ export function VictoryOverlay() {
   const { t } = useTranslation();
 
   const cardRef = useRef<HTMLDivElement>(null);
+
+  // Save daily best score
+  useEffect(() => {
+    if (gameMode === 'daily' && dailyDate) {
+      setDailyBestScore(dailyDate, errorCount);
+    }
+  }, [gameMode, dailyDate, errorCount]);
 
   // Animate in
   useEffect(() => {
@@ -99,10 +124,33 @@ export function VictoryOverlay() {
     }
   }, [victoryDish]);
 
+  const handlePlayAgain = () => {
+    if (gameMode === 'survival') {
+      gameStore.getState().completeSurvivalRecipe();
+    } else if (gameMode === 'daily') {
+      // Retry same daily - re-start game with same puzzle
+      const data = gameStore.getState().puzzleData;
+      if (data) {
+        gameStore.getState().startGame(data, difficulty);
+      }
+    } else {
+      gameStore.getState().resetGameplay();
+    }
+  };
+
   const diffConfig = DIFFICULTY_LABELS[difficulty];
   const msg = TROPHY_MESSAGES[msgIndex];
   const hasImage = !!victoryImageUrl;
   const showFallback = !victoryImageLoading && !hasImage;
+
+  const playAgainLabel =
+    gameMode === 'survival'
+      ? t('survival.continue')
+      : gameMode === 'daily'
+        ? t('victory.playAgain')
+        : t('victory.playAgain');
+
+  const PlayAgainIcon = gameMode === 'survival' ? ArrowRight : RotateCcw;
 
   return (
     <div
@@ -340,6 +388,31 @@ export function VictoryOverlay() {
                 {t('victory.steps', { current: stepCount, total: totalSteps })}
               </div>
             </div>
+
+            {/* Error count */}
+            <div
+              style={{
+                fontSize: 12,
+                fontWeight: 700,
+                color: errorCount > 0 ? '#e74c3c' : '#4caf50',
+              }}
+            >
+              {t('victory.errors', { count: errorCount })}
+            </div>
+
+            {/* Survival-specific info */}
+            {gameMode === 'survival' && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ fontSize: 12, fontWeight: 900, color: '#3e2723' }}>
+                  {t('survival.round', { round: survivalRound })}
+                </div>
+                <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                  {Array.from({ length: Math.min(survivalLives, 10) }).map((_, i) => (
+                    <Heart key={i} size={12} strokeWidth={2} fill="#e53935" color="#e53935" />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -374,7 +447,7 @@ export function VictoryOverlay() {
             {t('victory.saveCard')}
           </button>
           <button
-            onClick={() => gameStore.getState().resetGameplay()}
+            onClick={handlePlayAgain}
             style={{
               fontSize: 14,
               fontWeight: 900,
@@ -391,8 +464,8 @@ export function VictoryOverlay() {
               letterSpacing: '0.04em',
             }}
           >
-            <RotateCcw size={16} strokeWidth={3} />
-            {t('victory.playAgain')}
+            <PlayAgainIcon size={16} strokeWidth={3} />
+            {playAgainLabel}
           </button>
         </div>
       </div>

@@ -49,6 +49,46 @@
     "youWin": "クリア！",
     "playAgain": "もう一度",
     "saveCard": "カードを保存",
-    "steps": "{current}/{total} ステップ"
+    "steps": "{current}/{total} ステップ",
+    "errors": "{count} エラー"
+  },
+  "modes": {
+    "title": "FOODSTACK",
+    "play": "プレイ",
+    "start": "スタート",
+    "configure": "設定",
+    "back": "戻る",
+    "chooseDifficulty": "難易度を選択",
+    "daily": {
+      "title": "デイリー",
+      "description": "今日のレシピチャレンジ。エラー10回まで。",
+      "best": "ベスト: {count}"
+    },
+    "survival": {
+      "title": "サバイバル",
+      "description": "できるだけ多くのレシピを生き残ろう。ライフ10。"
+    },
+    "normal": {
+      "title": "クイックプレイ",
+      "description": "ランダムレシピ、エラー無制限。"
+    },
+    "seeded": {
+      "title": "カスタム",
+      "description": "カテゴリーを選んで料理名を作ろう。"
+    }
+  },
+  "survival": {
+    "round": "ラウンド {round}",
+    "lives": "ライフ {count}",
+    "continue": "続ける",
+    "chooseNext": "次のレシピを選択",
+    "errors": "エラー"
+  },
+  "gameOver": {
+    "title": "キッチン大惨事！",
+    "tooManyErrors": "ミスが多すぎます ({count}/{max})",
+    "survivalEnd": "{rounds} ラウンド生存！",
+    "tryAgain": "もう一度",
+    "backToMenu": "メニューへ"
   }
 }

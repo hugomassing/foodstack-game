@@ -49,6 +49,46 @@
     "youWin": "HAI VINTO!",
     "playAgain": "GIOCA ANCORA",
     "saveCard": "SALVA CARTA",
-    "steps": "{current}/{total} passi"
+    "steps": "{current}/{total} passi",
+    "errors": "{count} errori"
+  },
+  "modes": {
+    "title": "FOODSTACK",
+    "play": "GIOCA",
+    "start": "INIZIA",
+    "configure": "CONFIGURA",
+    "back": "INDIETRO",
+    "chooseDifficulty": "Scegli la difficoltà",
+    "daily": {
+      "title": "Giornaliero",
+      "description": "La sfida di oggi. Limite di 10 errori.",
+      "best": "Migliore: {count}"
+    },
+    "survival": {
+      "title": "Sopravvivenza",
+      "description": "Sopravvivi a più ricette possibili. 10 vite."
+    },
+    "normal": {
+      "title": "Partita rapida",
+      "description": "Ricetta casuale, errori illimitati."
+    },
+    "seeded": {
+      "title": "Personalizzato",
+      "description": "Scegli le categorie e crea un nome per il piatto."
+    }
+  },
+  "survival": {
+    "round": "Round {round}",
+    "lives": "{count} vite",
+    "continue": "CONTINUA",
+    "chooseNext": "Scegli la prossima ricetta",
+    "errors": "errori"
+  },
+  "gameOver": {
+    "title": "Disastro in cucina!",
+    "tooManyErrors": "Troppi errori ({count}/{max})",
+    "survivalEnd": "Sopravvissuto {rounds} round!",
+    "tryAgain": "RIPROVA",
+    "backToMenu": "TORNA AL MENU"
   }
 }

@@ -49,6 +49,46 @@
     "youWin": "GEWONNEN!",
     "playAgain": "NOCHMAL SPIELEN",
     "saveCard": "KARTE SPEICHERN",
-    "steps": "{current}/{total} Schritte"
+    "steps": "{current}/{total} Schritte",
+    "errors": "{count} Fehler"
+  },
+  "modes": {
+    "title": "FOODSTACK",
+    "play": "SPIELEN",
+    "start": "START",
+    "configure": "ANPASSEN",
+    "back": "ZURÜCK",
+    "chooseDifficulty": "Schwierigkeit wählen",
+    "daily": {
+      "title": "Täglich",
+      "description": "Heutige Rezept-Challenge. 10 Fehler erlaubt.",
+      "best": "Bestes: {count}"
+    },
+    "survival": {
+      "title": "Überleben",
+      "description": "Überlebe so viele Rezepte wie möglich. 10 Leben."
+    },
+    "normal": {
+      "title": "Schnelles Spiel",
+      "description": "Zufälliges Rezept, unbegrenzte Fehler."
+    },
+    "seeded": {
+      "title": "Eigenes Rezept",
+      "description": "Wähle Kategorien und erstelle einen Gerichtnamen."
+    }
+  },
+  "survival": {
+    "round": "Runde {round}",
+    "lives": "{count} Leben",
+    "continue": "WEITER",
+    "chooseNext": "Nächstes Rezept wählen",
+    "errors": "Fehler"
+  },
+  "gameOver": {
+    "title": "Küchenkatastrophe!",
+    "tooManyErrors": "Zu viele Fehlversuche ({count}/{max})",
+    "survivalEnd": "{rounds} Runden überlebt!",
+    "tryAgain": "NOCHMAL",
+    "backToMenu": "ZUM MENÜ"
   }
 }

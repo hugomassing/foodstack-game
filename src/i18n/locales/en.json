@@ -49,6 +49,46 @@
     "youWin": "YOU WIN!",
     "playAgain": "PLAY AGAIN",
     "saveCard": "SAVE CARD",
-    "steps": "{current}/{total} steps"
+    "steps": "{current}/{total} steps",
+    "errors": "{count} errors"
+  },
+  "modes": {
+    "title": "FOODSTACK",
+    "play": "PLAY",
+    "start": "START",
+    "configure": "CONFIGURE",
+    "back": "BACK",
+    "chooseDifficulty": "Choose Difficulty",
+    "daily": {
+      "title": "Daily",
+      "description": "Today's recipe challenge. 10 error limit.",
+      "best": "Best: {count}"
+    },
+    "survival": {
+      "title": "Survival",
+      "description": "Survive as many recipes as you can. 10 lives total."
+    },
+    "normal": {
+      "title": "Quick Play",
+      "description": "Random recipe, unlimited errors. Beat your best!"
+    },
+    "seeded": {
+      "title": "Custom",
+      "description": "Pick your own categories and craft a dish name."
+    }
+  },
+  "survival": {
+    "round": "Round {round}",
+    "lives": "{count} lives",
+    "continue": "CONTINUE",
+    "chooseNext": "Choose Next Recipe",
+    "errors": "errors"
+  },
+  "gameOver": {
+    "title": "Kitchen Disaster!",
+    "tooManyErrors": "Too many failed combinations ({count}/{max})",
+    "survivalEnd": "Survived {rounds} rounds!",
+    "tryAgain": "TRY AGAIN",
+    "backToMenu": "BACK TO MENU"
   }
 }
