@@ -64,7 +64,15 @@
     "playAgain": "もう一度",
     "saveCard": "カードを保存",
     "steps": "{current}/{total} ステップ",
-    "errors": "{count} エラー"
+    "errors": "{count} エラー",
+    "trophyMessages": [
+      "トロフィーを作成中...",
+      "細部を描き中...",
+      "輝きを追加中...",
+      "傑作を盛り付け中...",
+      "写真を撮影中...",
+      "金を磨き中..."
+    ]
   },
   "modes": {
     "title": "FOODSTACK",
@@ -96,7 +104,8 @@
     "lives": "ライフ {count}",
     "continue": "続ける",
     "chooseNext": "次のレシピを選択",
-    "errors": "エラー"
+    "errors": "エラー",
+    "errorsShort": "エラー"
   },
   "gameOver": {
     "title": "キッチン大惨事！",

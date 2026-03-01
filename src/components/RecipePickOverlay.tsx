@@ -40,7 +40,6 @@ export function RecipePickOverlay() {
       const puzzleData = await convex.action(api.generator.generateOrGetRecipe, {
         dishName,
         difficulty,
-        locale: 'en',
       });
       gameStore.getState().startSurvivalRound(puzzleData as PuzzleData, difficulty);
     } catch (err) {

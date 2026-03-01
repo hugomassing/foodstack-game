@@ -3,6 +3,7 @@ import { QUEST_PANEL_W, GAME_H, FONT_FAMILY } from '../config';
 import { useGameStore } from '../App';
 import type { Step } from '../types';
 import { useTranslation } from '../i18n';
+import { localize } from '../i18n/localize';
 import {
   Check,
   Download,
@@ -119,7 +120,9 @@ export function QuestBookPanel() {
 
   if (!puzzleData) return null;
 
-  const dishLabel = puzzleData.dishName;
+  const localizedDishName = localize(puzzleData.dishName, puzzleData.dishNameI18n);
+  const dishLabel =
+    localizedDishName.length > 26 ? localizedDishName.slice(0, 24) + '\u2026' : localizedDishName;
 
   return (
     <div
@@ -251,7 +254,7 @@ export function QuestBookPanel() {
                 }}
               >
                 <div style={{ width: 12, height: 1.5, background: '#d7ccc8', borderRadius: 1 }} />
-                {branch.name.toUpperCase()}
+                {localize(branch.name, branch.nameI18n).toUpperCase()}
               </div>
               {branch.steps.map((step) => (
                 <StepRow
@@ -335,8 +338,8 @@ function StepRow({
   actionable: boolean;
 }) {
   const Icon = getProcessorIcon(step.processor);
-  const title = step.questTitle ?? step.output;
-  const description = step.hint;
+  const title = localize(step.questTitle ?? step.output, step.questTitleI18n ?? step.outputI18n);
+  const description = step.hint ? localize(step.hint, step.hintI18n) : undefined;
 
   return (
     <div

@@ -39,7 +39,6 @@ sweet: cake, cake_slice, candy, cheesecake, chocolate, cinnamon_roll, cookie, co
 snack: chips, popcorn, rice_cracker
 drink: beer, bubble_tea, champagne, cocktail, coffee, hot_beverage, juice_box, milkshake, sake, soda, tea, tropical_drink, water, wine_bottle
 
-## LANGUAGE / LOCALE
-When the prompt specifies a locale (e.g. "locale: fr"), the "name" field MUST be written in that language.
-Asset IDs are English-only catalog keys — never translate those.
-If no locale is specified or the locale is "en", write everything in English.`;
+## LANGUAGE
+Always return the "name" field in English. The game handles translations separately.
+Asset IDs are English-only catalog keys — never translate those.`;

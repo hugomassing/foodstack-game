@@ -132,7 +132,7 @@ export function GameOverOverlay() {
                 }}
               >
                 <span>{result.dishName}</span>
-                <span>{result.errorsUsed} err</span>
+                <span>{result.errorsUsed} {t('survival.errorsShort')}</span>
               </div>
             ))}
           </div>
