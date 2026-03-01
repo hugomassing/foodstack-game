@@ -53,6 +53,10 @@ export function useTranslation() {
   return { t: translate, locale: localeStore.getState().locale };
 }
 
+export function getLocale(): string {
+  return localeStore.getState().locale;
+}
+
 export async function loadLocale(locale: string): Promise<void> {
   const mod = await import(`./locales/${locale}.json`);
   localeStore.getState().setLocale(locale, mod.default);

@@ -119,4 +119,16 @@ drink: beer, bubble_tea, champagne, cocktail, coffee, hot_beverage, juice_box, m
 8. Processor emojis in steps match the fixed mapping defined above.
 9. Every ingredient and decoy has an emoji. No two different ingredients share the same emoji.
 10. The recipe makes culinary sense.
-11. Every assetId on ingredients, decoys, and step outputs is a valid ID from the ASSET_CATALOG.`;
+11. Every assetId on ingredients, decoys, and step outputs is a valid ID from the ASSET_CATALOG.
+
+## LANGUAGE / LOCALE
+When the prompt specifies a locale (e.g. "locale: fr"), ALL user-facing text MUST be written in that language:
+- ingredient names, decoy names
+- branch names
+- step outputs
+- questTitle and hint fields
+- dishName
+
+Processor names (mix, chop, boil, etc.) MUST stay in English — they are game-engine keys, not display text.
+Asset IDs are also English-only catalog keys — never translate those.
+If no locale is specified or the locale is "en", write everything in English.`;
