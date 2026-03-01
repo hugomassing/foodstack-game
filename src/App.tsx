@@ -14,6 +14,7 @@ import { VictoryOverlay } from './components/VictoryOverlay';
 import { GameOverOverlay } from './components/GameOverOverlay';
 import { RecipePickOverlay } from './components/RecipePickOverlay';
 import { AuthModal } from './components/AuthModal';
+import { HealthBar } from './components/HealthBar';
 
 function useGameStore<T>(selector: (state: ReturnType<typeof gameStore.getState>) => T): T {
   return useSyncExternalStore(gameStore.subscribe, () => selector(gameStore.getState()));
@@ -70,17 +71,20 @@ export default function App() {
         {phase === 'playing' && (
           <>
             <QuestBookPanel />
+            <HealthBar />
           </>
         )}
         {phase === 'victory' && (
           <>
             <QuestBookPanel />
+            <HealthBar />
             <VictoryOverlay />
           </>
         )}
         {phase === 'game_over' && (
           <>
             <QuestBookPanel />
+            <HealthBar />
             <GameOverOverlay />
           </>
         )}

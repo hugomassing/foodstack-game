@@ -13,6 +13,11 @@ import {
   ZONE,
   HAND,
   DPR,
+  BD_X,
+  BD_Y,
+  BD_W,
+  BD_H,
+  BD_R,
 } from '../config';
 import { FoodAssets } from '../data/food-assets';
 import { gameStore } from '../store/gameStore';
@@ -113,13 +118,6 @@ function localAssetMatch(name: string): string | null {
   return null;
 }
 
-// Board dimensions (expanded — header removed)
-const BD_X = 248;
-const BD_Y = 10;
-const BD_W = 704;
-const BD_H = 440;
-const BD_R = 20;
-
 interface HandSlot {
   x: number;
   y: number;
@@ -162,7 +160,6 @@ export class FoodStackGameScene extends Phaser.Scene {
   private ingredientMeta!: Map<PuzzleCard, { emoji: string; assetId: string | null }>;
   private pendingHoverCard: PuzzleCard | null = null;
   private removeIndicator!: Phaser.GameObjects.Graphics;
-  private errorCounterText!: Phaser.GameObjects.Text;
 
   constructor() {
     super({ key: 'FoodStackGameScene' });
@@ -364,20 +361,6 @@ export class FoodStackGameScene extends Phaser.Scene {
       this.hoveredProcessor = null;
       this.dropHighlight.setVisible(false);
     });
-
-    // -- Error counter (below zones, top-right) --
-    const zoneH = Math.round(BD_H * ZONE.HEIGHT_FRACTION);
-    this.errorCounterText = this.add
-      .text(BD_X + BD_W - 10, BD_Y + zoneH + 4, '', {
-        fontSize: '13px',
-        fontStyle: 'bold',
-        color: '#e74c3c',
-        fontFamily: FONT_FAMILY,
-      })
-      .setOrigin(1, 0)
-      .setDepth(50)
-      .setResolution(DPR);
-    this.updateErrorCounter();
 
     // -- Create cards --
     this.createProcessorZones();
@@ -1199,9 +1182,6 @@ export class FoodStackGameScene extends Phaser.Scene {
     // Increment error count (addError triggers game_over phase at maxErrors)
     gameStore.getState().addError();
 
-    // Update error counter display
-    this.updateErrorCounter();
-
     // Float text
     const floatText = this.add
       .text(zoneCx, zoneCy - 12, `⚠️ ${result.name}`, {
@@ -1785,28 +1765,6 @@ export class FoodStackGameScene extends Phaser.Scene {
   private enableAllProcessors(): void {
     for (const [, zone] of this.processorZones) {
       zone.container.setAlpha(1);
-    }
-  }
-
-  private updateErrorCounter(): void {
-    const { errorCount, maxErrors } = gameStore.getState();
-    if (errorCount === 0) {
-      this.errorCounterText.setVisible(false);
-    } else {
-      this.errorCounterText.setVisible(true);
-      const label = Number.isFinite(maxErrors) ? `⚠️ ${errorCount}/${maxErrors}` : `⚠️ ${errorCount}`;
-      this.errorCounterText.setText(label);
-
-      // Pulse animation on update
-      this.tweens.killTweensOf(this.errorCounterText);
-      this.errorCounterText.setScale(1.3);
-      this.tweens.add({
-        targets: this.errorCounterText,
-        scaleX: 1,
-        scaleY: 1,
-        duration: 300,
-        ease: 'Back.easeOut',
-      });
     }
   }
 

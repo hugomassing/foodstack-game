@@ -64,6 +64,16 @@ export const SCATTER = {
   MAX_ATTEMPTS: 15,
 } as const;
 
+// Health bar strip above the board
+export const HEALTH_BAR_H = 32;
+
+// Board dimensions (shifted down to make room for health bar)
+export const BD_X = 248;
+export const BD_Y = 10 + HEALTH_BAR_H + 4; // 46
+export const BD_W = 704;
+export const BD_H = 404;
+export const BD_R = 20;
+
 // Processor ring (legacy, kept for reference)
 export const PROCESSOR_RING_PAD = 4;
 
