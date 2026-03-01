@@ -60,8 +60,21 @@ export const SCATTER = {
   MAX_ATTEMPTS: 15,
 } as const;
 
-// Processor ring
+// Processor ring (legacy, kept for reference)
 export const PROCESSOR_RING_PAD = 4;
+
+// Processor zones (full-width columns across top of board)
+export const ZONE = {
+  HEIGHT_FRACTION: 1 / 3, // zone occupies top 1/3 of board
+  BG_COLOR: 0xe8d5be, // darker than board 0xf5e6d3
+  SEPARATOR_COLOR: 0x8d6e63,
+  HIGHLIGHT_COLOR: 0x00ff88,
+  HIGHLIGHT_FILL_ALPHA: 0.08,
+  ICON_Y_OFFSET: -10, // icon vertical offset from zone center
+  LABEL_Y_OFFSET: 28, // label below icon
+  DISABLED_ALPHA: 0.4,
+  CARD_START_OFFSET: 14, // gap below zone bottom for attached cards
+} as const;
 
 // Hand arc layout
 export const HAND = {

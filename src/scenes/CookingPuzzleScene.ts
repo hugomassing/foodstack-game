@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { FOOD_CARD_W, FOOD_CARD_H, FOOD_CARD_RADIUS } from '../gameObjects/FoodCard';
+import { FOOD_CARD_W, FOOD_CARD_H } from '../gameObjects/FoodCard';
 import { PuzzleCard } from '../gameObjects/PuzzleCard';
 import {
   GAME_W,
@@ -10,7 +10,7 @@ import {
   TEXT_COLORS,
   PILE,
   SCATTER,
-  PROCESSOR_RING_PAD,
+  ZONE,
   HAND,
   DPR,
 } from '../config';
@@ -126,19 +126,29 @@ interface HandSlot {
   depth: number;
 }
 
+interface ProcessorZone {
+  name: string;
+  emoji: string;
+  container: Phaser.GameObjects.Container;
+  bg: Phaser.GameObjects.Graphics;
+  icon: Phaser.GameObjects.Image | Phaser.GameObjects.Text;
+  label: Phaser.GameObjects.Text;
+  rect: Phaser.Geom.Rectangle;
+}
+
 export class CookingPuzzleScene extends Phaser.Scene {
   private puzzleData!: PuzzleData;
   private completedSteps!: Set<string>;
   private availableIntermediates!: Map<string, string>;
   private stepCount!: number;
   private cards!: PuzzleCard[];
-  private processorCards!: Map<string, PuzzleCard>;
-  private processorAttachments!: Map<PuzzleCard, Attachment[]>;
+  private processorZones!: Map<string, ProcessorZone>;
+  private processorAttachments!: Map<string, Attachment[]>;
   private allSteps!: Step[];
   private totalSteps!: number;
-  private hoveredProcessor: PuzzleCard | null = null;
+  private hoveredProcessor: string | null = null;
   private dropHighlight!: Phaser.GameObjects.Graphics;
-  private activeProcessor: PuzzleCard | null = null;
+  private activeProcessor: string | null = null;
   private cookButton: Phaser.GameObjects.Container | null = null;
 
   // Hand system
@@ -178,16 +188,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     board.lineStyle(4, 0x3e2723, 1);
     board.strokeRoundedRect(BD_X, BD_Y, BD_W, BD_H, BD_R);
 
-    // ── Board grid lines ─────────────────────────────────────
-    board.lineStyle(1, 0x8d6e63, 0.18);
-    for (let i = 1; i <= 5; i++) {
-      const y = BD_Y + (BD_H / 6) * i;
-      board.lineBetween(BD_X, y, BD_X + BD_W, y);
-    }
-    for (let i = 1; i <= 8; i++) {
-      const x = BD_X + (BD_W / 9) * i;
-      board.lineBetween(x, BD_Y, x, BD_Y + BD_H);
-    }
+
 
     this.puzzleData = data.puzzleData;
 
@@ -196,7 +197,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     this.availableIntermediates = new Map();
     this.stepCount = 0;
     this.cards = [];
-    this.processorCards = new Map();
+    this.processorZones = new Map();
     this.processorAttachments = new Map();
     this.handCards = [];
     this.handSlots = new Map();
@@ -264,10 +265,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
           obj.x = dragX;
           obj.y = dragY;
           // Check processor overlap for direct drop onto processor
-          const proc = this.findOverlappingProcessor(obj);
-          this.hoveredProcessor = proc;
-          if (proc) {
-            this.updateDropHighlight(proc);
+          const procName = this.findOverlappingProcessor(obj);
+          this.hoveredProcessor = procName;
+          if (procName) {
+            this.updateDropHighlight(procName);
           } else {
             this.dropHighlight.setVisible(false);
           }
@@ -293,10 +294,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
           obj.y = Phaser.Math.Clamp(dragY, boardMinDragY, boardMaxDragY);
         }
 
-        const proc = this.findOverlappingProcessor(obj);
-        this.hoveredProcessor = proc;
-        if (proc) {
-          this.updateDropHighlight(proc);
+        const procName = this.findOverlappingProcessor(obj);
+        this.hoveredProcessor = procName;
+        if (procName) {
+          this.updateDropHighlight(procName);
         } else {
           this.dropHighlight.setVisible(false);
         }
@@ -354,9 +355,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
       this.dropHighlight.setVisible(false);
     });
 
-    // -- Error counter (top-right of board) --
+    // -- Error counter (below zones, top-right) --
+    const zoneH = Math.round(BD_H * ZONE.HEIGHT_FRACTION);
     this.errorCounterText = this.add
-      .text(BD_X + BD_W - 10, BD_Y + 14, '', {
+      .text(BD_X + BD_W - 10, BD_Y + zoneH + 4, '', {
         fontSize: '13px',
         fontStyle: 'bold',
         color: '#e74c3c',
@@ -368,13 +370,13 @@ export class CookingPuzzleScene extends Phaser.Scene {
     this.updateErrorCounter();
 
     // -- Create cards --
-    this.createProcessorCards();
+    this.createProcessorZones();
     this.createHandCards();
   }
 
-  // -- Create processor cards on board --
+  // -- Create processor zones on board --
 
-  private createProcessorCards(): void {
+  private createProcessorZones(): void {
     // Processor emoji + asset lookup
     const procEmojiMap = new Map<string, string>();
     const procAssetMap = new Map<string, string | null>();
@@ -390,27 +392,98 @@ export class CookingPuzzleScene extends Phaser.Scene {
     }
     const paletteNames = this.puzzleData.processors.map((p) => p.name);
     const processorSet = new Set([...usedProcessors, ...paletteNames]);
-
-    // Ensure final step processor is included
     processorSet.add(this.puzzleData.finalStep.processor);
 
     const processors = [...processorSet];
     const count = processors.length;
-    const rowY = BD_Y + 80;
+    const zoneH = Math.round(BD_H * ZONE.HEIGHT_FRACTION);
+    const zoneW = BD_W / count;
+
+    // Shared geometry mask — inset by border width so zones don't cover the board stroke
+    const borderInset = 2; // half of the 4px board stroke
+    const maskShape = this.add.graphics();
+    maskShape.fillStyle(0xffffff);
+    maskShape.fillRoundedRect(
+      BD_X + borderInset,
+      BD_Y + borderInset,
+      BD_W - borderInset * 2,
+      BD_H - borderInset * 2,
+      BD_R - borderInset,
+    );
+    maskShape.setVisible(false);
+    const boardMask = maskShape.createGeometryMask();
 
     for (let i = 0; i < count; i++) {
       const procName = processors[i];
-      const x = BD_X + (BD_W * (i + 0.5)) / count;
+      const zoneX = BD_X + i * zoneW;
+      const zoneY = BD_Y;
       const emoji =
         procEmojiMap.get(procName) ??
         (procName === this.puzzleData.finalStep.processor
           ? (this.puzzleData.finalStep.processorEmoji ?? '')
           : '');
       const assetId = procAssetMap.get(procName) ?? PROCESSOR_ASSET[procName] ?? null;
-      const card = new PuzzleCard(this, x, rowY, procName, 'processor', { emoji, assetId });
-      this.cards.push(card);
-      this.processorCards.set(procName, card);
-      this.processorAttachments.set(card, []);
+
+      const container = this.add.container(0, 0).setDepth(2);
+
+      // Zone background fill (simple rect, clipped by board mask)
+      const bg = this.add.graphics();
+      bg.fillStyle(ZONE.BG_COLOR, 1);
+      bg.fillRect(zoneX, zoneY, zoneW, zoneH);
+
+      // Bottom separator line
+      bg.lineStyle(1, ZONE.SEPARATOR_COLOR, 0.4);
+      bg.lineBetween(zoneX, zoneY + zoneH, zoneX + zoneW, zoneY + zoneH);
+
+      // Vertical separator on right side (except last zone)
+      if (i < count - 1) {
+        bg.lineStyle(1, ZONE.SEPARATOR_COLOR, 0.25);
+        bg.lineBetween(zoneX + zoneW, zoneY + 4, zoneX + zoneW, zoneY + zoneH - 4);
+      }
+
+      bg.setMask(boardMask);
+      container.add(bg);
+
+      // Icon (upper portion of zone)
+      const iconCx = zoneX + zoneW / 2;
+      const iconCy = zoneY + zoneH * 0.35;
+      let icon: Phaser.GameObjects.Image | Phaser.GameObjects.Text;
+
+      const textureKey = assetId ? `food_${assetId}` : null;
+      if (textureKey && this.textures.exists(textureKey)) {
+        const img = this.add.image(iconCx, iconCy, textureKey);
+        const maxDim = zoneH * 0.34;
+        const scale = Math.min(maxDim / img.width, maxDim / img.height);
+        img.setScale(scale).setOrigin(0.5);
+        icon = img;
+      } else {
+        icon = this.add
+          .text(iconCx, iconCy, emoji || '🍳', {
+            fontSize: '32px',
+            fontFamily: FONT_FAMILY,
+          })
+          .setOrigin(0.5)
+          .setResolution(DPR);
+      }
+      container.add(icon);
+
+      // Label text below icon
+      const label = this.add
+        .text(iconCx, iconCy + ZONE.LABEL_Y_OFFSET, procName.toUpperCase(), {
+          fontSize: '11px',
+          fontStyle: 'bold',
+          color: TEXT_COLORS.DARK,
+          fontFamily: FONT_FAMILY,
+        })
+        .setOrigin(0.5)
+        .setAlpha(0.6)
+        .setResolution(DPR);
+      container.add(label);
+
+      const rect = new Phaser.Geom.Rectangle(zoneX, zoneY, zoneW, zoneH);
+
+      this.processorZones.set(procName, { name: procName, emoji, container, bg, icon, label, rect });
+      this.processorAttachments.set(procName, []);
     }
   }
 
@@ -583,7 +656,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     this.handToBoardCard.set(card, boardCard);
     this.boardToHandCard.set(boardCard, card);
 
-    // If dropped on a processor, attach directly
+    // If dropped on a processor zone, attach directly
     if (this.hoveredProcessor) {
       if (!this.activeProcessor || this.activeProcessor === this.hoveredProcessor) {
         this.attachToProcessor(boardCard, this.hoveredProcessor);
@@ -619,52 +692,58 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
   // -- Attach / Detach --
 
-  private attachToProcessor(ingredientCard: PuzzleCard, procCard: PuzzleCard): void {
-    const attachments = this.processorAttachments.get(procCard);
+  private attachToProcessor(ingredientCard: PuzzleCard, procName: string): void {
+    const attachments = this.processorAttachments.get(procName);
     if (!attachments) return;
     if (attachments.some((a) => a.card === ingredientCard)) return;
 
-    ingredientCard.attachedTo = procCard;
+    ingredientCard.attachedTo = procName;
     attachments.push({
       card: ingredientCard,
       itemName: ingredientCard.itemName,
       stepId: ingredientCard.stepId,
     });
 
-    this.layoutAttachedCards(procCard);
+    this.layoutAttachedCards(procName);
 
     if (!this.activeProcessor) {
-      this.activeProcessor = procCard;
-      this.disableOtherProcessors(procCard);
+      this.activeProcessor = procName;
+      this.disableOtherProcessors(procName);
     }
     this.showCookButton();
   }
 
   private detachFromProcessor(ingredientCard: PuzzleCard): void {
-    const procCard = ingredientCard.attachedTo;
-    if (!procCard) return;
+    const procName = ingredientCard.attachedTo;
+    if (!procName) return;
 
-    const attachments = this.processorAttachments.get(procCard);
+    const attachments = this.processorAttachments.get(procName);
     if (attachments) {
       const idx = attachments.findIndex((a) => a.card === ingredientCard);
       if (idx !== -1) attachments.splice(idx, 1);
-      this.layoutAttachedCards(procCard);
+      this.layoutAttachedCards(procName);
     }
     ingredientCard.attachedTo = null;
 
-    if (this.activeProcessor === procCard && attachments && attachments.length === 0) {
+    if (this.activeProcessor === procName && attachments && attachments.length === 0) {
       this.deactivateProcessor();
     }
   }
 
-  private layoutAttachedCards(procCard: PuzzleCard): void {
-    const attachments = this.processorAttachments.get(procCard);
+  private layoutAttachedCards(procName: string): void {
+    const attachments = this.processorAttachments.get(procName);
     if (!attachments) return;
+    const zone = this.processorZones.get(procName);
+    if (!zone) return;
+
+    const centerX = zone.rect.x + zone.rect.width / 2;
+    // Stack cards inside the zone, starting below the label area (~65% down the zone)
+    const startY = zone.rect.y + zone.rect.height * 0.65 + FOOD_CARD_H / 2;
 
     attachments.forEach((att, i) => {
-      const targetX = procCard.x;
-      const targetY = procCard.y + PILE.BASE_Y + i * PILE.OFFSET_Y;
-      att.card.setDepth(procCard.cardDepth + 1 + i);
+      const targetX = centerX;
+      const targetY = startY + i * PILE.OFFSET_Y;
+      att.card.setDepth(3 + i);
       this.tweens.add({
         targets: att.card,
         x: targetX,
@@ -677,11 +756,9 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
   // -- Match Checking --
 
-  private checkProcessorMatch(procCard: PuzzleCard): void {
-    const attachments = this.processorAttachments.get(procCard);
+  private checkProcessorMatch(procName: string): void {
+    const attachments = this.processorAttachments.get(procName);
     if (!attachments || attachments.length === 0) return;
-
-    const procName = procCard.cardLabel;
 
     const resolvedInputs = attachments.map((att) => {
       if (att.stepId) return att.stepId;
@@ -712,20 +789,23 @@ export class CookingPuzzleScene extends Phaser.Scene {
         }
       }
       if (match) {
-        this.onStepSuccess(step, procCard);
+        this.onStepSuccess(step, procName);
         return;
       }
     }
 
     // No recipe match — attempt creative craft combination
-    this.attemptCraftCombination(procCard);
+    this.attemptCraftCombination(procName);
   }
 
-  private shakeAndReturn(procCard: PuzzleCard): void {
-    const attachments = this.processorAttachments.get(procCard);
+  private shakeAndReturn(procName: string): void {
+    const attachments = this.processorAttachments.get(procName);
     if (!attachments) return;
 
     this.cameras.main.shake(300, 0.008);
+
+    const zoneH = Math.round(BD_H * ZONE.HEIGHT_FRACTION);
+    const minScatterY = BD_Y + zoneH + FOOD_CARD_H / 2 + 10;
 
     const toDetach = [...attachments];
     for (const att of toDetach) {
@@ -750,10 +830,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
         this.boardToHandCard.delete(att.card);
         this.restoreToHand(handCard);
       } else {
-        // Intermediate card: fling back to random board position
+        // Intermediate card: fling back to random board position (lower 2/3)
         const newX = Phaser.Math.Between(BD_X + 68, BD_X + BD_W - 68);
         const newY = Phaser.Math.Between(
-          BD_Y + 20,
+          minScatterY,
           BD_Y + BD_H - FOOD_CARD_H / 2 - SCATTER.FOOTER - 10,
         );
         att.card.setInteractive({ draggable: true });
@@ -772,25 +852,23 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
   // -- Craft Combination (Infinite Craft mechanic) --
 
-  private async attemptCraftCombination(procCard: PuzzleCard): Promise<void> {
-    const attachments = this.processorAttachments.get(procCard);
+  private async attemptCraftCombination(procName: string): Promise<void> {
+    const attachments = this.processorAttachments.get(procName);
     if (!attachments || attachments.length === 0) return;
 
-    const processorName = procCard.cardLabel;
     const ingredientNames = attachments.map((att) => att.itemName);
 
     // Hide cook button and disable interaction
     this.hideCookButton();
-    procCard.disableInteractive();
     for (const att of attachments) {
       att.card.disableInteractive();
     }
 
-    const loadingAnim = this.showProcessorLoading(procCard);
+    const loadingAnim = this.showProcessorLoading(procName);
 
     try {
       const result = await convex.action(api.generator.generateCombination, {
-        processor: processorName,
+        processor: procName,
         ingredients: ingredientNames,
         locale: getLocale(),
       });
@@ -800,9 +878,9 @@ export class CookingPuzzleScene extends Phaser.Scene {
       this.stopProcessorLoading(loadingAnim);
 
       // Return all input cards to the player (don't consume on failed match)
-      this.shakeAndReturn(procCard);
+      this.shakeAndReturn(procName);
 
-      this.spawnCraftedCard(result as { name: string; emoji: string; assetId: string }, procCard);
+      this.spawnCraftedCard(result as { name: string; emoji: string; assetId: string }, procName);
     } catch (err) {
       console.error('[Craft] LLM generation failed, falling back to shake:', err);
       if (!this.scene.isActive()) return;
@@ -810,26 +888,26 @@ export class CookingPuzzleScene extends Phaser.Scene {
       this.stopProcessorLoading(loadingAnim);
 
       // Re-enable interaction
-      procCard.setInteractive();
       for (const att of attachments) {
         att.card.setInteractive({ draggable: true });
       }
 
       this.showCookButton();
-      this.shakeAndReturn(procCard);
+      this.shakeAndReturn(procName);
     }
   }
 
-  private showProcessorLoading(procCard: PuzzleCard): {
+  private showProcessorLoading(procName: string): {
     dots: Phaser.GameObjects.Arc[];
     dotsTimeline: Phaser.Tweens.Tween;
     text: Phaser.GameObjects.Text;
     textTween: Phaser.Tweens.Tween;
     pulseTween: Phaser.Tweens.Tween;
   } {
-    const cx = procCard.x;
-    const cy = procCard.y;
-    const radius = FOOD_CARD_W / 2 + 16;
+    const zone = this.processorZones.get(procName)!;
+    const cx = zone.rect.x + zone.rect.width / 2;
+    const cy = zone.rect.y + zone.rect.height / 2;
+    const radius = Math.min(zone.rect.width, zone.rect.height) / 2 - 8;
     const dotCount = 8;
     const dots: Phaser.GameObjects.Arc[] = [];
 
@@ -847,7 +925,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
       dots.push(dot);
     }
 
-    // Rotate dots around processor
+    // Rotate dots around zone center
     const dotsTimeline = this.tweens.add({
       targets: {},
       duration: 1200,
@@ -862,12 +940,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
       },
     });
 
-    // Pulse the processor card
+    // Pulse the zone container
     const pulseTween = this.tweens.add({
-      targets: procCard,
-      scaleX: 1.08,
-      scaleY: 1.08,
-      alpha: 0.85,
+      targets: zone.container,
+      alpha: 0.6,
       duration: 500,
       yoyo: true,
       repeat: -1,
@@ -876,7 +952,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     // Animated "..." text
     const text = this.add
-      .text(cx, cy + FOOD_CARD_H / 2 + 20, '...', {
+      .text(cx, zone.rect.bottom + 14, '...', {
         fontSize: '18px',
         fontStyle: 'bold',
         color: TEXT_COLORS.GOLD,
@@ -912,26 +988,36 @@ export class CookingPuzzleScene extends Phaser.Scene {
     anim.pulseTween.stop();
     for (const dot of anim.dots) dot.destroy();
     anim.text.destroy();
+    // Reset zone container alpha after pulse
+    for (const [, zone] of this.processorZones) {
+      zone.container.setAlpha(1);
+    }
   }
 
   private spawnCraftedCard(
     result: { name: string; emoji: string; assetId: string },
-    procCard: PuzzleCard,
+    procName: string,
   ): void {
+    const zone = this.processorZones.get(procName);
+    const zoneCx = zone ? zone.rect.x + zone.rect.width / 2 : BD_X + BD_W / 2;
+    const zoneCy = zone ? zone.rect.y + zone.rect.height / 2 : BD_Y + 80;
+
     // Validate assetId
     let assetId: string | null = result.assetId;
     if (!FoodAssets.find(assetId)) {
       assetId = localAssetMatch(result.name);
     }
 
-    // Spawn below the processor, clamped to board bounds
+    // Spawn inside the zone, clamped to board bounds
     const boardMaxY = BD_Y + BD_H - FOOD_CARD_H / 2 - SCATTER.FOOTER;
     const spawnX = Phaser.Math.Clamp(
-      procCard.x,
+      zoneCx,
       BD_X + FOOD_CARD_W / 2 + SCATTER.PAD,
       BD_X + BD_W - FOOD_CARD_W / 2 - SCATTER.PAD,
     );
-    const spawnY = Math.min(procCard.y + FOOD_CARD_H + SCATTER.CARD_GAP, boardMaxY);
+    const spawnY = zone
+      ? Math.min(zone.rect.y + zone.rect.height * 0.65 + FOOD_CARD_H / 2, boardMaxY)
+      : boardMaxY;
 
     let maxDepth = 0;
     for (const c of this.cards) {
@@ -958,24 +1044,19 @@ export class CookingPuzzleScene extends Phaser.Scene {
       delay: 200,
     });
 
-    // Red flash on processor
-    const flash = this.add.graphics();
-    flash.fillStyle(0xe74c3c, 0.5);
-    flash.fillRoundedRect(
-      -FOOD_CARD_W / 2 - 4,
-      -FOOD_CARD_H / 2 - 4,
-      FOOD_CARD_W + 8,
-      FOOD_CARD_H + 8,
-      10,
-    );
-    flash.setPosition(procCard.x, procCard.y);
-    flash.setDepth(99);
-    this.tweens.add({
-      targets: flash,
-      alpha: 0,
-      duration: 500,
-      onComplete: () => flash.destroy(),
-    });
+    // Red flash on zone
+    if (zone) {
+      const flash = this.add.graphics();
+      flash.fillStyle(0xe74c3c, 0.5);
+      flash.fillRect(zone.rect.x, zone.rect.y, zone.rect.width, zone.rect.height);
+      flash.setDepth(99);
+      this.tweens.add({
+        targets: flash,
+        alpha: 0,
+        duration: 500,
+        onComplete: () => flash.destroy(),
+      });
+    }
 
     // Red camera flash
     this.cameras.main.flash(300, 231, 76, 60, false);
@@ -991,7 +1072,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     // Float text
     const floatText = this.add
-      .text(procCard.x, procCard.y - 12, `⚠️ ${result.name}`, {
+      .text(zoneCx, zoneCy - 12, `⚠️ ${result.name}`, {
         fontSize: '15px',
         fontStyle: 'bold',
         color: '#e74c3c',
@@ -1012,7 +1093,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
   // -- Step Success --
 
-  private onStepSuccess(step: Step, procCard: PuzzleCard): void {
+  private onStepSuccess(step: Step, procName: string): void {
     const isRedo = this.completedSteps.has(step.stepId);
     if (!isRedo) {
       this.completedSteps.add(step.stepId);
@@ -1020,29 +1101,25 @@ export class CookingPuzzleScene extends Phaser.Scene {
     }
 
     const isFinal = step.stepId === 'final';
+    const zone = this.processorZones.get(procName);
 
-    // Green flash on processor
-    const flash = this.add.graphics();
-    flash.fillStyle(COLORS.SUCCESS_FLASH, 0.5);
-    flash.fillRoundedRect(
-      -FOOD_CARD_W / 2 - 4,
-      -FOOD_CARD_H / 2 - 4,
-      FOOD_CARD_W + 8,
-      FOOD_CARD_H + 8,
-      10,
-    );
-    flash.setPosition(procCard.x, procCard.y);
-    flash.setDepth(99);
-    this.tweens.add({
-      targets: flash,
-      alpha: 0,
-      duration: 500,
-      onComplete: () => flash.destroy(),
-    });
+    // Green flash on zone
+    if (zone) {
+      const flash = this.add.graphics();
+      flash.fillStyle(COLORS.SUCCESS_FLASH, 0.5);
+      flash.fillRect(zone.rect.x, zone.rect.y, zone.rect.width, zone.rect.height);
+      flash.setDepth(99);
+      this.tweens.add({
+        targets: flash,
+        alpha: 0,
+        duration: 500,
+        onComplete: () => flash.destroy(),
+      });
+    }
 
     this.cameras.main.flash(300, 46, 204, 113, false);
 
-    const attachments = this.processorAttachments.get(procCard);
+    const attachments = this.processorAttachments.get(procName);
     const attachedCards = attachments ? attachments.map((a) => a.card) : [];
     if (attachments) {
       for (const att of attachments) {
@@ -1087,7 +1164,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     if (!isFinal) {
       this.availableIntermediates.set(step.stepId, step.output);
-      this.spawnOutputCard(step, procCard, attachedCards);
+      this.spawnOutputCard(step, procName, attachedCards);
     }
 
     // Update zustand store — triggers React re-renders for QuestBookPanel and GameHUD
@@ -1106,7 +1183,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
     }
   }
 
-  private spawnOutputCard(step: Step, procCard: PuzzleCard, inputCards: PuzzleCard[]): void {
+  private spawnOutputCard(step: Step, procName: string, inputCards: PuzzleCard[]): void {
     const logicalAsset = step.outputAssetId ?? localAssetMatch(step.output);
 
     const inputTextureKeys: string[] = [];
@@ -1126,14 +1203,18 @@ export class CookingPuzzleScene extends Phaser.Scene {
         ? inputTextureKeys[0].slice(5)
         : null;
 
-    // Spawn below the processor, clamped to board bounds
+    // Spawn inside the zone, clamped to board bounds
+    const zone = this.processorZones.get(procName);
+    const zoneCx = zone ? zone.rect.x + zone.rect.width / 2 : BD_X + BD_W / 2;
     const boardMaxY = BD_Y + BD_H - FOOD_CARD_H / 2 - SCATTER.FOOTER;
     const spawnX = Phaser.Math.Clamp(
-      procCard.x,
+      zoneCx,
       BD_X + FOOD_CARD_W / 2 + SCATTER.PAD,
       BD_X + BD_W - FOOD_CARD_W / 2 - SCATTER.PAD,
     );
-    const spawnY = Math.min(procCard.y + FOOD_CARD_H + SCATTER.CARD_GAP, boardMaxY);
+    const spawnY = zone
+      ? Math.min(zone.rect.y + zone.rect.height * 0.65 + FOOD_CARD_H / 2, boardMaxY)
+      : boardMaxY;
 
     let maxDepth = 0;
     for (const c of this.cards) {
@@ -1202,8 +1283,10 @@ export class CookingPuzzleScene extends Phaser.Scene {
       delay: 200,
     });
 
+    const floatCx = zone ? zone.rect.x + zone.rect.width / 2 : BD_X + BD_W / 2;
+    const floatCy = zone ? zone.rect.y + zone.rect.height / 2 : BD_Y + 80;
     const floatText = this.add
-      .text(procCard.x, procCard.y - 12, step.output, {
+      .text(floatCx, floatCy - 12, step.output, {
         fontSize: '15px',
         fontStyle: 'bold',
         color: TEXT_COLORS.SUCCESS,
@@ -1224,7 +1307,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
   // -- Spatial drop helpers --
 
-  private findOverlappingProcessor(card: PuzzleCard): PuzzleCard | null {
+  private findOverlappingProcessor(card: PuzzleCard): string | null {
     const cardRect = new Phaser.Geom.Rectangle(
       card.x - FOOD_CARD_W / 2,
       card.y - FOOD_CARD_H / 2,
@@ -1232,42 +1315,45 @@ export class CookingPuzzleScene extends Phaser.Scene {
       FOOD_CARD_H,
     );
 
-    let best: PuzzleCard | null = null;
+    let bestName: string | null = null;
     let bestArea = 0;
 
-    for (const [, procCard] of this.processorCards) {
-      const procRect = new Phaser.Geom.Rectangle(
-        procCard.x - FOOD_CARD_W / 2,
-        procCard.y - FOOD_CARD_H / 2,
-        FOOD_CARD_W,
-        FOOD_CARD_H,
-      );
-      if (!Phaser.Geom.Intersects.RectangleToRectangle(cardRect, procRect)) continue;
+    for (const [name, zone] of this.processorZones) {
+      if (!Phaser.Geom.Intersects.RectangleToRectangle(cardRect, zone.rect)) continue;
 
       const overlapW =
-        Math.min(cardRect.right, procRect.right) - Math.max(cardRect.left, procRect.left);
+        Math.min(cardRect.right, zone.rect.right) - Math.max(cardRect.left, zone.rect.left);
       const overlapH =
-        Math.min(cardRect.bottom, procRect.bottom) - Math.max(cardRect.top, procRect.top);
+        Math.min(cardRect.bottom, zone.rect.bottom) - Math.max(cardRect.top, zone.rect.top);
       const area = overlapW * overlapH;
       if (area > bestArea) {
         bestArea = area;
-        best = procCard;
+        bestName = name;
       }
     }
 
-    return best;
+    return bestName;
   }
 
-  private updateDropHighlight(procCard: PuzzleCard): void {
-    const pad = PROCESSOR_RING_PAD + 5;
+  private updateDropHighlight(procName: string): void {
+    const zone = this.processorZones.get(procName);
+    if (!zone) return;
+
+    const pad = 2;
     this.dropHighlight.clear();
-    this.dropHighlight.lineStyle(3, 0x00ff88, 1);
-    this.dropHighlight.strokeRoundedRect(
-      procCard.x - FOOD_CARD_W / 2 - pad,
-      procCard.y - FOOD_CARD_H / 2 - pad,
-      FOOD_CARD_W + pad * 2,
-      FOOD_CARD_H + pad * 2,
-      FOOD_CARD_RADIUS + pad,
+    this.dropHighlight.lineStyle(3, ZONE.HIGHLIGHT_COLOR, 1);
+    this.dropHighlight.strokeRect(
+      zone.rect.x + pad,
+      zone.rect.y + pad,
+      zone.rect.width - pad * 2,
+      zone.rect.height - pad * 2,
+    );
+    this.dropHighlight.fillStyle(ZONE.HIGHLIGHT_COLOR, ZONE.HIGHLIGHT_FILL_ALPHA);
+    this.dropHighlight.fillRect(
+      zone.rect.x + pad,
+      zone.rect.y + pad,
+      zone.rect.width - pad * 2,
+      zone.rect.height - pad * 2,
     );
     this.dropHighlight.setVisible(true);
   }
@@ -1277,9 +1363,9 @@ export class CookingPuzzleScene extends Phaser.Scene {
   private showCookButton(): void {
     if (this.cookButton) return;
 
-    const proc = this.activeProcessor;
-    const procName = proc?.cardLabel ?? '';
-    const procEmoji = proc?.emojiText.text ?? '';
+    const procName = this.activeProcessor ?? '';
+    const zone = this.activeProcessor ? this.processorZones.get(this.activeProcessor) : null;
+    const procEmoji = zone?.emoji ?? '';
 
     // Action label: capitalize processor name, e.g. "Grill!" / "Fry!"
     const actionLabel = procName
@@ -1407,19 +1493,17 @@ export class CookingPuzzleScene extends Phaser.Scene {
     this.hideCookButton();
   }
 
-  private disableOtherProcessors(active: PuzzleCard): void {
-    for (const [, card] of this.processorCards) {
-      if (card !== active) {
-        card.disableInteractive();
-        card.setAlpha(0.5);
+  private disableOtherProcessors(activeName: string): void {
+    for (const [name, zone] of this.processorZones) {
+      if (name !== activeName) {
+        zone.container.setAlpha(ZONE.DISABLED_ALPHA);
       }
     }
   }
 
   private enableAllProcessors(): void {
-    for (const [, card] of this.processorCards) {
-      card.setInteractive();
-      card.setAlpha(1);
+    for (const [, zone] of this.processorZones) {
+      zone.container.setAlpha(1);
     }
   }
 
