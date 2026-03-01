@@ -11,14 +11,22 @@ Given a dish name composed of [Style] + [Protein/Main] + [Method/Twist] + [Base/
 - Include 2-4 decoy ingredients that are plausible but wrong.
 - Each ingredient must have a matching emoji. Use the most recognizable one. If no perfect emoji exists, pick the closest food-category match.
 
-### Processors
-You may ONLY use processors from this allowed list with their fixed emojis:
+### Processors (Actions)
+Generate the most pertinent cooking actions for each dish. You are NOT limited to a fixed list — choose whatever processors best fit the recipe.
 
-mix 🥣, chop 🔪, boil 🫕, fry 🍳, bake 🧁, grill 🔥, roast 🍖, knead 🤲, shape 🖐️, mash 🥔, steam 💨, toast 🍞, melt 🫠
+Examples for inspiration: mix, chop, boil, fry, bake, grill, roast, knead, shape, mash, steam, toast, melt, sear, blanch, simmer, whisk, marinate, caramelize, smoke, pickle, ferment, deglaze, braise, poach, sauté, fold, zest, julienne, dice, blend, reduce, cure, dry, toss, stuff, glaze, char, press, strain, whip, crush, infuse, temper, flash-fry, broil, flambe, deep-fry, stir-fry, etc.
 
-"assemble" (🍽️) is always the final step and is separate from the above.
+Each processor in the "processors" array MUST include:
+- "name": a short, lowercase English action name (1-2 words, e.g. "sear", "stir-fry") — always English, used as a game key
+- "emoji": a single fitting emoji for the action
+- "assetId": a utensil sprite ID from the UTENSIL_CATALOG below
 
-Across the ENTIRE recipe (all branches, all steps, excluding assemble), you must use NO MORE than 3 or 4 DISTINCT processors. You may reuse the same processor in multiple steps.
+"assemble" (🍽️, assetId: plate) is ALWAYS the final step. It counts toward the total processor count.
+
+UTENSIL_CATALOG (use these exact IDs for processor assetId):
+bowl_spoon, knife, cooking_pot, frying_pan, oven_mitt, fire, plate, spoon, shallow_pan, fork_knife, scissors, chopsticks
+
+You may reuse the same processor in multiple steps.
 
 ### Steps
 - Each step takes 1 to 3 inputs. Never more than 3.
@@ -73,20 +81,32 @@ Examples of BAD hints:
 - The final node's output is the dish name.
 
 ### Difficulty
-Adapt to the requested difficulty:
-- easy: 4-6 ingredients, 1-2 decoys, 2 branches, 3 distinct processors
-- medium: 6-9 ingredients, 2-3 decoys, 2-3 branches, 3-4 distinct processors
-- hard: 9-12 ingredients, 3-4 decoys, 3 branches, 4 distinct processors
+Adapt to the requested difficulty. "Total actions" means the number of DISTINCT processor names INCLUDING "assemble".
+
+| Difficulty | Ingredients | Decoys | Branches | Distinct processors (STRICT) |
+|------------|-------------|--------|----------|------------------------------|
+| easy       | 4-6         | 1-2    | 2        | exactly 4                    |
+| medium     | 6-9         | 2-3    | 2-3      | exactly 5 or 6               |
+| hard       | 9-12        | 3-4    | 3        | exactly 6 or 7               |
+
+⚠️ HARD CONSTRAINT — the "processors" array length MUST be within these exact bounds. The output is programmatically validated and will be REJECTED otherwise.
+
+STRATEGY TO STAY WITHIN BOUNDS:
+- Plan your distinct processors FIRST, before writing steps.
+- Reuse the same processor across multiple steps. Example: "chop" garlic in branch 1 AND "chop" lettuce in branch 2 = still ONE distinct processor.
+- "assemble" is ALWAYS the final processor and counts toward the total. So for easy (4 total), you only get 3 other distinct processors.
+- If you find yourself wanting a new processor, check if an existing one can do the job instead.
 
 Default to medium if unspecified.
 
 ## GENERATION PROCESS (follow this order internally)
-1. Decide the branches and what each one represents.
-2. Write every step with its processor, inputs, and output.
-3. THEN collect the distinct processors you actually used in the steps.
-4. Verify the count is 3 or 4. If not, revise the steps.
-5. Put that collected set into the "processors" field.
-6. Assign an emoji to every ingredient. Use the fixed emoji mapping above for processors.
+1. Look up the EXACT processor count allowed for the requested difficulty.
+2. Plan your processor palette FIRST: pick that exact number of distinct processors (including "assemble"). Write them down before anything else.
+3. Decide the branches and what each one represents.
+4. Write every step using ONLY processors from your pre-planned palette. Reuse them freely.
+5. Verify: collect distinct processor names from all steps + finalStep. The count MUST match step 2. If not, revise steps — do NOT add new processors.
+6. Put that collected set into the "processors" array with name, emoji, and assetId.
+7. Assign an emoji to every ingredient.
 
 ### Asset IDs
 Every ingredient, decoy, and step output MUST have an assetId picked from the ASSET_CATALOG below.
@@ -95,6 +115,7 @@ Pick the closest visual match. Approximate freely — the goal is a recognizable
 Common mappings: pork/pork chops → ham, bell pepper/jalapeño → pepper, noodle soup → ramen, mixed vegetables/diced veggies → salad, fried rice → rice, broth/stock → soup, batter/dough → dough, cream cheese/sour cream → cream, chili peppers → chili, spring onion/scallion/shallot → onion, cooked meat/ground beef → steak, tortilla/wrap → flatbread, bread crumbs → bread_slice, cooked pasta → spaghetti, melted cheese → cheese, syrup → honey, whipped cream → cream, slaw/coleslaw → cabbage, mashed potatoes → potato, etc.
 
 ASSET_CATALOG (use these exact IDs):
+utensil: bowl_spoon, knife, cooking_pot, frying_pan, oven_mitt, fire, plate, spoon, shallow_pan, fork_knife, scissors, chopsticks
 fruit: apple, avocado, banana, blueberry, cherry, coconut, dragonfruit, grapes, green_apple, kiwi, lemon, lime, mango, melon, orange, peach, pear, pineapple, raspberry, strawberry, tangerine, watermelon
 vegetable: beans, beet, bok_choy, broccoli, cabbage, carrot, chili, corn, cucumber, eggplant, garlic, leek, lettuce, mushroom, olive, onion, pea_pod, peas, pepper, pickle, potato, pumpkin, radish, sweet_potato, tomato, tomato_slice, turnip, zucchini
 protein: bacon, drumstick, egg, fried_egg, ham, ham_slice, meat_bone, patty, pepperoni, raw_meat, sausage, sausage_chain, steak
@@ -115,20 +136,13 @@ drink: beer, bubble_tea, champagne, cocktail, coffee, hot_beverage, juice_box, m
 4. The final step inputs reference exactly the last step of each branch.
 5. No step has more than 3 inputs.
 6. The "processors" array contains EXACTLY the set of distinct processors found in the steps. No more, no less.
-7. The "processors" array has 3 or 4 entries.
-8. Processor emojis in steps match the fixed mapping defined above.
+7. The "processors" array count STRICTLY matches the difficulty (easy: exactly 4, medium: 5-6, hard: 6-7 — including assemble). If you have more, merge steps to reuse existing processors.
+8. Every processor has a valid utensil assetId from the UTENSIL_CATALOG (bowl_spoon, knife, cooking_pot, frying_pan, oven_mitt, fire, plate, spoon, shallow_pan, fork_knife, scissors, chopsticks).
 9. Every ingredient and decoy has an emoji. No two different ingredients share the same emoji.
 10. The recipe makes culinary sense.
 11. Every assetId on ingredients, decoys, and step outputs is a valid ID from the ASSET_CATALOG.
 
-## LANGUAGE / LOCALE
-When the prompt specifies a locale (e.g. "locale: fr"), ALL user-facing text MUST be written in that language:
-- ingredient names, decoy names
-- branch names
-- step outputs
-- questTitle and hint fields
-- dishName
-
-Processor names (mix, chop, boil, etc.) MUST stay in English — they are game-engine keys, not display text.
-Asset IDs are also English-only catalog keys — never translate those.
-If no locale is specified or the locale is "en", write everything in English.`;
+## LANGUAGE
+All text fields MUST be in English. The game handles translations separately.
+Processor "name" fields (mix, chop, boil, etc.) are English game-engine keys.
+Asset IDs are English-only catalog keys — never translate those.`;

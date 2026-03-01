@@ -244,6 +244,14 @@ export function GameMenu() {
     indices.Filling
   ];
 
+  // Always compute the English dish name for the cache key
+  const enWords = getWordlists('en');
+  const enTemplate = DISH_NAME_TEMPLATES.en;
+  const enWordsAtIndices = Object.fromEntries(
+    CATEGORIES.map((c) => [c, enWords[c][indices[c] % enWords[c].length]]),
+  ) as Record<Category, string>;
+  const englishDishName = formatDishName(enTemplate, enWordsAtIndices);
+
   const getDishName = useCallback(() => {
     const raw = customName.trim();
     return raw || formatDishName(template, words, fillingGender);
@@ -266,8 +274,10 @@ export function GameMenu() {
     const dishName = getDishName();
 
     try {
+      // Use English dish name as the cache key; custom names are sent as-is
+      const cacheKey = customName.trim() ? dishName : englishDishName;
       const puzzleData = await convex.action(api.generator.generateOrGetRecipe, {
-        dishName,
+        dishName: cacheKey,
         difficulty,
         locale,
       });

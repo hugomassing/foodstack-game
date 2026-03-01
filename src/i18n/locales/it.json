@@ -64,7 +64,15 @@
     "playAgain": "GIOCA ANCORA",
     "saveCard": "SALVA CARTA",
     "steps": "{current}/{total} passi",
-    "errors": "{count} errori"
+    "errors": "{count} errori",
+    "trophyMessages": [
+      "Creazione del trofeo...",
+      "Pittura dei dettagli...",
+      "Aggiunta della brillantezza...",
+      "Impiattamento del capolavoro...",
+      "Scatto della foto...",
+      "Lucidatura dell'oro..."
+    ]
   },
   "modes": {
     "title": "FOODSTACK",
@@ -96,7 +104,8 @@
     "lives": "{count} vite",
     "continue": "CONTINUA",
     "chooseNext": "Scegli la prossima ricetta",
-    "errors": "errori"
+    "errors": "errori",
+    "errorsShort": "err"
   },
   "gameOver": {
     "title": "Disastro in cucina!",

@@ -3,83 +3,83 @@ import { QUEST_PANEL_W, GAME_H, FONT_FAMILY } from '../config';
 import { useGameStore } from '../App';
 import type { Step } from '../types';
 import { useTranslation } from '../i18n';
+import { localize } from '../i18n/localize';
 import {
   Check,
   Download,
   ArrowLeft,
-  PocketKnife,
-  Flame,
-  CookingPot,
-  Layers,
-  Scissors,
-  Droplets,
-  Sparkles,
-  Snowflake,
-  Cloud,
-  Paintbrush,
-  Wheat,
-  UtensilsCrossed,
-  CircleDot,
   Heart,
 } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
 
 const M = 8;
 const SB_W = QUEST_PANEL_W - M * 2;
 const SB_H = GAME_H - M * 2;
 const PAD = 12;
 
-const PROCESSOR_ICONS: Record<string, LucideIcon> = {
-  chop: PocketKnife,
-  slice: Scissors,
-  dice: PocketKnife,
-  mince: PocketKnife,
-  cut: Scissors,
-  fry: Flame,
-  grill: Flame,
-  roast: Flame,
-  toast: Flame,
-  sear: Flame,
-  caramelize: Flame,
-  char: Flame,
-  bake: CookingPot,
-  boil: Droplets,
-  steam: Cloud,
-  braise: CookingPot,
-  simmer: CookingPot,
-  poach: Droplets,
-  blanch: Droplets,
-  stew: CookingPot,
-  mix: UtensilsCrossed,
-  blend: UtensilsCrossed,
-  whisk: UtensilsCrossed,
-  fold: UtensilsCrossed,
-  stir: UtensilsCrossed,
-  toss: UtensilsCrossed,
-  combine: UtensilsCrossed,
-  assemble: Layers,
-  layer: Layers,
-  stack: Layers,
-  plate: Layers,
-  season: Sparkles,
-  garnish: Sparkles,
-  dress: Sparkles,
-  drizzle: Droplets,
-  glaze: Paintbrush,
-  marinate: Droplets,
-  coat: Paintbrush,
-  spread: Paintbrush,
-  stuff: Wheat,
-  fill: Wheat,
-  wrap: Wheat,
-  freeze: Snowflake,
-  chill: Snowflake,
-  cool: Snowflake,
+const PROCESSOR_ASSET: Record<string, string> = {
+  chop: 'knife',
+  slice: 'scissors',
+  dice: 'knife',
+  mince: 'knife',
+  cut: 'scissors',
+  fry: 'frying_pan',
+  'stir-fry': 'frying_pan',
+  'deep-fry': 'frying_pan',
+  'flash-fry': 'frying_pan',
+  sauté: 'frying_pan',
+  sear: 'frying_pan',
+  grill: 'fire',
+  roast: 'fire',
+  char: 'fire',
+  broil: 'fire',
+  flambe: 'fire',
+  toast: 'shallow_pan',
+  caramelize: 'shallow_pan',
+  melt: 'shallow_pan',
+  bake: 'oven_mitt',
+  boil: 'cooking_pot',
+  steam: 'cooking_pot',
+  braise: 'cooking_pot',
+  simmer: 'cooking_pot',
+  poach: 'cooking_pot',
+  blanch: 'cooking_pot',
+  stew: 'cooking_pot',
+  reduce: 'cooking_pot',
+  mix: 'bowl_spoon',
+  blend: 'bowl_spoon',
+  whisk: 'bowl_spoon',
+  toss: 'bowl_spoon',
+  combine: 'bowl_spoon',
+  marinate: 'bowl_spoon',
+  fold: 'spoon',
+  stir: 'spoon',
+  mash: 'spoon',
+  crush: 'spoon',
+  knead: 'spoon',
+  assemble: 'fork_knife',
+  layer: 'fork_knife',
+  stack: 'fork_knife',
+  plate: 'plate',
+  season: 'salt_shaker',
+  garnish: 'salt_shaker',
+  dress: 'salt_shaker',
+  drizzle: 'pouring_liquid',
+  glaze: 'pouring_liquid',
+  coat: 'pouring_liquid',
+  spread: 'knife',
+  stuff: 'plate',
+  fill: 'plate',
+  wrap: 'plate',
+  shape: 'plate',
+  freeze: 'cooking_pot',
+  chill: 'cooking_pot',
+  cool: 'cooking_pot',
 };
 
-function getProcessorIcon(processor: string): LucideIcon {
+function getProcessorSprite(processor: string): string {
   const key = processor.toLowerCase().trim();
-  return PROCESSOR_ICONS[key] ?? CircleDot;
+  const assetId = PROCESSOR_ASSET[key] ?? 'fork_knife';
+  return `/assets/sprites/food/utensil/${assetId}.png`;
 }
 
 export function QuestBookPanel() {
@@ -119,7 +119,7 @@ export function QuestBookPanel() {
 
   if (!puzzleData) return null;
 
-  const dishLabel = puzzleData.dishName;
+  const localizedDishName = localize(puzzleData.dishName, puzzleData.dishNameI18n);
 
   return (
     <div
@@ -175,8 +175,8 @@ export function QuestBookPanel() {
           <div style={{ fontSize: 11, fontWeight: 900, color: '#3e2723', letterSpacing: '0.04em' }}>
             {t('quest.recipe')}
           </div>
-          <div style={{ fontSize: 13, color: '#d84315', marginTop: 2, fontWeight: 900, lineHeight: 1.3 }}>
-            {dishLabel}
+          <div style={{ fontSize: 11, color: '#d84315', marginTop: 2, fontWeight: 900, lineHeight: 1.3 }}>
+            {localizedDishName}
           </div>
           {gameMode === 'survival' && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
@@ -251,7 +251,7 @@ export function QuestBookPanel() {
                 }}
               >
                 <div style={{ width: 12, height: 1.5, background: '#d7ccc8', borderRadius: 1 }} />
-                {branch.name.toUpperCase()}
+                {localize(branch.name, branch.nameI18n).toUpperCase()}
               </div>
               {branch.steps.map((step) => (
                 <StepRow
@@ -334,9 +334,9 @@ function StepRow({
   completed: boolean;
   actionable: boolean;
 }) {
-  const Icon = getProcessorIcon(step.processor);
-  const title = step.questTitle ?? step.output;
-  const description = step.hint;
+  const sprite = getProcessorSprite(step.processor);
+  const title = localize(step.questTitle ?? step.output, step.questTitleI18n ?? step.outputI18n);
+  const description = step.hint ? localize(step.hint, step.hintI18n) : undefined;
 
   return (
     <div
@@ -403,10 +403,15 @@ function StepRow({
           justifyContent: 'center',
         }}
       >
-        <Icon
-          size={14}
-          strokeWidth={2.5}
-          color={completed ? '#4caf50' : actionable ? '#d84315' : '#bdbdbd'}
+        <img
+          src={sprite}
+          alt=""
+          style={{
+            width: 16,
+            height: 16,
+            opacity: completed ? 0.7 : actionable ? 1 : 0.35,
+            filter: completed ? 'hue-rotate(90deg) saturate(1.5)' : 'none',
+          }}
         />
       </div>
 
@@ -420,11 +425,13 @@ function StepRow({
               fontSize: 11,
               fontWeight: 900,
               color: completed ? '#4caf50' : actionable ? '#3e2723' : '#9ca3af',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
               letterSpacing: '0.02em',
               textTransform: 'capitalize',
+              lineHeight: 1.3,
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical' as const,
+              overflow: 'hidden',
             }}
           >
             {title}

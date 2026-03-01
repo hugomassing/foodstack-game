@@ -64,7 +64,15 @@
     "playAgain": "다시 하기",
     "saveCard": "카드 저장",
     "steps": "{current}/{total} 단계",
-    "errors": "{count} 오류"
+    "errors": "{count} 오류",
+    "trophyMessages": [
+      "트로피 제작 중...",
+      "세부 묘사 중...",
+      "반짝임 추가 중...",
+      "걸작 플레이팅 중...",
+      "사진 촬영 중...",
+      "금 광택 중..."
+    ]
   },
   "modes": {
     "title": "FOODSTACK",
@@ -96,7 +104,8 @@
     "lives": "생명 {count}",
     "continue": "계속",
     "chooseNext": "다음 레시피 선택",
-    "errors": "오류"
+    "errors": "오류",
+    "errorsShort": "오류"
   },
   "gameOver": {
     "title": "주방 대참사!",

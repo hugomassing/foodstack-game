@@ -391,7 +391,7 @@ function LanguageSwitcher() {
               key={l.code}
               onClick={() => {
                 loadLocale(l.code);
-                saveLocale({ locale: l.code }).catch(() => {});
+                saveLocale({ locale: l.code }).catch(() => { });
                 setOpen(false);
               }}
               style={{
@@ -482,8 +482,8 @@ type MainTab = 'modes' | 'rankings' | 'history';
 type ModeWithDifficulty = 'daily' | 'survival' | 'normal';
 
 export function ModeSelector() {
-  const { t, locale } = useTranslation();
   const [mainTab, setMainTab] = useState<MainTab>('modes');
+  const { t, locale } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [loadingDishName, setLoadingDishName] = useState('');
   const [error, setError] = useState('');

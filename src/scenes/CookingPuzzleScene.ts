@@ -20,6 +20,7 @@ import { convex } from '../lib/convex';
 import { api } from '../../convex/_generated/api';
 import type { PuzzleData, Step, Ingredient, Attachment } from '../types';
 import { t, getLocale } from '../i18n';
+import { localize } from '../i18n/localize';
 
 const PROCESSOR_ASSET: Record<string, string> = {
   mix: 'bowl_spoon',
@@ -382,9 +383,12 @@ export class CookingPuzzleScene extends Phaser.Scene {
     // Processor emoji + asset lookup
     const procEmojiMap = new Map<string, string>();
     const procAssetMap = new Map<string, string | null>();
+    const procDisplayMap = new Map<string, string>();
     for (const p of this.puzzleData.processors) {
       procEmojiMap.set(p.name, p.emoji);
       procAssetMap.set(p.name, p.assetId ?? null);
+      const localizedName = localize(p.name, p.displayNameI18n);
+      if (localizedName !== p.name) procDisplayMap.set(p.name, localizedName);
     }
 
     // Collect all processors (including final step)
@@ -471,7 +475,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
       // Label text below icon
       const label = this.add
-        .text(iconCx, iconCy + ZONE.LABEL_Y_OFFSET, procName.toUpperCase(), {
+        .text(iconCx, iconCy + ZONE.LABEL_Y_OFFSET, (procDisplayMap.get(procName) ?? procName).toUpperCase(), {
           fontSize: '11px',
           fontStyle: 'bold',
           color: TEXT_COLORS.DARK,
@@ -497,7 +501,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     for (const item of shuffled) {
       const assetId = item.assetId ?? localAssetMatch(item.name);
-      const card = new PuzzleCard(this, this.gameCenterX, GAME_H + 100, item.name, 'ingredient', {
+      const displayName = localize(item.name, item.nameI18n);
+      const card = new PuzzleCard(this, this.gameCenterX, GAME_H + 100, displayName, 'ingredient', {
         itemName: item.name,
         emoji: item.emoji,
         assetId,
@@ -921,7 +926,15 @@ export class CookingPuzzleScene extends Phaser.Scene {
       // Return all input cards to the player (don't consume on failed match)
       this.shakeAndReturn(procName);
 
-      this.spawnCraftedCard(result as { name: string; emoji: string; assetId: string }, procName);
+      this.spawnCraftedCard(
+        result as {
+          name: string;
+          nameI18n?: Record<string, string>;
+          emoji: string;
+          assetId: string;
+        },
+        procName,
+      );
     } catch (err) {
       console.error('[Craft] LLM generation failed, falling back to shake:', err);
       if (!this.scene.isActive()) return;
@@ -1036,7 +1049,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
   }
 
   private spawnCraftedCard(
-    result: { name: string; emoji: string; assetId: string },
+    result: { name: string; nameI18n?: Record<string, string>; emoji: string; assetId: string },
     procName: string,
   ): void {
     const zone = this.processorZones.get(procName);
@@ -1065,7 +1078,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
       if (c.depth > maxDepth) maxDepth = c.depth;
     }
 
-    const card = new PuzzleCard(this, spawnX, spawnY, result.name, 'error', {
+    const displayName = localize(result.name, result.nameI18n);
+    const card = new PuzzleCard(this, spawnX, spawnY, displayName, 'error', {
       itemName: result.name,
       emoji: result.emoji,
       assetId,
@@ -1219,7 +1233,7 @@ export class CookingPuzzleScene extends Phaser.Scene {
 
     if (isFinal) {
       this.time.delayedCall(400, () => {
-        gameStore.getState().setVictory(step.output);
+        gameStore.getState().setVictory(localize(step.output, step.outputI18n));
       });
     }
   }
@@ -1262,7 +1276,8 @@ export class CookingPuzzleScene extends Phaser.Scene {
       if (c.depth > maxDepth) maxDepth = c.depth;
     }
 
-    const card = new PuzzleCard(this, spawnX, spawnY, step.output, 'intermediate', {
+    const outputDisplay = localize(step.output, step.outputI18n);
+    const card = new PuzzleCard(this, spawnX, spawnY, outputDisplay, 'intermediate', {
       itemName: step.output,
       stepId: step.stepId,
       emoji: '',
