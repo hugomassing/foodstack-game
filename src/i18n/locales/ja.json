@@ -60,7 +60,7 @@
     "back": "戻る",
     "chooseDifficulty": "難易度を選択",
     "daily": {
-      "title": "デイリー",
+      "title": "今日のレシピ",
       "description": "今日のレシピチャレンジ。みんな同じ料理！",
       "best": "ベスト: {count}"
     },

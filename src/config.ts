@@ -3,6 +3,7 @@ export const GAME_H = 540;
 export const DPR = Math.min(window.devicePixelRatio || 1, 2);
 
 export const FONT_FAMILY = "'Fredoka One', Arial, sans-serif";
+export const TITLE_FONT_FAMILY = "'Novibes Display', 'Fredoka One', Arial, sans-serif";
 
 // Quest panel
 export const QUEST_PANEL_W = 240;

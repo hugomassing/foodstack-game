@@ -60,7 +60,7 @@
     "back": "VOLTAR",
     "chooseDifficulty": "Escolha a dificuldade",
     "daily": {
-      "title": "Diário",
+      "title": "Receita do dia",
       "description": "O desafio de hoje. O mesmo prato para todos!",
       "best": "Melhor: {count}"
     },

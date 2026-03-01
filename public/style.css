@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'Novibes Display';
+    src: url('/assets/fonts/NovibesDisplay.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 body {
     margin: 0;
     padding: 0;

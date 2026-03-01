@@ -60,7 +60,7 @@
     "back": "INDIETRO",
     "chooseDifficulty": "Scegli la difficoltà",
     "daily": {
-      "title": "Giornaliero",
+      "title": "Ricetta del giorno",
       "description": "La sfida di oggi. Lo stesso piatto per tutti!",
       "best": "Migliore: {count}"
     },

@@ -60,7 +60,7 @@
     "back": "뒤로",
     "chooseDifficulty": "난이도 선택",
     "daily": {
-      "title": "일일",
+      "title": "오늘의 레시피",
       "description": "오늘의 레시피 도전. 모두 같은 요리!",
       "best": "최고: {count}"
     },
