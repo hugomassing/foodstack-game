@@ -1,36 +1,32 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { api } from '../../convex/_generated/api';
-import { convex } from '../lib/convex';
-import { gameStore } from '../store/gameStore';
-import { FONT_FAMILY } from '../config';
-import type { PuzzleData } from '../types';
-import { ChevronLeft, ChevronRight, Play, Upload } from 'lucide-react';
+import { useState, useRef, useCallback, useEffect } from "react";
+import { api } from "../../convex/_generated/api";
+import { convex } from "../lib/convex";
+import { gameStore } from "../store/gameStore";
+import { FONT_FAMILY } from "../config";
+import type { PuzzleData } from "../types";
+import { ChevronLeft, ChevronRight, Play, Upload } from "lucide-react";
+import wordlists from "../data/wordlists.json";
 
 const LOADING_MESSAGES = [
-  { emoji: '🥕', text: 'Preparing ingredients' },
-  { emoji: '🔪', text: 'Chopping vegetables' },
-  { emoji: '🍳', text: 'Heating up the pan' },
-  { emoji: '🧂', text: 'Gathering spices' },
-  { emoji: '🥄', text: 'Grabbing utensils' },
-  { emoji: '📖', text: 'Reading the cookbook' },
-  { emoji: '👨‍🍳', text: 'Calling the chef' },
-  { emoji: '🔥', text: 'Preheating the oven' },
-  { emoji: '🧈', text: 'Melting the butter' },
-  { emoji: '🫗', text: 'Mixing the batter' },
+  { emoji: "🥕", text: "Preparing ingredients" },
+  { emoji: "🔪", text: "Chopping vegetables" },
+  { emoji: "🍳", text: "Heating up the pan" },
+  { emoji: "🧂", text: "Gathering spices" },
+  { emoji: "🥄", text: "Grabbing utensils" },
+  { emoji: "📖", text: "Reading the cookbook" },
+  { emoji: "👨‍🍳", text: "Calling the chef" },
+  { emoji: "🔥", text: "Preheating the oven" },
+  { emoji: "🧈", text: "Melting the butter" },
+  { emoji: "🫗", text: "Mixing the batter" },
 ];
 
-type Category = 'Style' | 'Filling' | 'Method' | 'Base';
+type Category = "Style" | "Filling" | "Method" | "Base";
 
-const WORD_LISTS: Record<Category, string[]> = {
-  Style: ['Crispy', 'Smoky', 'Spicy', 'Cheesy', 'Tangy', 'Herby', 'Zesty'],
-  Filling: ['Ham', 'Chicken', 'Tofu', 'Shrimp', 'Mushroom', 'Meatball'],
-  Method: ['Stuffed', 'Glazed', 'Grilled', 'Braised', 'Roasted', 'Caramelized'],
-  Base: ['Bun', 'Bowl', 'Wrap', 'Taco', 'Pasta', 'Salad'],
-};
+const WORD_LISTS: Record<Category, string[]> = wordlists;
 
-const CATEGORIES: Category[] = ['Style', 'Filling', 'Method', 'Base'];
+const CATEGORIES: Category[] = ["Style", "Filling", "Method", "Base"];
 
-const FOOD_ICONS = ['🍖', '🥩', '🍕', '🥪', '🥕', '🍴', '🔥', '💧', '☕'];
+const FOOD_ICONS = ["🍖", "🥩", "🍕", "🥪", "🥕", "🍴", "🔥", "💧", "☕"];
 
 function randomSelections(): Record<Category, number> {
   const result = {} as Record<Category, number>;
@@ -81,36 +77,36 @@ function LoadingCard({ dishName }: { dishName: string }) {
       <div
         style={{
           width: 380,
-          padding: '36px 28px 32px',
-          background: '#fffaf0',
+          padding: "36px 28px 32px",
+          background: "#fffaf0",
           borderRadius: 28,
-          border: '4px solid #3e2723',
-          boxShadow: '0 10px 0 #3e2723',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          border: "4px solid #3e2723",
+          boxShadow: "0 10px 0 #3e2723",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
           gap: 16,
-          position: 'relative',
+          position: "relative",
           zIndex: 10,
         }}
       >
         {/* Top pin */}
         <div
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            left: "50%",
+            transform: "translate(-50%, -50%)",
           }}
         >
           <div
             style={{
               width: 26,
               height: 26,
-              background: '#ff5252',
-              borderRadius: '50%',
-              border: '3px solid #3e2723',
-              boxShadow: '0 2px 0 #3e2723',
+              background: "#ff5252",
+              borderRadius: "50%",
+              border: "3px solid #3e2723",
+              boxShadow: "0 2px 0 #3e2723",
             }}
           />
         </div>
@@ -120,9 +116,9 @@ function LoadingCard({ dishName }: { dishName: string }) {
           style={{
             fontSize: 14,
             fontWeight: 900,
-            color: '#d84315',
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
+            color: "#d84315",
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
             fontFamily: FONT_FAMILY,
           }}
         >
@@ -132,11 +128,11 @@ function LoadingCard({ dishName }: { dishName: string }) {
           style={{
             fontSize: 22,
             fontWeight: 900,
-            color: '#3e2723',
-            textTransform: 'uppercase',
-            letterSpacing: '-0.02em',
+            color: "#3e2723",
+            textTransform: "uppercase",
+            letterSpacing: "-0.02em",
             fontFamily: FONT_FAMILY,
-            textAlign: 'center',
+            textAlign: "center",
           }}
         >
           {dishName}
@@ -146,10 +142,10 @@ function LoadingCard({ dishName }: { dishName: string }) {
         <div
           style={{
             fontSize: 64,
-            animation: 'loadingSpin 1.6s ease-in-out infinite',
+            animation: "loadingSpin 1.6s ease-in-out infinite",
             lineHeight: 1,
-            margin: '8px 0',
-            transition: 'opacity 0.3s',
+            margin: "8px 0",
+            transition: "opacity 0.3s",
             opacity: fading ? 0 : 1,
           }}
         >
@@ -161,10 +157,10 @@ function LoadingCard({ dishName }: { dishName: string }) {
           style={{
             fontSize: 18,
             fontWeight: 900,
-            color: '#5d4037',
+            color: "#5d4037",
             fontFamily: FONT_FAMILY,
-            textAlign: 'center',
-            transition: 'opacity 0.3s',
+            textAlign: "center",
+            transition: "opacity 0.3s",
             opacity: fading ? 0 : 1,
             minHeight: 28,
           }}
@@ -173,16 +169,16 @@ function LoadingCard({ dishName }: { dishName: string }) {
         </div>
 
         {/* Bouncing dots */}
-        <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+        <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
           {[0, 1, 2].map((i) => (
             <div
               key={i}
               style={{
                 width: 10,
                 height: 10,
-                borderRadius: '50%',
-                background: '#ffca28',
-                border: '2px solid #3e2723',
+                borderRadius: "50%",
+                background: "#ffca28",
+                border: "2px solid #3e2723",
                 animation: `loadingDot 1.2s ease-in-out ${i * 0.2}s infinite`,
               }}
             />
@@ -195,31 +191,36 @@ function LoadingCard({ dishName }: { dishName: string }) {
 
 export function GameMenu() {
   const [indices, setIndices] = useState(randomSelections);
-  const [customName, setCustomName] = useState('');
-  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
+  const [customName, setCustomName] = useState("");
+  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
+    "medium",
+  );
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const getDishName = useCallback(() => {
     const raw = customName.trim();
-    return raw || CATEGORIES.map((c) => WORD_LISTS[c][indices[c]]).join(' ');
+    return raw || CATEGORIES.map((c) => WORD_LISTS[c][indices[c]]).join(" ");
   }, [customName, indices]);
 
-  const generatedName = CATEGORIES.map((c) => WORD_LISTS[c][indices[c]]).join(' ').toUpperCase();
+  const generatedName = CATEGORIES.map((c) => WORD_LISTS[c][indices[c]])
+    .join(" ")
+    .toUpperCase();
 
   const cycleWord = (cat: Category, dir: 1 | -1) => {
     if (isLoading) return;
     setIndices((prev) => ({
       ...prev,
-      [cat]: (prev[cat] + dir + WORD_LISTS[cat].length) % WORD_LISTS[cat].length,
+      [cat]:
+        (prev[cat] + dir + WORD_LISTS[cat].length) % WORD_LISTS[cat].length,
     }));
   };
 
   const onCook = async () => {
     if (isLoading) return;
     setIsLoading(true);
-    setError('');
+    setError("");
     const dishName = getDishName();
 
     try {
@@ -237,15 +238,15 @@ export function GameMenu() {
 
   const onDemo = async () => {
     if (isLoading) return;
-    const module = await import('../data/mockPuzzle.json');
-    gameStore.getState().startGame(module.default as PuzzleData, 'medium');
+    const module = await import("../data/mockPuzzle.json");
+    gameStore.getState().startGame(module.default as PuzzleData, "medium");
   };
 
   const onLoadJSON = () => {
     if (isLoading) return;
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
     input.onchange = (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (!file) return;
@@ -253,9 +254,9 @@ export function GameMenu() {
       reader.onload = (ev) => {
         try {
           const puzzleData = JSON.parse(ev.target!.result as string);
-          gameStore.getState().startGame(puzzleData, 'medium');
+          gameStore.getState().startGame(puzzleData, "medium");
         } catch {
-          setError('Invalid JSON file');
+          setError("Invalid JSON file");
         }
       };
       reader.readAsText(file);
@@ -269,47 +270,47 @@ export function GameMenu() {
     return (
       <div
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: 0,
           left: 0,
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           fontFamily: font,
           zIndex: 10,
-          overflow: 'hidden',
+          overflow: "hidden",
         }}
       >
         {/* Background food pattern */}
         <div
           style={{
-            position: 'absolute',
+            position: "absolute",
             inset: 0,
-            pointerEvents: 'none',
+            pointerEvents: "none",
             opacity: 0.12,
-            overflow: 'hidden',
+            overflow: "hidden",
           }}
         >
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(8, 1fr)',
+              display: "grid",
+              gridTemplateColumns: "repeat(8, 1fr)",
               gap: 40,
               padding: 24,
-              height: '100%',
-              width: '100%',
-              transform: 'rotate(-5deg) scale(1.3)',
+              height: "100%",
+              width: "100%",
+              transform: "rotate(-5deg) scale(1.3)",
             }}
           >
             {Array.from({ length: 48 }).map((_, i) => (
               <div
                 key={i}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   fontSize: 32,
                 }}
               >
@@ -326,47 +327,47 @@ export function GameMenu() {
   return (
     <div
       style={{
-        position: 'absolute',
+        position: "absolute",
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         fontFamily: font,
         zIndex: 10,
-        overflow: 'hidden',
+        overflow: "hidden",
       }}
     >
       {/* Background food pattern */}
       <div
         style={{
-          position: 'absolute',
+          position: "absolute",
           inset: 0,
-          pointerEvents: 'none',
+          pointerEvents: "none",
           opacity: 0.12,
-          overflow: 'hidden',
+          overflow: "hidden",
         }}
       >
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(8, 1fr)',
+            display: "grid",
+            gridTemplateColumns: "repeat(8, 1fr)",
             gap: 40,
             padding: 24,
-            height: '100%',
-            width: '100%',
-            transform: 'rotate(-5deg) scale(1.3)',
+            height: "100%",
+            width: "100%",
+            transform: "rotate(-5deg) scale(1.3)",
           }}
         >
           {Array.from({ length: 48 }).map((_, i) => (
             <div
               key={i}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 fontSize: 32,
               }}
             >
@@ -380,16 +381,16 @@ export function GameMenu() {
       <div
         style={{
           width: 480,
-          padding: '20px 28px 16px',
-          background: '#fffaf0',
+          padding: "20px 28px 16px",
+          background: "#fffaf0",
           borderRadius: 28,
-          border: '4px solid #3e2723',
-          boxShadow: '0 10px 0 #3e2723',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          border: "4px solid #3e2723",
+          boxShadow: "0 10px 0 #3e2723",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
           gap: 2,
-          position: 'relative',
+          position: "relative",
           marginTop: 8,
           zIndex: 10,
         }}
@@ -397,20 +398,20 @@ export function GameMenu() {
         {/* Top pin */}
         <div
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            left: "50%",
+            transform: "translate(-50%, -50%)",
           }}
         >
           <div
             style={{
               width: 26,
               height: 26,
-              background: '#ff5252',
-              borderRadius: '50%',
-              border: '3px solid #3e2723',
-              boxShadow: '0 2px 0 #3e2723',
+              background: "#ff5252",
+              borderRadius: "50%",
+              border: "3px solid #3e2723",
+              boxShadow: "0 2px 0 #3e2723",
             }}
           />
         </div>
@@ -420,20 +421,32 @@ export function GameMenu() {
           style={{
             fontSize: 26,
             fontWeight: 900,
-            color: '#3e2723',
-            margin: '2px 0 6px',
-            letterSpacing: '-0.03em',
-            textTransform: 'uppercase',
+            color: "#3e2723",
+            margin: "2px 0 6px",
+            letterSpacing: "-0.03em",
+            textTransform: "uppercase",
           }}
         >
           Create Recipe
         </h1>
 
         {/* Difficulty selector */}
-        <DifficultySelector value={difficulty} onChange={setDifficulty} disabled={isLoading} />
+        <DifficultySelector
+          value={difficulty}
+          onChange={setDifficulty}
+          disabled={isLoading}
+        />
 
         {/* Selector rows */}
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 4 }}>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            gap: 5,
+            marginBottom: 4,
+          }}
+        >
           {CATEGORIES.map((cat) => (
             <SelectorRow
               key={cat}
@@ -449,14 +462,14 @@ export function GameMenu() {
         {/* Summary box */}
         <div
           style={{
-            width: '100%',
-            background: '#ffca28',
+            width: "100%",
+            background: "#ffca28",
             borderRadius: 14,
-            border: '3px solid #3e2723',
-            boxShadow: '0 5px 0 #3e2723',
-            padding: '10px 16px 12px',
-            textAlign: 'center',
-            position: 'relative',
+            border: "3px solid #3e2723",
+            boxShadow: "0 5px 0 #3e2723",
+            padding: "10px 16px 12px",
+            textAlign: "center",
+            position: "relative",
             marginBottom: 6,
           }}
         >
@@ -464,10 +477,10 @@ export function GameMenu() {
             style={{
               fontSize: 11,
               fontWeight: 900,
-              color: '#d84315',
+              color: "#d84315",
               marginBottom: 4,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
             }}
           >
             SELECTED ORDER
@@ -480,17 +493,17 @@ export function GameMenu() {
               style={{
                 fontSize: 19,
                 fontWeight: 900,
-                color: '#3e2723',
+                color: "#3e2723",
                 fontFamily: font,
-                background: 'transparent',
-                border: 'none',
-                borderBottom: '2px solid #3e2723',
-                outline: 'none',
-                textAlign: 'center',
-                width: '90%',
-                caretColor: '#d84315',
-                textTransform: 'uppercase',
-                letterSpacing: '-0.02em',
+                background: "transparent",
+                border: "none",
+                borderBottom: "2px solid #3e2723",
+                outline: "none",
+                textAlign: "center",
+                width: "90%",
+                caretColor: "#d84315",
+                textTransform: "uppercase",
+                letterSpacing: "-0.02em",
               }}
             />
           ) : (
@@ -498,15 +511,15 @@ export function GameMenu() {
               style={{
                 fontSize: 19,
                 fontWeight: 900,
-                color: '#3e2723',
-                cursor: 'text',
+                color: "#3e2723",
+                cursor: "text",
                 minHeight: 24,
                 lineHeight: 1.2,
-                textTransform: 'uppercase',
-                letterSpacing: '-0.02em',
+                textTransform: "uppercase",
+                letterSpacing: "-0.02em",
               }}
               onClick={() => {
-                setCustomName(' ');
+                setCustomName(" ");
                 setTimeout(() => inputRef.current?.focus(), 0);
               }}
             >
@@ -525,11 +538,11 @@ export function GameMenu() {
           shadowDepth={6}
           onClick={onCook}
           disabled={isLoading}
-          style={{ width: '100%' }}
+          style={{ width: "100%" }}
         />
 
         {/* DEMO / LOAD buttons */}
-        <div style={{ display: 'flex', gap: 8, width: '100%', marginTop: 2 }}>
+        <div style={{ display: "flex", gap: 8, width: "100%", marginTop: 2 }}>
           <PushButton
             label="DEMO"
             color="#29b6f6"
@@ -555,7 +568,14 @@ export function GameMenu() {
 
         {/* Error */}
         {error && (
-          <div style={{ fontSize: 13, color: '#e74c3c', textAlign: 'center', marginTop: 4 }}>
+          <div
+            style={{
+              fontSize: 13,
+              color: "#e74c3c",
+              textAlign: "center",
+              marginTop: 4,
+            }}
+          >
             {error}
           </div>
         )}
@@ -580,13 +600,13 @@ function SelectorRow({
   return (
     <div
       style={{
-        width: '100%',
-        background: '#ffffff',
+        width: "100%",
+        background: "#ffffff",
         borderRadius: 14,
-        border: '2px solid #e0e0e0',
-        boxShadow: '0 3px 0 #e0e0e0',
-        display: 'flex',
-        alignItems: 'center',
+        border: "2px solid #e0e0e0",
+        boxShadow: "0 3px 0 #e0e0e0",
+        display: "flex",
+        alignItems: "center",
         padding: 4,
       }}
     >
@@ -595,9 +615,9 @@ function SelectorRow({
           style={{
             fontSize: 11,
             fontWeight: 900,
-            color: '#a1887f',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
+            color: "#a1887f",
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
           }}
         >
           {category}
@@ -607,13 +627,13 @@ function SelectorRow({
       <div
         style={{
           flex: 1,
-          textAlign: 'center',
+          textAlign: "center",
           fontSize: 18,
           fontWeight: 900,
-          color: '#3e2723',
-          textTransform: 'uppercase',
-          letterSpacing: '0.04em',
-          userSelect: 'none',
+          color: "#3e2723",
+          textTransform: "uppercase",
+          letterSpacing: "0.04em",
+          userSelect: "none",
         }}
       >
         {value}
@@ -623,9 +643,17 @@ function SelectorRow({
   );
 }
 
-function ArrowBtn({ direction, onClick, disabled }: { direction: 'left' | 'right'; onClick: () => void; disabled: boolean }) {
+function ArrowBtn({
+  direction,
+  onClick,
+  disabled,
+}: {
+  direction: "left" | "right";
+  onClick: () => void;
+  disabled: boolean;
+}) {
   const [hover, setHover] = useState(false);
-  const Icon = direction === 'left' ? ChevronLeft : ChevronRight;
+  const Icon = direction === "left" ? ChevronLeft : ChevronRight;
   return (
     <div
       onMouseEnter={() => setHover(true)}
@@ -635,15 +663,15 @@ function ArrowBtn({ direction, onClick, disabled }: { direction: 'left' | 'right
         width: 34,
         height: 34,
         borderRadius: 10,
-        background: hover && !disabled ? '#eeeeee' : '#f5f5f5',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: disabled ? 'default' : 'pointer',
-        color: '#3e2723',
-        userSelect: 'none',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.06)',
-        transition: 'background 0.15s',
+        background: hover && !disabled ? "#eeeeee" : "#f5f5f5",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: disabled ? "default" : "pointer",
+        color: "#3e2723",
+        userSelect: "none",
+        boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
+        transition: "background 0.15s",
       }}
     >
       <Icon size={20} strokeWidth={3} />
@@ -652,9 +680,9 @@ function ArrowBtn({ direction, onClick, disabled }: { direction: 'left' | 'right
 }
 
 const DIFFICULTIES = [
-  { value: 'easy' as const, label: 'EASY', icon: '🌶️' },
-  { value: 'medium' as const, label: 'MEDIUM', icon: '🌶️🌶️' },
-  { value: 'hard' as const, label: 'HARD', icon: '🌶️🌶️🌶️' },
+  { value: "easy" as const, label: "EASY", icon: "🌶️" },
+  { value: "medium" as const, label: "MEDIUM", icon: "🌶️🌶️" },
+  { value: "hard" as const, label: "HARD", icon: "🌶️🌶️🌶️" },
 ];
 
 function DifficultySelector({
@@ -662,15 +690,15 @@ function DifficultySelector({
   onChange,
   disabled,
 }: {
-  value: 'easy' | 'medium' | 'hard';
-  onChange: (v: 'easy' | 'medium' | 'hard') => void;
+  value: "easy" | "medium" | "hard";
+  onChange: (v: "easy" | "medium" | "hard") => void;
   disabled: boolean;
 }) {
   return (
     <div
       style={{
-        width: '100%',
-        display: 'flex',
+        width: "100%",
+        display: "flex",
         gap: 6,
         marginBottom: 4,
       }}
@@ -683,16 +711,16 @@ function DifficultySelector({
             onClick={disabled ? undefined : () => onChange(d.value)}
             style={{
               flex: 1,
-              padding: '6px 0',
+              padding: "6px 0",
               borderRadius: 10,
-              border: `2px solid ${active ? '#3e2723' : '#e0e0e0'}`,
-              background: active ? '#3e2723' : '#ffffff',
-              color: active ? '#ffffff' : '#3e2723',
-              textAlign: 'center',
-              cursor: disabled ? 'default' : 'pointer',
-              userSelect: 'none',
-              transition: 'all 0.15s',
-              boxShadow: active ? '0 3px 0 #2a1a12' : '0 3px 0 #e0e0e0',
+              border: `2px solid ${active ? "#3e2723" : "#e0e0e0"}`,
+              background: active ? "#3e2723" : "#ffffff",
+              color: active ? "#ffffff" : "#3e2723",
+              textAlign: "center",
+              cursor: disabled ? "default" : "pointer",
+              userSelect: "none",
+              transition: "all 0.15s",
+              boxShadow: active ? "0 3px 0 #2a1a12" : "0 3px 0 #e0e0e0",
             }}
           >
             <div style={{ fontSize: 12, lineHeight: 1 }}>{d.icon}</div>
@@ -700,7 +728,7 @@ function DifficultySelector({
               style={{
                 fontSize: 11,
                 fontWeight: 900,
-                letterSpacing: '0.08em',
+                letterSpacing: "0.08em",
                 fontFamily: FONT_FAMILY,
                 marginTop: 2,
               }}
@@ -747,9 +775,9 @@ function PushButton({
       style={{
         borderRadius: outerRadius,
         border: `${borderWidth}px solid #3e2723`,
-        background: '#3e2723',
-        cursor: disabled ? 'default' : 'pointer',
-        userSelect: 'none',
+        background: "#3e2723",
+        cursor: disabled ? "default" : "pointer",
+        userSelect: "none",
         ...style,
       }}
       onMouseEnter={() => setHover(true)}
@@ -773,13 +801,13 @@ function PushButton({
           height,
           borderRadius: innerRadius,
           background: hover && !disabled && !pressed ? hoverColor : color,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           gap: 8,
           marginBottom: pressed ? 0 : shadowDepth,
           marginTop: pressed ? shadowDepth : 0,
-          transition: 'margin 0.08s, background 0.15s',
+          transition: "margin 0.08s, background 0.15s",
         }}
       >
         {icon}
@@ -787,10 +815,10 @@ function PushButton({
           style={{
             fontSize: 18,
             fontWeight: 900,
-            color: '#ffffff',
+            color: "#ffffff",
             fontFamily: FONT_FAMILY,
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase',
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
           }}
         >
           {label}
